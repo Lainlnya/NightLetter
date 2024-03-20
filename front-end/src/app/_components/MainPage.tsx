@@ -23,10 +23,6 @@ export default function Home() {
 
     const dragX = useMotionValue(0);
 
-    const onclickPush = () => {
-        setContents((prev) => [...prev, 1]);
-    }
-
     const onDragStart = () => {
         setDragging(true);
     }
