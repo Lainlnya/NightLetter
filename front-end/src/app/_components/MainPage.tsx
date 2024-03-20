@@ -7,6 +7,7 @@ import calender from "../../../public/Icons/calender_icon.svg"
 import tarot_background from "../../../public/images/tarot-background.png";
 import { motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // TODO: 
 // 1.서버 데이터 받아서 날짜 동적으로 수정
@@ -17,19 +18,17 @@ const DRAG_BUFFER = 100;
 
 export default function Home() {
     const [dragging, setDragging] = useState(false);
-    const [contents, setContents] = useState([1]);
+    const [contents, setContents] = useState([1, 2, 3, 4, 5]);
     const [cardIndex, setCardIndex] = useState(contents.length - 1);
 
     const dragX = useMotionValue(0);
 
     const onclickPush = () => {
         setContents((prev) => [...prev, 1]);
-
     }
 
     const onDragStart = () => {
         setDragging(true);
-        console.log('start : ' + cardIndex)
     }
 
     const onDragEnd = () => {
@@ -42,7 +41,6 @@ export default function Home() {
         } else if (x >= DRAG_BUFFER && cardIndex > 0) {
             setCardIndex((prev) => prev - 1);
         }
-
     }
 
     return <>
@@ -95,8 +93,5 @@ export default function Home() {
                 </motion.div>
             </div>
         </section>
-        <div className={styles.capsule_notification}>
-            AI가 분석한 오늘의 코멘트가 도착했어요.
-        </div>
     </>;
 }
