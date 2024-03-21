@@ -15,7 +15,7 @@ interface CardInfo {
 
 const ViewCard: React.FC = () => {
   const [card, setCard] = useState<CardInfo>();
-  const [isBack, setIsBack] = useState<boolean>(false);
+  const [isBack, setIsBack] = useState<boolean>(true);
   useEffect(() => {
     setCard(getTarotCard);
   }, []);
@@ -29,7 +29,6 @@ const ViewCard: React.FC = () => {
         <div className={`${styles.card} ${isBack ? styles.isRight : ""}`}>
           <img
             className={styles.front}
-            onClick={() => setIsBack(!isBack)}
             src={`/deleted_card/${card.no}.png`}
             alt="tarot image"
           />
