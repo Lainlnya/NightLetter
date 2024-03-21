@@ -5,4 +5,26 @@ const withPWA = withPWAInit({
   dest: "public",
 });
 
-export default withPWA({});
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  async rewrites() {
+    return [
+      {
+        source: "/:path*",
+        destination: `http://letter-for.me/:path*`,
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/auth/oauth-response",
+        destination: `http://letter-for.me/tarot`,
+        permanent: true,
+      },
+    ];
+  },
+};
+
+export default withPWA(nextConfig);
