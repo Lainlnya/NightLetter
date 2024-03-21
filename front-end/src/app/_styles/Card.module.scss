@@ -1,0 +1,65 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  div {
+    font-size: 3.2rem;
+    font-weight: 800;
+  }
+  img {
+    margin: 2rem 0;
+    width: 29rem;
+    height: 52rem;
+  }
+
+  .card {
+    display: inline-grid;
+    color: white;
+    transition: transform 0.3s;
+    transform: perspective(800px) rotateY(0deg);
+    // transform-style: preserve-3d;
+  }
+
+  .isRight {
+    transform: perspective(800px) rotateY(180deg);
+  }
+
+  .card > * {
+    grid-area: 1 / 1 / 1 / 1;
+    width: 29rem;
+    height: 52rem;
+    backface-visibility: hidden;
+  }
+
+  .back {
+    margin: 2rem 0;
+    position: relative;
+    transform: rotateY(180deg);
+  }
+
+  .view {
+    background-color: rgba(25, 28, 43, 0.7);
+    position: absolute;
+    top: 0;
+    height: 52rem;
+    overflow-y: scroll;
+    font-size: 1.6rem;
+    word-spacing: 0.1rem;
+    letter-spacing: 0.1rem;
+    margin-top: 2rem;
+    padding: 2rem;
+  }
+
+  .nonView {
+    display: none;
+  }
+
+  .meaning {
+    text-align: center;
+    padding: 0 2.4rem;
+    font-size: 2.4rem;
+    white-space: pre-line;
+  }
+}
