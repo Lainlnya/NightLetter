@@ -33,14 +33,22 @@ const ViewCard: React.FC = () => {
             src={`/deleted_card/${card.no}.png`}
             alt="tarot image"
           />
-          <img
-            className={styles.back}
-            onClick={() => setIsBack(!isBack)}
-            src={`/deleted_card/${card.no}.png`}
-            alt="tarot image"
-          />
+          <div>
+            <img
+              className={styles.back}
+              onClick={() => setIsBack(!isBack)}
+              src={`/deleted_card/${card.no}.png`}
+              alt="tarot image"
+            />
+            <div
+              className={`${isBack ? styles.nonView : styles.view}`}
+              onClick={() => setIsBack(!isBack)}
+            >
+              {card.description}
+            </div>
+          </div>
         </div>
-        <div className={styles.description}>{card.right}</div>
+        <div className={styles.meaning}>{card.right}</div>
       </main>
     )
   );
