@@ -1,0 +1,50 @@
+@keyframes tilt {
+  from {
+    transform: rotate(0) translateX(0) translateY(0);
+  }
+  to {
+    transform: rotate(var(--rotate)) translateX(var(--target-left))
+      translateY(var(--target-top));
+  }
+}
+
+.card {
+  background-image: url("/images/tarot-background.png");
+  width: 14rem;
+  height: 23rem;
+  left: 0rem;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  transition: transform 0.7s ease;
+  transform-origin: center;
+  &.tilt {
+    animation: tilt 0.7s forwards;
+  }
+}
+
+.card1 {
+  position: absolute;
+  --target-left: 3rem;
+  --target-top: 0rem;
+  --rotate: 0deg;
+}
+.card2 {
+  position: absolute;
+  --target-left: 10rem;
+  --target-top: -5rem;
+  --rotate: 10deg;
+}
+.card3 {
+  position: absolute;
+  --target-left: 17rem;
+  --target-top: -10rem;
+  --rotate: 15deg;
+}
+.card4 {
+  position: absolute;
+  --target-left: 24rem;
+  --target-top: -15rem;
+  --rotate: 20deg;
+}

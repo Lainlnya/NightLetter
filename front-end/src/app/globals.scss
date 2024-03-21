@@ -14,14 +14,14 @@
 
 html {
   font-size: 62.5%;
-  width: 43rem;
+  width: 100dvw;
   margin: 0 auto;
 }
 
 body {
   display: flex;
   height: 100dvh;
-  padding: 0 1.6rem 3.2rem;
+  padding: 1.6rem 3.2rem;
 
   @media (max-width: 430px) {
     width: 100%;
