@@ -21,6 +21,7 @@ const SelectTarot: React.FC = ({ timePeriod }: SelectTarotProps) => {
   const router = useRouter();
 
   const handleCardSelect = () => {
+    timePeriod = "future";
     router.push(`/card?isPast=${timePeriod}`);
   };
 
