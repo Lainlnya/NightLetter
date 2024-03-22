@@ -14,5 +14,4 @@ public class ValidationExceptionHandler {
     public ResponseEntity<ResponseDto> validationExceptionHandler(Exception exception) {
         return ResponseDto.validationFail();
     }
-
 }

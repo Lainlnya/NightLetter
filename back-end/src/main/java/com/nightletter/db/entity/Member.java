@@ -1,31 +1,28 @@
 package com.nightletter.db.entity;
 
+import com.nightletter.db.enums.Provider;
+import com.nightletter.db.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.LocalDateTime;
 
 @ToString
 @Getter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer memberId;
+@AttributeOverride(name = "id", column = @Column(name = "member_id"))
+public class Member extends BaseEntity{
+
     private String OAuth2Id;
+
     private String email;
+
     private String nickname;
+
     private String profileImgUrl;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-//    @LastModifiedBy
-    private Integer updatedBy;
-    private Provider type;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+    @Enumerated(EnumType.STRING)
     private Role role;
 }

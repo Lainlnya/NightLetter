@@ -2,8 +2,8 @@ package com.nightletter.apis.service;
 
 import com.nightletter.db.entity.CustomOAuth2User;
 import com.nightletter.db.entity.Member;
-import com.nightletter.db.entity.Provider;
-import com.nightletter.db.entity.Role;
+import com.nightletter.db.enums.Provider;
+import com.nightletter.db.enums.Role;
 import com.nightletter.db.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.nightletter.db.entity.Provider.KAKAO;
-import static com.nightletter.db.entity.Role.ROLE_MEMBER;
+import static com.nightletter.db.enums.Provider.KAKAO;
+import static com.nightletter.db.enums.Role.ROLE_MEMBER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +45,7 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
         String email = null;
         String nickname = null;
         String profileImgUrl = null;
-        Provider type = null;
+        Provider provider = null;
         Role role = null;
 
         switch(oauthClientName) {
@@ -56,7 +56,7 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
                 
                 // 멤버가 존재하면 해당 멤버 정보 반환
                 if (member != null) {
-                    return new CustomOAuth2User(Integer.toString(member.getMemberId()));
+                    return new CustomOAuth2User(Integer.toString(member.getId()));
                 }
 
                 Map<String, String> kakaoAccountInfo = oAuth2User.getAttribute("kakao_account");
@@ -64,7 +64,7 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
                 email = kakaoAccountInfo.get("email");
                 nickname = kakaoProfileInfo.get("nickname");
                 profileImgUrl = kakaoProfileInfo.get("profile_image");
-                type = KAKAO;
+                provider = KAKAO;
                 role = ROLE_MEMBER;
 
                 break;
@@ -73,7 +73,7 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
         }
 
         // 에러 처리
-        if (type == null) {
+        if (provider == null) {
             return null;
         }
 
@@ -82,7 +82,7 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
                 .email(email)
                 .nickname(nickname)
                 .profileImgUrl(profileImgUrl)
-                .type(type)
+                .provider(provider)
                 .role(role)
                 .build();
 
@@ -91,6 +91,6 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
         // 존재 확인 후 save
         member = memberRepository.save(member);
 
-        return new CustomOAuth2User(Integer.toString(member.getMemberId()));
+        return new CustomOAuth2User(Integer.toString(member.getId()));
     }
 }

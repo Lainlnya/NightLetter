@@ -10,7 +10,6 @@ public class ResponseDto {
     String code;
     String message;
 
-
     public static ResponseEntity<ResponseDto> databaseError() {
         return ResponseEntity.internalServerError().body(
                 ResponseDto.builder()

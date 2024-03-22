@@ -1,7 +1,7 @@
 package com.nightletter.filter;
 
 import com.nightletter.db.entity.Member;
-import com.nightletter.db.entity.Role;
+import com.nightletter.db.enums.Role;
 import com.nightletter.db.repository.MemberRepository;
 import com.nightletter.provider.JwtProvider;
 import jakarta.servlet.FilterChain;
@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return ;
             }
 
-            Member member = memberRepository.findByMemberId(Integer.parseInt(memberId));
+            Member member = memberRepository.findMemberById(Integer.parseInt(memberId));
 //            Member member = memberRepository.findMemberByOAuth2Id(memberId);
             Role role = member.getRole();
 
