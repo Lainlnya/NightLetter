@@ -40,6 +40,8 @@ export default function Home() {
         }
     }
 
+
+
     return <>
         <header className={styles.header}>
             <div className={styles.header_icons}>
@@ -50,7 +52,6 @@ export default function Home() {
                 <h1>2024년 3월 11일</h1>
             </div>
         </header>
-
         <section className={styles.section}>
             <div className={styles.guide}>
                 카드를 슬라이드하여 날짜를 바꿀 수 있어요.
