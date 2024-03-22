@@ -1,0 +1,76 @@
+.post {
+  width: 100dvw;
+  display: flex;
+  flex-direction: column;
+  margin-left: -3rem;
+  align-items: center;
+
+  .hr_sect {
+    width: 100dvw;
+    display: flex;
+    align-items: center;
+    color: #fdfdfd;
+    font-size: 1.6rem;
+  }
+  .hr_sect::before,
+  .hr_sect::after {
+    content: "";
+    flex-grow: 2;
+    background: #fdfdfd;
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0 1rem;
+  }
+
+  .hr_sect::before {
+    flex-grow: 9;
+  }
+
+  textarea {
+    padding: 0 2rem;
+    width: 100%;
+    resize: none;
+    border: none;
+    background-color: transparent;
+    height: 40rem;
+    font-size: 1.4rem;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
+
+  .temperary {
+    display: flex;
+  }
+
+  hr {
+    width: 100%;
+    color: #fdfdfd;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+  }
+
+  .checkbox {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5rem;
+    label {
+      font-size: 1.6rem;
+    }
+  }
+
+  .save {
+    width: 30rem;
+    height: 5rem;
+    background-color: #803886;
+    border-radius: 5rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+}
