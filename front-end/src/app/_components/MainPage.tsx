@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 const DRAG_BUFFER = 100;
 
 export default function Home() {
+    const router = useRouter();
     const [dragging, setDragging] = useState(false);
     const [contents, setContents] = useState([1, 2, 3, 4, 5]);
     const [cardIndex, setCardIndex] = useState(contents.length - 1);
@@ -78,6 +79,7 @@ export default function Home() {
                             <div
                                 key={idx}
                                 className={styles.card_wrapper}
+                                onClick={() => router.push('/diaries')}
                             >
 
                                 <Image src={tarot_background} className={`${styles.card} ${styles.past}`} alt="past_card" width={120} height={205} />
