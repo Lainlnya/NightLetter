@@ -4,6 +4,7 @@ import styles from "@/app/_styles/Card.module.scss";
 import { getTarotCard } from "@/app/_apis/TarotApis";
 import Loading from "@/app/loading";
 import { useEffect, useState } from "react";
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 
 interface CardInfo {
   no: number;
@@ -16,6 +17,8 @@ interface CardInfo {
 const ViewCard: React.FC = () => {
   const [card, setCard] = useState<CardInfo>();
   const [isBack, setIsBack] = useState<boolean>(true);
+
+  const searchParams: ReadonlyURLSearchParams = useSearchParams();
   useEffect(() => {
     setCard(getTarotCard);
   }, []);
@@ -48,6 +51,11 @@ const ViewCard: React.FC = () => {
           </div>
         </div>
         <div className={styles.meaning}>{card.right}</div>
+        {searchParams.get("isPast") === "past" ? (
+          ""
+        ) : (
+          <button className={styles.comment}>코멘트 보러가기</button>
+        )}
       </main>
     )
   );
