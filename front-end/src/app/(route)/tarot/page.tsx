@@ -5,6 +5,9 @@ import Spread from "@/app/_components/Spread";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
+interface SelectTarotProps {
+  timePeriod?: "past" | "future";
+}
 interface CardInfo {
   no: number;
   name: string;
@@ -13,12 +16,12 @@ interface CardInfo {
   description: string;
 }
 
-const SelectTarot: React.FC = () => {
+const SelectTarot: React.FC = ({ timePeriod }: SelectTarotProps) => {
   const [isTilted, setIsTilted] = useState<boolean>(true);
   const router = useRouter();
 
   const handleCardSelect = () => {
-    router.push("/card");
+    router.push(`/card?isPast=${timePeriod}`);
   };
 
   /**
@@ -32,7 +35,7 @@ const SelectTarot: React.FC = () => {
   return (
     <main className={styles.main}>
       <h1 className={styles.h1}>
-        <p>어제를 생각하며</p>
+        <p>{timePeriod === "future" ? "미래" : "어제"}를 생각하며</p>
         <p>한 장을 뽑아보세요</p>
       </h1>
       <section className={styles.spreadSec}>
