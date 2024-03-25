@@ -1,0 +1,27 @@
+.main {
+  background-image: url("/images/login-background.png");
+  width: 100dvw;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin: -1.6rem -3.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    font-size: 3rem;
+    font-weight: 900;
+  }
+  div {
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-weight: 900;
+  }
+
+  img {
+    margin-top: 5rem;
+    width: 20rem;
+    height: 5rem;
+  }
+}
