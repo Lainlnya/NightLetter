@@ -50,8 +50,6 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
-                        .requestMatchers("/api/v1/member/**").hasRole("MEMBER")
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                         )
                 .oauth2Login(oauth2 -> oauth2
@@ -81,16 +79,16 @@ public class WebSecurityConfig {
 
         return source;
     }
-}
 
-class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    private static class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setContentType("application/json");
-        // 권한 없음.
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        // {"code": "NP", "message": "No Permission."}
-        response.getWriter().write("{\"code\": \"NP\", \"message\": \"No Permission.\"}");
+        @Override
+        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+            response.setContentType("application/json");
+            // 권한 없음.
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            // {"code": "NP", "message": "No Permission."}
+            response.getWriter().write("{\"code\": \"NP\", \"message\": \"No Permission.\"}");
+        }
     }
 }

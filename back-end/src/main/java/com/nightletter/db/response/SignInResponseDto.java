@@ -1,7 +1,7 @@
 package com.nightletter.db.response;
 
-import com.nightletter.common.ResponseCode;
-import com.nightletter.common.ResponseMessage;
+import com.nightletter.db.response.common.ResponseCode;
+import com.nightletter.db.response.common.ResponseMessage;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.nightletter.common;
+package com.nightletter.db.response.common;
 
 public interface ResponseMessage {
 

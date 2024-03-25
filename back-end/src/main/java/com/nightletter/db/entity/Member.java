@@ -1,16 +1,16 @@
 package com.nightletter.db.entity;
 
 import com.nightletter.db.enums.Provider;
-import com.nightletter.db.enums.Role;
+import com.nightletter.db.response.MemberResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@ToString
-@Getter @Builder
+@Getter @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@AttributeOverride(name = "id", column = @Column(name = "member_id"))
+@AttributeOverride(name = "id", column =  @Column(name = "member_id"))
 public class Member extends BaseEntity{
 
     private String OAuth2Id;
@@ -23,6 +23,5 @@ public class Member extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+
 }

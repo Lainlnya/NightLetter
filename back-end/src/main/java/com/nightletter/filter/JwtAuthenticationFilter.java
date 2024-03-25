@@ -1,7 +1,6 @@
 package com.nightletter.filter;
 
 import com.nightletter.db.entity.Member;
-import com.nightletter.db.enums.Role;
 import com.nightletter.db.repository.MemberRepository;
 import com.nightletter.provider.JwtProvider;
 import jakarta.servlet.FilterChain;
@@ -17,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -37,12 +37,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = parseBearerToken(request);
 
+            log.info("Token Info In JWT Filter : " + token);
+
             if (token == null) {
                 filterChain.doFilter(request, response);
                 return ;
             }
 
             String memberId = jwtProvider.validate(token);
+
+            log.info("MemberId Info In JWT Filter : " + memberId);
 
             if (memberId == null) {
                 filterChain.doFilter(request, response);
@@ -51,12 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Member member = memberRepository.findMemberById(Integer.parseInt(memberId));
 //            Member member = memberRepository.findMemberByOAuth2Id(memberId);
-            Role role = member.getRole();
 
-            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role.toString()));
+            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
 
             log.info("Called in Filter : Member info : " + member.toString());
-            log.info("Called in Filter : Member Role info : " + role);
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             AbstractAuthenticationToken authenticationToken =
@@ -67,7 +69,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             securityContext.setAuthentication(authenticationToken);
             SecurityContextHolder.setContext(securityContext);
 
+            log.info("Authentication Info In JWT Filter : " + SecurityContextHolder.getContext());
+
         } catch (Exception e) {
+            log.info("ERROR OCCURED IN PARSING TOKEN");
             e.printStackTrace();
         }
 
@@ -89,7 +94,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //        String token = authorization.substring(7);
         String accessToken = null;
 
-        for (Cookie cookie : cookies) {
+          for (Cookie cookie : cookies) {
             if (cookie.getName().equals("access-token")) {
                 accessToken = cookie.getValue();
                 log.info("token type: ACCESS // token : " + accessToken);

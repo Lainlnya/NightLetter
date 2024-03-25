@@ -3,11 +3,11 @@ package com.nightletter.apis.service;
 import com.nightletter.db.entity.CustomOAuth2User;
 import com.nightletter.db.entity.Member;
 import com.nightletter.db.enums.Provider;
-import com.nightletter.db.enums.Role;
 import com.nightletter.db.repository.MemberRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 import static com.nightletter.db.enums.Provider.KAKAO;
-import static com.nightletter.db.enums.Role.ROLE_MEMBER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,10 +45,9 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
         String nickname = null;
         String profileImgUrl = null;
         Provider provider = null;
-        Role role = null;
 
         switch(oauthClientName) {
-            case "kakao":
+            case "kakao" :
                 OAuth2Id = "kakao_" + oAuth2User.getAttribute("id");
                 
                 member = memberRepository.findMemberByOAuth2Id(OAuth2Id);
@@ -65,7 +63,6 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
                 nickname = kakaoProfileInfo.get("nickname");
                 profileImgUrl = kakaoProfileInfo.get("profile_image");
                 provider = KAKAO;
-                role = ROLE_MEMBER;
 
                 break;
             case "apple":
@@ -83,7 +80,6 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
                 .nickname(nickname)
                 .profileImgUrl(profileImgUrl)
                 .provider(provider)
-                .role(role)
                 .build();
 
         log.info(member.toString());

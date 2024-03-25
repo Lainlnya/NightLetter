@@ -5,8 +5,6 @@ import com.nightletter.db.enums.Type;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,7 +13,8 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
-public class DiaryRequest {
+public class DiaryUpdateRequest {
+    private Integer diaryId;
     private String content;
     private Type type;
 
@@ -26,7 +25,10 @@ public class DiaryRequest {
             today = today.minusDays(1);;
         }
 
+        System.out.println("diaryId : " + this.diaryId);
+
         return Diary.builder()
+                .id(diaryId)
                 .date(today)
                 .content(this.content)
                 .type(this.type)
