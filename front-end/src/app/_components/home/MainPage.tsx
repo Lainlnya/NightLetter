@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import styles from "./mainPage.module.scss";
-import alarm from "../../../public/Icons/alarm_icon.svg";
-import calender from "../../../public/Icons/calender_icon.svg"
-import tarot_background from "../../../public/images/tarot-background.png";
+import alarm from "../../../../public/Icons/alarm_icon.svg";
+import calender from "../../../../public/Icons/calender_icon.svg"
+import tarot_background from "../../../../public/images/tarot-background.png";
+import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
 import { motion, useMotionValue } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import useStore from '@/store/date'
 
 // TODO: 
 // 1.서버 데이터 받아서 날짜 동적으로 수정
@@ -21,6 +23,11 @@ export default function Home() {
     const [dragging, setDragging] = useState(false);
     const [contents, setContents] = useState([1, 2, 3, 4, 5]);
     const [cardIndex, setCardIndex] = useState(contents.length - 1);
+    const { date, setDate, daysDifference, setDaysDifference } = useStore();
+
+    useEffect(() => {
+        setDate(parseDateToKoreanFormatWithDay(daysDifference));
+    }, [daysDifference]);
 
     const dragX = useMotionValue(0);
 
@@ -35,12 +42,12 @@ export default function Home() {
 
         if (x <= -DRAG_BUFFER && cardIndex < contents.length - 1) {
             setCardIndex((prev) => prev + 1);
+            setDaysDifference(daysDifference + 1);
         } else if (x >= DRAG_BUFFER && cardIndex > 0) {
             setCardIndex((prev) => prev - 1);
+            setDaysDifference(daysDifference - 1);
         }
     }
-
-
 
     return <>
         <header className={styles.header}>
@@ -49,12 +56,12 @@ export default function Home() {
                 <Image src={calender} alt="calender" width={24} height={24} className={styles.header_icon} />
             </div>
             <div className={styles.header_title}>
-                <h1>2024년 3월 11일</h1>
+                <h1>{date}</h1>
             </div>
         </header>
         <section className={styles.section}>
             <div className={styles.guide}>
-                카드를 슬라이드하여 날짜를 바꿀 수 있어요.
+                좌우로 슬라이드하여 날짜를 바꿀 수 있어요.
             </div>
             <div className={
                 styles.carousel_container
