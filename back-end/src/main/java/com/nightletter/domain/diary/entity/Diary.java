@@ -7,6 +7,7 @@ import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.global.common.BaseEntity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,8 +35,9 @@ public class Diary extends BaseEntity {
 	private DiaryType type;
 	private String gptComment;
 
-	// todo. 벡터 추가.
-
+	@Nullable
+	@Column(columnDefinition = "json")
+	private String vector;
 	public Diary() {
 		super();
 	}

@@ -2,6 +2,7 @@ server:
   port: 8081
 
 spring:
+
   security:
     oauth2:
       client:
@@ -29,9 +30,25 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
+    properties:
+      hibernate:
+        dialect=org:
+          hibernate:
+            dialect:
+              MySQL5Dialect:
+        transaction:
+          jta:
+            platform=org:
+              hibernate:
+                service:
+                  jta:
+                    platform:
+                      internal:
+                        JBossStandAloneJtaPlatform:
     hibernate:
       ddl-auto: create
     show-sql: true
+
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
