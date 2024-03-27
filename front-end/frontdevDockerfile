@@ -2,13 +2,11 @@ FROM node:latest
 
 WORKDIR /app
 
-RUN ls -al
-
-COPY package*.json ./
+COPY /var/jenkins_home/workspace/letterforme-frontdev/front-end/package.json .
 
 RUN npm install
 
-COPY . .
+COPY /var/jenkins_home/workspace/letterforme-frontdev/front-end/ .
 
 RUN npm run build
 
