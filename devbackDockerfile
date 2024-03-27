@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY ./back-end .
 
+RUN chmod +x ./gradlew
+
 RUN ./gradlew build
 
 FROM openjdk:17
