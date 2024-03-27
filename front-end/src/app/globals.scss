@@ -1,0 +1,134 @@
+:root {
+  --vh: 100%;
+  --background-color: #191c2b;
+  --text-color: #fdfdfd;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "AritaBuri";
+  color: var(--text-color);
+}
+
+html {
+  font-size: 62.5%;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 100dvw;
+  height: 100dvh;
+
+  overflow: hidden;
+}
+
+body:-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+
+  max-width: 39rem;
+
+  padding: 0 1.6rem 1.6rem;
+
+  background-image: url("/images/background.png");
+  background-size:cover;
+  background-repeat: no-repeat;
+
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+@font-face {
+  font-family: "AritaBuri";
+  font-weight: 100;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "AritaBuri";
+  font-weight: 300;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Light.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Light.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Light.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Light.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Light.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "AritaBuri";
+  font-weight: 500;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Medium.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Medium.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Medium.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Medium.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Medium.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "AritaBuri";
+  font-weight: 600;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-SemiBold.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-SemiBold.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-SemiBold.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-SemiBold.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-SemiBold.ttf")
+      format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "AritaBuri";
+  font-weight: 700;
+  font-style: normal;
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Bold.eot");
+  src: url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Bold.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Bold.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Bold.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Bold.ttf")
+      format("truetype");
+  font-display: swap;
+}
