@@ -4,17 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryType;
+import com.nightletter.domain.diary.entity.DiaryOpenType;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Data
 public class DiaryCreateRequest {
 	private String content;
-	private DiaryType type;
+	private DiaryOpenType type;
 	private String vector;
 
 	public Diary toEntity() {
