@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "../_styles/Spread.module.scss";
+import styles from "./spread.module.scss";
 interface SpreadProps {
   isTilted: boolean;
   handleSelectCard: () => void;
