@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim as build
+FROM openjdk:17 as build
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY ./back-end .
 
 RUN ./gradlew build
 
-FROM openjdk:17-jre-slim
+FROM openjdk:17
 
 WORKDIR /app
 
