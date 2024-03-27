@@ -17,9 +17,7 @@ export default function Home() {
             <div className={styles.guide}>
                 {Messages.MAIN_PAGE_DRAG_GUIDE}
             </div>
-            <RQProvider>
-                <CardSlider />
-            </RQProvider>
+            <CardSlider />
         </section>
     </main>;
 }
