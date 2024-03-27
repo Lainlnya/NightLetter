@@ -2,10 +2,10 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY package.json ./
+COPY ./front-end/package.json ./
 RUN npm install
 
-COPY . .
+COPY ./front-end .
 
 RUN npm run build
 
