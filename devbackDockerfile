@@ -1,0 +1,15 @@
+FROM openjdk:17-jdk-slim as build
+
+WORKDIR /app
+
+COPY ./back-end .
+
+RUN ./gradlew build
+
+FROM openjdk:17-jre-slim
+
+WORKDIR /app
+
+COPY --from=build /app/build/libs/*.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
