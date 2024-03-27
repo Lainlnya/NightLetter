@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DiaryUpdateRequest {
-	private Integer diaryId;
+	private Long diaryId;
 	private String content;
 	private DiaryType type;
 

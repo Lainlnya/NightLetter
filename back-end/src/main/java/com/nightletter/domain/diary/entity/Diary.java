@@ -1,5 +1,7 @@
 package com.nightletter.domain.diary.entity;
 
+import com.nightletter.domain.diary.dto.DiaryListResponse;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -7,21 +9,14 @@ import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.global.common.BaseEntity;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Getter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "diary_id"))
 @SuperBuilder
 public class Diary extends BaseEntity {
@@ -30,9 +25,13 @@ public class Diary extends BaseEntity {
 	@JoinColumn(name = "writer_id", referencedColumnName = "member_id", updatable = false)
 	private Member writer;
 	private String content;
+	// 날짜 필요 (CreatedAt과 다른 컬럼)
+	private LocalDate date;
 	@Enumerated(EnumType.STRING)
 	private DiaryType type;
 	private String gptComment;
+	@OneToMany(mappedBy = "diary")
+	private List<DiaryTarot> diaryTarots;
 
 	// todo. 벡터 추가.
 
@@ -40,13 +39,50 @@ public class Diary extends BaseEntity {
 		super();
 	}
 
-	public DiaryResponse toDto() {
-		return DiaryResponse.builder()
-			.id(this.writer.getId())
-			.content(this.content)
-			.type(this.type)
-			.gptComment(this.gptComment)
-			.build();
+	public Diary modifyDiaryDisclosure(DiaryType diaryType) {
+		this.type = diaryType;
+		return this;
 	}
+
+	public DiaryResponse toDiaryResponse() {
+		Tarot pastCard = null;
+		Tarot nowCard = null;
+		Tarot futureCard = null;
+
+		for (DiaryTarot tarot : this.diaryTarots) {
+			TarotType type = tarot.getType();
+
+			if (type.equals(TarotType.PAST)) {
+				pastCard = tarot.getTarot();
+			}
+			else if (type.equals(TarotType.NOW)) {
+				nowCard = tarot.getTarot();
+			}
+			else if (type.equals(TarotType.FUTURE)) {
+				futureCard = tarot.getTarot();
+			}
+		}
+
+		return DiaryResponse.builder()
+				.writerId(this.writer.getId())
+				.diaryId(this.getId())
+				.type(this.type)
+				.content(this.content)
+				.gptComment(this.gptComment)
+				.pastCard(pastCard)
+				.nowCard(nowCard)
+				.futureCard(futureCard)
+				.date(this.date)
+				.build();
+	}
+
+//	public DiaryResponse toDto() {
+//		return DiaryResponse.builder()
+//			.diaryId(this.writer.getId())
+//			.content(this.content)
+//			.type(this.type)
+//			.gptComment(this.gptComment)
+//			.build();
+//	}
 }
 
