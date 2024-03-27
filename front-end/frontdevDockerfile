@@ -2,7 +2,7 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY package*.json /app/
+COPY . .
 
 RUN ls -la
 
