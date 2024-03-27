@@ -1,4 +1,4 @@
-import styles from "@/app/_styles/Comment.module.scss";
+import styles from "./comment.module.scss";
 
 const Comment: React.FC = () => {
   const today = new Date();
