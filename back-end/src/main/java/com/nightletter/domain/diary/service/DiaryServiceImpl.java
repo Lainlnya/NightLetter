@@ -1,15 +1,10 @@
 package com.nightletter.domain.diary.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import com.nightletter.domain.diary.dto.*;
-import com.nightletter.domain.diary.entity.*;
-import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.member.repository.MemberRepository;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,7 +13,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import net.minidev.json.JSONArray;
 
+import com.nightletter.domain.diary.dto.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.domain.diary.dto.DiaryRequestDirection;
+import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
+import com.nightletter.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +28,6 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-@Service @Slf4j
 @RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
 
@@ -38,13 +35,14 @@ public class DiaryServiceImpl implements DiaryService {
 	private final WebClient webClient;
 
 	private final MemberRepository memberRepository;
+
 	@Override
-	public Diary createDiary(DiaryRequest diaryRequest) {
-		 Mono<JSONArray> responseMono = webClient.post()
-		        .uri("/get-embedding")
-		        .body(BodyInserters.fromValue(Map.of("query", diaryRequest.getContent())))
-		        .retrieve()
-		        .bodyToMono(JSONArray.class);
+	public Optional<Diary> createDiary(DiaryCreateRequest diaryRequest) {
+		Mono<JSONArray> responseMono = webClient.post()
+			.uri("/get-embedding")
+			.body(BodyInserters.fromValue(Map.of("query", diaryRequest.getContent())))
+			.retrieve()
+			.bodyToMono(JSONArray.class);
 
 		responseMono.subscribe(
 			response -> {
@@ -60,12 +58,12 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Optional<Diary> updateDiaryDisclosure(Integer diaryId, DiaryType diaryType) {
+	public Optional<Diary> updateDiaryDisclosure(Integer diaryId, DiaryOpenType diaryOpenType) {
 		Diary diary = null;
 
 		try {
 			diary = diaryRepository.getReferenceById(diaryId);
-			return Optional.of(diary.modifyDiaryDisclosure(diaryType));
+			return Optional.of(diary.modifyDiaryDisclosure(diaryOpenType));
 		} catch (Exception e) {
 			log.info("Error Occured: " + e.toString());
 		}
@@ -80,11 +78,11 @@ public class DiaryServiceImpl implements DiaryService {
 		LocalDate queryEndDate = request.getDate();
 
 		if (request.getDirection() == DiaryRequestDirection.BOTH ||
-				request.getDirection() == DiaryRequestDirection.BEFORE) {
+			request.getDirection() == DiaryRequestDirection.BEFORE) {
 			querySttDate = querySttDate.minusDays(request.getSize());
 		}
 		if (request.getDirection() == DiaryRequestDirection.BOTH ||
-				request.getDirection() == DiaryRequestDirection.AFTER) {
+			request.getDirection() == DiaryRequestDirection.AFTER) {
 			queryEndDate = queryEndDate.plusDays(request.getSize());
 		}
 
@@ -99,6 +97,6 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private Long getCurrentMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return Long.parseLong((String) authentication.getPrincipal());
+		return Long.parseLong((String)authentication.getPrincipal());
 	}
 }
