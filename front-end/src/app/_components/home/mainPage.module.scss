@@ -1,6 +1,5 @@
 .header{
     width: 100%;
-
 }
 
 .header_icons{
@@ -30,6 +29,7 @@
     height: 30rem;
 
     position: absolute;
+    overflow: hidden;
 
     top: 50%;
     transform: translateY(-50%);
@@ -46,46 +46,4 @@
     color: #B2B0B0;
 
     margin-bottom: 1.5rem;
-}
-
-.carousel_slider{
-    position: relative;
-    overflow: hidden;
-}
-
-.carousel{
-    display: flex;
-    align-items: center;
-}
-
-.card_wrapper{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100dvw;
-
-    flex-shrink: 0;
-
-    object-fit: cover;
-}
-
-.card{
-    width: 12rem;
-    height: 20.5rem;
-
-    &.past {
-        margin-right: -4rem;
-        margin-top: 2rem;
-        transform: rotate(-12deg);
-        z-index: 1;
-    }
-    &.current {
-        margin-right: -4rem;
-        z-index: 2;
-    }
-    &.future {
-        margin-top: 2rem;
-        transform: rotate(12deg);
-        z-index: 3;
-    }
 }

@@ -6,6 +6,7 @@ import alarm from "../../../../public/Icons/alarm_icon.svg";
 import calender from "../../../../public/Icons/calender_icon.svg"
 import useStore from '@/store/date'
 import CardSlider from "./CardSlider";
+import { Messages } from "@/utils/msg";
 
 // TODO: 
 // 1.서버 데이터 받아서 날짜 동적으로 수정
@@ -28,7 +29,7 @@ export default function Home() {
         </header>
         <section className={styles.section}>
             <div className={styles.guide}>
-                좌우로 슬라이드하여 날짜를 바꿀 수 있어요.
+                {Messages.MAIN_PAGE_DRAG_GUIDE}
             </div>
             <CardSlider />
         </section>

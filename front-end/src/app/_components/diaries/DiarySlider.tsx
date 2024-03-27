@@ -1,31 +1,27 @@
 'use client';
 
-import Image from "next/image";
-import styles from "./cardSlider.module.scss";
+import React, { useEffect } from 'react'
+import styles from './diarySlider.module.scss'
+import Image from 'next/image'
+
 import tarot_background from "../../../../public/images/tarot-background.png";
-import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
 import { motion, useMotionValue } from "framer-motion";
-import React, { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { DRAG_BUFFER } from '@/utils/animation'
 import useStore from '@/store/date'
+import { parseDateToKoreanFormatWithDay } from '@/utils/dateFormat'
 
-const DRAG_BUFFER = 100;
-
-export default function CardSlider() {
-    const router = useRouter();
+export default function DiarySlider() {
     const [dragging, setDragging] = useState(false);
     const [contents, setContents] = useState([1, 2, 3, 4, 5]);
     const [cardIndex, setCardIndex] = useState(contents.length - 1);
-    const [isNotNotedToday, setIsNotNotedToday] = useState(true);
     const { setDate, daysDifference, setDaysDifference } = useStore();
-
-    useEffect(() => {
-
-    }, []);
 
     useEffect(() => {
         setDate(parseDateToKoreanFormatWithDay(daysDifference));
     }, [daysDifference]);
+
 
     const dragX = useMotionValue(0);
 
@@ -46,11 +42,10 @@ export default function CardSlider() {
             setDaysDifference(daysDifference - 1);
         }
     }
-
     return (
-        <div className={
-            styles.carousel_container
-        }>
+        <div
+            className={styles.carousel_container}
+        >
             <motion.div
                 drag="x"
                 dragConstraints={{
@@ -69,19 +64,25 @@ export default function CardSlider() {
             >
                 {contents.map((_, idx) => {
                     return (
-                        <div
+                        <main
                             key={idx}
-                            className={styles.card_wrapper}
-                            onClick={() => router.push('/diaries')}
+                            className={styles.diary}
                         >
-                            <Image src={tarot_background} className={`${styles.card} ${styles.past}`} alt="past_card" width={120} height={205} />
-                            <Image src={tarot_background} className={`${styles.card} ${styles.current} `} alt="current_card" width={120} height={205} />
-                            <Image src={tarot_background} className={`${styles.card} ${styles.future}`} alt="future_card" width={120} height={205} />
-                            {isNotNotedToday && <div className={styles.note_notification}>오늘의 일기 작성</div>}
-                        </div>
+                            <div className={styles.diary_thumbnail}>
+                                <Image src={tarot_background} className={`${styles.card} ${styles.past}`} alt="past_card" width={120} height={205} />
+                                <Image src={tarot_background} className={`${styles.card} ${styles.current}`} alt="current_card" width={120} height={205} />
+                                <Image src={tarot_background} className={`${styles.card} ${styles.future}`} alt="future_card" width={120} height={205} />
+                            </div>
+                            <div className={styles.diary_text}>
+                                <h2>오늘의 일기</h2>
+                                <p>나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라오직 호날두의 플레이를 보기 위해서였다 나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라 오직 호날두의 플레이를 보기 위해서였다 나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라 오직 호날두의 플레이를 보기 위해서였다 나의 눈이 다시 </p>
+                            </div>
+                        </main>
                     );
                 })}
             </motion.div>
         </div>
-    );
+
+
+    )
 }
