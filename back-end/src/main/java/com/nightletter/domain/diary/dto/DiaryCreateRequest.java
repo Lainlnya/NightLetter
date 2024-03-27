@@ -6,14 +6,13 @@ import java.time.LocalTime;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryType;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-public class DiaryRequest {
+@Data
+public class DiaryCreateRequest {
 	private String content;
 	private DiaryType type;
 
@@ -26,6 +25,7 @@ public class DiaryRequest {
 
 		return Diary.builder()
 			.content(this.content)
+			.date(today)
 			.type(this.type)
 			.build();
 	}

@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				return;
 			}
 
-			Member member = memberRepository.findMemberById(Integer.parseInt(memberId));
+			Member member = memberRepository.findById(Long.parseLong(memberId));
 			//            Member member = memberRepository.findMemberByOAuth2Id(memberId);
 
 			List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));

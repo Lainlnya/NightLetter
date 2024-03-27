@@ -7,8 +7,9 @@ import com.nightletter.domain.member.entity.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-	Member findMemberById(Integer id);
 
 	Member findMemberByOAuth2Id(String OAuth2Id);
+
+    Member findById(Long currentMemberId);
 }
 
