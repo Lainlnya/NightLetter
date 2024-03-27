@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 public class DiaryResponse {
 
-	private Long writerId;
+	private Integer writerId;
 	private Long diaryId;
 	private DiaryType type;
 	private String content;
@@ -22,7 +22,7 @@ public class DiaryResponse {
 	private LocalDate date;
 
 	@Builder
-	public DiaryResponse(Long writerId, Long diaryId, String content, DiaryType type, String gptComment,
+	public DiaryResponse(Integer writerId, Long diaryId, String content, DiaryType type, String gptComment,
 								Tarot pastCard, Tarot nowCard, Tarot futureCard, LocalDate date) {
 		this.writerId = writerId;
 		this.diaryId = diaryId;

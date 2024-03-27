@@ -1,7 +1,11 @@
 package com.nightletter.domain.diary.entity;
 
 import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,10 +20,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @Entity
-@AttributeOverride(name = "id", column = @Column(name = "diary_id"))
-@SuperBuilder
-public class Diary extends BaseEntity {
+public class Diary extends BaseTimeEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long diaryId;
 	@CreatedBy
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id", referencedColumnName = "member_id", updatable = false)
@@ -64,8 +71,8 @@ public class Diary extends BaseEntity {
 		}
 
 		return DiaryResponse.builder()
-				.writerId(this.writer.getId())
-				.diaryId(this.getId())
+				.writerId(this.writer.getMemberId())
+				.diaryId(this.diaryId)
 				.type(this.type)
 				.content(this.content)
 				.gptComment(this.gptComment)

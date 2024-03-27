@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DiaryCustomRepository{
 
-    List<Diary> findDiariesByMemberId(Long memberId, LocalDate sttDate, LocalDate endDate);
+    List<Diary> findDiariesByMemberId(Integer memberId, LocalDate sttDate, LocalDate endDate);
 }

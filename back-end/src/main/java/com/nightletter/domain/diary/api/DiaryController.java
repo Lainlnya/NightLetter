@@ -1,6 +1,9 @@
 package com.nightletter.domain.diary.api;
 
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.entity.DiaryType;
+import com.nightletter.global.common.ResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +33,7 @@ public class DiaryController {
 	}
 
 	@PatchMapping("/diaries/{diaryId}")
-	public ResponseEntity<?> modifyDiary(@PathVariable Integer diaryId, @RequestParam DiaryType diaryType) {
+	public ResponseEntity<?> modifyDiary(@PathVariable Long diaryId, @RequestParam DiaryType diaryType) {
 		Optional<Diary> diary = diaryService.updateDiaryDisclosure(diaryId, diaryType);
 
 		return diary.map(ResponseEntity::ok)
@@ -38,8 +41,9 @@ public class DiaryController {
 	}
 
 	@GetMapping("/diaries")
-	public ResponseEntity<?> findDiaries(@RequestBody DiaryCreateRequest diaryCreateRequest) {
+	public ResponseEntity<?> findDiaries(@RequestBody DiaryListRequest diaryListRequest) {
+		Optional<DiaryListResponse> response = diaryService.findDiaries(diaryListRequest);
 
-		return null;
+		return ResponseEntity.ok(response);
 	}
 }

@@ -1,8 +1,6 @@
 package com.nightletter.domain.diary.entity;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +12,7 @@ import java.util.Objects;
 @Embeddable
 public class DiaryTarotId implements Serializable {
     private Long diaryId;
-    private Long tarotId;
+    private Integer tarotId;
 
     @Override
     public boolean equals(Object obj) {

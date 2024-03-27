@@ -2,23 +2,24 @@ package com.nightletter.domain.member.entity;
 
 import com.nightletter.global.common.BaseEntity;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.nightletter.global.common.BaseTimeEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@AttributeOverride(name = "id", column = @Column(name = "member_id"))
-public class Member extends BaseEntity {
+public class Member extends BaseTimeEntity {
+	@Id
+	@Column(name = "member_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer memberId;
 
 	private String OAuth2Id;
 

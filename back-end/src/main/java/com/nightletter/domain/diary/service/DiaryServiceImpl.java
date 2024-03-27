@@ -4,9 +4,6 @@ import com.nightletter.domain.diary.dto.*;
 import com.nightletter.domain.diary.entity.*;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +29,7 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Optional<Diary> updateDiaryDisclosure(Integer diaryId, DiaryType diaryType) {
+	public Optional<Diary> updateDiaryDisclosure(Long diaryId, DiaryType diaryType) {
 		Diary diary = null;
 
 		try {
@@ -69,8 +66,8 @@ public class DiaryServiceImpl implements DiaryService {
 		return Optional.of(diaryListResponse);
 	}
 
-	private Long getCurrentMemberId() {
+	private Integer getCurrentMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return Long.parseLong((String) authentication.getPrincipal());
+        return Integer.parseInt((String) authentication.getPrincipal());
 	}
 }

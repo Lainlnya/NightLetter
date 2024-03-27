@@ -32,8 +32,7 @@ public class JpaAuditorConfig implements AuditorAware<Member> {
 
 		// 자체 작성한 find 쿼리 말고 원래 있던 기능 쓰니까 됨.
 		// 아마 자체 작성하는 find 는 flush 되는 듯 ? 추후 알아봐야 함.
-		Optional<Member> member = memberRepository.findById(Integer.parseInt((String) authentication.getPrincipal()));
 
-		return member;
+        return Optional.ofNullable(memberRepository.findByMemberId(Integer.parseInt((String) authentication.getPrincipal())));
 	}
 }

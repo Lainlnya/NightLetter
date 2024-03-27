@@ -12,7 +12,7 @@ public interface DiaryService {
 
 	Optional<Diary> createDiary(DiaryCreateRequest diaryCreateRequest);
 
-	Optional<Diary> updateDiaryDisclosure(Integer diaryId, DiaryType diaryType);
+	Optional<Diary> updateDiaryDisclosure(Long diaryId, DiaryType diaryType);
 
 	Optional<DiaryListResponse> findDiaries(DiaryListRequest diaryListRequest);
 

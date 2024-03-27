@@ -6,8 +6,9 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@AttributeOverride(name = "id", column = @Column(name = "tarotId"))
-public class Tarot extends BaseEntity {
+public class Tarot {
+    @Id
+    Integer tarotId;
     String name;
     String imgUrl;
     String forwardKeyword;
