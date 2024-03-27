@@ -3,6 +3,9 @@ FROM node:latest
 WORKDIR /app
 
 COPY package*.json ./
+
+WORKDIR /app/front-end
+
 RUN npm install
 
 COPY . .
