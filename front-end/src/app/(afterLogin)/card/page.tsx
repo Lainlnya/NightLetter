@@ -1,7 +1,7 @@
 "use client";
 
-import styles from "@/app/_styles/Card.module.scss";
-import { getTarotCard } from "@/app/_apis/TarotApis";
+import styles from "./card.module.scss";
+import { getTarotCard } from "@/_apis/TarotApis";
 import Loading from "@/app/loading";
 import { useEffect, useState } from "react";
 import {
