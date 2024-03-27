@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.scss";
+import RQProvider from "./_components/RQProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <RQProvider>
+        <body>{children}</body>
+      </RQProvider>
     </html>
   );
 }
