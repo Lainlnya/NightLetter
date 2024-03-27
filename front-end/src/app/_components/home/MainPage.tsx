@@ -4,50 +4,17 @@ import Image from "next/image";
 import styles from "./mainPage.module.scss";
 import alarm from "../../../../public/Icons/alarm_icon.svg";
 import calender from "../../../../public/Icons/calender_icon.svg"
-import tarot_background from "../../../../public/images/tarot-background.png";
-import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
-import { motion, useMotionValue } from "framer-motion";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import useStore from '@/store/date'
+import CardSlider from "./CardSlider";
 
 // TODO: 
 // 1.서버 데이터 받아서 날짜 동적으로 수정
 // 2. 캐러셀 제대로 만들기
 // 3. 아이콘 클릭시 캘린더, 알림페이지로 이동하기
 // 4. 조건에 따라 알림 띄우기
-const DRAG_BUFFER = 100;
 
 export default function Home() {
-    const router = useRouter();
-    const [dragging, setDragging] = useState(false);
-    const [contents, setContents] = useState([1, 2, 3, 4, 5]);
-    const [cardIndex, setCardIndex] = useState(contents.length - 1);
-    const { date, setDate, daysDifference, setDaysDifference } = useStore();
-
-    useEffect(() => {
-        setDate(parseDateToKoreanFormatWithDay(daysDifference));
-    }, [daysDifference]);
-
-    const dragX = useMotionValue(0);
-
-    const onDragStart = () => {
-        setDragging(true);
-    }
-
-    const onDragEnd = () => {
-        setDragging(false);
-
-        const x = dragX.get();
-
-        if (x <= -DRAG_BUFFER && cardIndex < contents.length - 1) {
-            setCardIndex((prev) => prev + 1);
-            setDaysDifference(daysDifference + 1);
-        } else if (x >= DRAG_BUFFER && cardIndex > 0) {
-            setCardIndex((prev) => prev - 1);
-            setDaysDifference(daysDifference - 1);
-        }
-    }
+    const { date } = useStore();
 
     return <>
         <header className={styles.header}>
@@ -63,41 +30,7 @@ export default function Home() {
             <div className={styles.guide}>
                 좌우로 슬라이드하여 날짜를 바꿀 수 있어요.
             </div>
-            <div className={
-                styles.carousel_container
-            }>
-                <motion.div
-                    drag="x"
-                    dragConstraints={{
-                        left: 0,
-                        right: 0
-                    }}
-                    animate={{
-                        translateX: `-${cardIndex * 100}%`
-                    }}
-                    style={{
-                        x: dragX
-                    }}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                    className={styles.carousel}
-                >
-                    {contents.map((_, idx) => {
-                        return (
-                            <div
-                                key={idx}
-                                className={styles.card_wrapper}
-                                onClick={() => router.push('/diaries')}
-                            >
-
-                                <Image src={tarot_background} className={`${styles.card} ${styles.past}`} alt="past_card" width={120} height={205} />
-                                <Image src={tarot_background} className={`${styles.card} ${styles.current}`} alt="current_card" width={120} height={205} />
-                                <Image src={tarot_background} className={`${styles.card} ${styles.future}`} alt="future_card" width={120} height={205} />
-                            </div>
-                        );
-                    })}
-                </motion.div>
-            </div>
+            <CardSlider />
         </section>
     </>;
 }
