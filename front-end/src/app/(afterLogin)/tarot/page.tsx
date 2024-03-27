@@ -1,7 +1,7 @@
 "use client";
 
-import styles from "@/app/_styles/Tarot.module.scss";
-import Spread from "@/app/_components/Spread";
+import styles from "./tarot.module.scss";
+import Spread from "@/app/_components/tarot/Spread";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 

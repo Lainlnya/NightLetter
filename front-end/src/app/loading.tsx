@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/app/_styles/Loading.module.scss";
+import styles from "./loading.module.scss";
 import { MoonLoader } from "react-spinners";
 
 interface LoadingProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/app/_styles/Login.module.scss";
+import styles from "./login.module.scss";
 
 const Login = () => {
   const handleClick = () => {
