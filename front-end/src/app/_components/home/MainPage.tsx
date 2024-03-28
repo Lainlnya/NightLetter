@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Image from "next/image";
 import styles from "./mainPage.module.scss";
@@ -48,7 +48,7 @@ export default function Home() {
         <div className={styles.header_icons}>
           <Image
             src={alarm}
-            alt="alarm"
+            alt='alarm'
             width={24}
             height={24}
             className={styles.header_icon}
