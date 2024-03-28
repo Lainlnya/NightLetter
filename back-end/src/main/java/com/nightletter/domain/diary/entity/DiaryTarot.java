@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
+import com.nightletter.global.common.BaseTimeEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter

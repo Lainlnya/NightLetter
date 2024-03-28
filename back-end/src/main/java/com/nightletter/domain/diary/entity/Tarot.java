@@ -1,16 +1,21 @@
 package com.nightletter.domain.diary.entity;
 
-import com.nightletter.global.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.util.List;
-
+@Getter
+@NoArgsConstructor
 @Entity
 public class Tarot {
     @Id
-    Integer tarotId;
-    String name;
-    String imgUrl;
-    String forwardKeyword;
-    String reverseKeyword;
+    private Integer tarotId;
+    private String tarotName;
+    private String forwardImgUrl;
+    private String reverseImgUrl;
+    private String forwardKeyword;
+    private String reverseKeyword;
+    private String tarotDesc;
 }

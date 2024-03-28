@@ -7,6 +7,8 @@ import com.nightletter.domain.member.repository.MemberRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import com.nightletter.global.common.ResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,6 +82,27 @@ public class DiaryServiceImpl implements DiaryService {
 		try {
 			diary = diaryRepository.getReferenceById(diaryId);
 			return Optional.of(diary.modifyDiaryDisclosure(diaryOpenType));
+	public Optional<Diary> createDiary(DiaryCreateRequest diaryCreateRequest) {
+		return Optional.of(diaryRepository.save(diaryCreateRequest.toEntity(getCurrentMember())));
+	}
+
+	@Override
+	public Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request) {
+
+		try {
+			System.out.println(request.toString());
+
+			Diary diary = diaryRepository.getReferenceById(request.getDiaryId());
+
+			diary.modifyDiaryDisclosure(request.getDiaryType());
+
+			return Optional.of(DiaryResponse.of(diaryRepository.save(diary)));
+//			long res = diaryRepository.updateDiaryType(request.getDiaryId(), request.getDiaryType())
+
+//			if (res == 0)
+//				return Optional.empty();
+
+//			return Optional.of(DiaryResponse.of(diaryRepository.findDiaryByDiaryId(request.getDiaryId())));
 		} catch (Exception e) {
 			log.info("Error Occured: " + e.toString());
 		}
@@ -102,17 +125,47 @@ public class DiaryServiceImpl implements DiaryService {
 			queryEndDate = queryEndDate.plusDays(request.getSize());
 		}
 
-		List<Diary> diaries = diaryRepository.findDiariesByMemberId(getCurrentMemberId(), querySttDate, queryEndDate);
+		List<Diary> diaries = diaryRepository.findDiariesByMember(getCurrentMember(), querySttDate, queryEndDate);
 
 		DiaryListResponse diaryListResponse = new DiaryListResponse();
 
-		diaryListResponse.setDiaries(diaries.stream().map(Diary::toDiaryResponse).toList());
+		diaryListResponse.setDiaries(diaries.stream().map(DiaryResponse::of).toList());
 
 		return Optional.of(diaryListResponse);
 	}
 
-	private Integer getCurrentMemberId() {
+	@Override
+	public Optional<DiaryResponse> findDiary(Long diaryId) {
+
+		Diary diary = diaryRepository.findDiaryByDiaryId(diaryId);
+
+		if (diary == null) {
+			return Optional.empty();
+		}
+
+		return Optional.ofNullable(DiaryResponse.of(diary));
+	}
+
+	@Override
+	public Optional<ResponseDto> deleteDiary(Long diaryId) {
+
+		Diary diary = diaryRepository.findDiaryByDiaryId(diaryId);
+
+		if (diary == null)
+			return Optional.empty();
+
+		diaryRepository.delete(diary);
+
+		return Optional.of(
+				ResponseDto.builder()
+						.code("SU")
+						.message("Diary Deleted Successfully.")
+						.build());
+	}
+
+
+	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return Integer.parseInt((String) authentication.getPrincipal());
+        return memberRepository.findByMemberId(Integer.parseInt((String) authentication.getPrincipal()));
 	}
 }

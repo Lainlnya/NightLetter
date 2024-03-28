@@ -15,13 +15,12 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class JpaAuditorConfig implements AuditorAware<Member> {
+public class JpaAuditorConfig implements AuditorAware<Integer> {
 
-	private final MemberRepository memberRepository;
-	private final JdbcTemplate jdbcTemplate;
+//	private final MemberRepository memberRepository;
 
 	@Override
-	public Optional<Member> getCurrentAuditor() {
+	public Optional<Integer> getCurrentAuditor() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null || !authentication.isAuthenticated()) {
@@ -34,6 +33,8 @@ public class JpaAuditorConfig implements AuditorAware<Member> {
 		// 아마 자체 작성하는 find 는 flush 되는 듯 ? 추후 알아봐야 함.
 		Optional<Member> member = memberRepository.findById(Integer.parseInt((String)authentication.getPrincipal()));
 
-        return Optional.ofNullable(memberRepository.findByMemberId(Integer.parseInt((String) authentication.getPrincipal())));
+//		Optional<Member> member = memberRepository.findById(Integer.parseInt((String) authentication.getPrincipal()));
+
+		return Optional.of(Integer.parseInt((String) authentication.getPrincipal()));
 	}
 }

@@ -6,17 +6,17 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
-import com.nightletter.global.common.BaseEntity;
 
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -42,12 +42,13 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Builder
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE Diary SET deleted_at = now() WHERE diary_id = ?")
+@SQLRestriction("deleted_at IS NULL")
 @Entity
 public class Diary extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long diaryId;
-	@CreatedBy
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id", referencedColumnName = "member_id", updatable = false)
 	private Member writer;
@@ -59,6 +60,7 @@ public class Diary extends BaseTimeEntity {
 	private String gptComment;
 	@OneToMany(mappedBy = "diary")
 	private List<DiaryTarot> diaryTarots;
+	private LocalDateTime deletedAt;
 
 	@Nullable
 	@Column(columnDefinition = "json")

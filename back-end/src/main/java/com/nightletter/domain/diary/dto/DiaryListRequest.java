@@ -11,7 +11,4 @@ public class DiaryListRequest {
 	private LocalDate date;
 	private DiaryRequestDirection direction;
 	private Integer size;
-	private Tarot pastCard;
-	private Tarot nowCard;
-	private Tarot futureCard;
 }
