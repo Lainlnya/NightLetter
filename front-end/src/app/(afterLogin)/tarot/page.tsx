@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface SelectTarotProps {
-  timePeriod?: "past" | "future";
+  timePeriod?: "past" | "present" | "future";
 }
 interface CardInfo {
   no: number;
@@ -22,7 +22,7 @@ const SelectTarot: React.FC = ({ timePeriod }: SelectTarotProps) => {
 
   const handleCardSelect = () => {
     timePeriod = "future";
-    router.push(`/card?isPast=${timePeriod}`);
+    router.push(`/card?info=${timePeriod}`);
   };
 
   /**

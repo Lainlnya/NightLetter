@@ -2,6 +2,15 @@
 import Toast from "@/app/_components/post/Toast";
 import styles from "./post.module.scss";
 import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { saveData } from "@/_apis/DiaryApis";
+import { Messages } from "@/utils/msg";
+import { useRouter } from "next/navigation";
+
+interface PostElement {
+  content: string;
+  type: string;
+}
 
 const Post: React.FC = () => {
   const today = new Date();
@@ -23,8 +32,9 @@ const Post: React.FC = () => {
   const [textCount, setTextCount] = useState<number>(0);
   const [tempDiary, setTempDiary] = useState<string>("");
   const [toast, setToast] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(false);
+  const router = useRouter();
 
-  // toast 추가 (입력해주세요)
   /** 임시저장 함수 */
   const saveTemp = () => {
     setToast(true);
@@ -41,6 +51,11 @@ const Post: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextCount(e.target.value.length);
     setTempDiary(e.target.value);
+  };
+
+  /** 체크박스 값 감지 */
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
   };
 
   useEffect(() => {
@@ -60,6 +75,24 @@ const Post: React.FC = () => {
     }
   }, []);
 
+  /** 다이어리 저장 쿼리 */
+  const savePost = useMutation({
+    mutationKey: ["post"],
+    mutationFn: () =>
+      saveData({ content: tempDiary, type: checked ? "PUBLIC" : "PRIVATE" })
+        .then((value) => {
+          sessionStorage.setItem("presentCardInfo", value);
+          router.push("/card?info=present");
+        })
+        .catch((e) => alert(e)),
+  });
+
+  /** 저장 버튼 눌렀을 때 작동하는 함수 */
+  const handleSave = () => {
+    if (tempDiary.trim().length === 0) {
+      setToast(true);
+    } else savePost.mutate();
+  };
   return (
     <main className={styles.post}>
       <h1>오늘의 일기를 작성해주세요</h1>
@@ -73,19 +106,30 @@ const Post: React.FC = () => {
       <div className={styles.temperary}>
         {toast &&
           (tempDiary.trim().length === 0 ? (
-            <Toast setToast={setToast} text="입력해주세요." />
+            <Toast setToast={setToast} text={Messages.DIARY_POST_NO_CONTENT} />
           ) : (
-            <Toast setToast={setToast} text="성공적으로 임시저장되었어요." />
+            <Toast
+              setToast={setToast}
+              text={Messages.DIARY_TEMPORARY_SAVE_SUCCESS}
+            />
           ))}
         <button onClick={saveTemp}>임시저장</button>
         <div>{textCount}/600자</div>
       </div>
       <hr />
       <div className={styles.checkbox}>
-        <input type="checkbox" name="public" />
+        <input
+          type="checkbox"
+          name="public"
+          id="public"
+          checked={checked}
+          onChange={handleCheckboxChange}
+        />
         <label htmlFor="public">사연으로 공개할래요</label>
       </div>
-      <button className={styles.save}>저장하기</button>
+      <button className={styles.save} onClick={handleSave}>
+        저장하기
+      </button>
     </main>
   );
 };

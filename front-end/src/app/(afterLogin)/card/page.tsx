@@ -33,6 +33,11 @@ const ViewCard: React.FC = () => {
   return (
     card && (
       <main className={styles.main}>
+        {searchParams.get("info") === "present" ? (
+          <div>오늘의 감정을 나타내는 카드는...</div>
+        ) : (
+          ""
+        )}
         <div>{card.name}</div>
         <div className={`${styles.card} ${isBack ? styles.isRight : ""}`}>
           <img
@@ -56,7 +61,7 @@ const ViewCard: React.FC = () => {
           </div>
         </div>
         <div className={styles.meaning}>{card.right}</div>
-        {searchParams.get("isPast") === "past" ? (
+        {searchParams.get("info") === "past" ? (
           ""
         ) : (
           <button
