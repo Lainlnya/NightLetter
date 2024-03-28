@@ -23,7 +23,8 @@ export default function CalendarComponent() {
         value={value}
         // minDetail="month"
         // maxDetail="month"
-        navigationLabel={null}
+        prev2Label={null}
+        next2Label={null}
         showNeighboringMonth={false}
         formatDay={(locale, date) => moment(date).format("DD")}
       />

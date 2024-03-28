@@ -68,7 +68,7 @@ const Post: React.FC = () => {
         value={tempDiary}
         onChange={handleChange}
         placeholder="일기를 작성해주세요"
-        maxLength="600"
+        maxLength={600}
       ></textarea>
       <div className={styles.temperary}>
         {toast &&
