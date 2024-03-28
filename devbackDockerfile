@@ -6,7 +6,7 @@ USER root
 RUN chown -R gradle /home/gradle/src/
 
 COPY ./back-end .
-RUN gradlew clean build
+RUN ./gradlew clean build
 
 FROM eclipse-temurin:17-jdk-alpine
 
