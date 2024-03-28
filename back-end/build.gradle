@@ -69,11 +69,6 @@ clean {
     delete file(generated)
 }
 
-compileQuerydsl.doFirst {
-    if(file(querydslDir).exists())
-        delete(file(generated))
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }
