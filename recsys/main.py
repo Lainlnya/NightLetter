@@ -19,11 +19,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-embedder = SentenceTransformer(os.getcwd()+'\kosbert-klue-bert-base')
+embedder = SentenceTransformer(os.getcwd() + '\kosbert-klue-bert-base')
+
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
 
 @app.get("/diaries/recommend")
 def get_rec(content: str):
@@ -37,17 +39,17 @@ def get_rec(content: str):
     tree.load('tree.ann')
 
     return {"vector": vector.tolist(),
-           "diariesId" : tree.get_nns_by_vector(vector.tolist(), 10)}
+            "diariesId": tree.get_nns_by_vector(vector.tolist(), 10)}
 
-@app.post("/diaryies/tree")
+
+@app.post("/diaries/tree")
 def build_model():
-
-    public_lst=[]
+    public_lst = []
 
     # data 읽어서 model build
     diarys = session.query(DiaryTable).all()
     for diary in diarys:
-        if (diary.type=="PUBLIC"):
+        if (diary.type == "PUBLIC"):
             public_lst.append([diary.diary_id, diary.vector])
 
     tree = AnnoyIndex(768, 'angular')
@@ -65,19 +67,14 @@ def build_model():
 
     return {"message": "success tree building"}
 
-@app.post("/tarot/init")
-def get_deck(tarots: List[model.Tarot]):
 
+@app.post("/tarot/init", response_model=model.TarotVectors)
+def get_deck(tarots: model.TarotInput):
     card_lst = []
-
-    for tarot in tarots:
-        card={}
-        card['id'] = tarot.id
-        card['keywords'] = []
-        for keyword in tarot.keywords:
-            # 타로 카드 키워드 벡터화
-            card['keywords'].append(embedder.encode(keyword.strip()))
-
+    for tarot in tarots.tarots:
+        card = {'id': tarot.id, 'keywords': []}
+        for keyword in tarot.keywords.split(','):
+            card['keywords'].append(embedder.encode(keyword.strip()).tolist())
         card_lst.append(card)
 
-    return {"tarot_vectors":card_lst}
+    return model.TarotVectors(tarots=card_lst)

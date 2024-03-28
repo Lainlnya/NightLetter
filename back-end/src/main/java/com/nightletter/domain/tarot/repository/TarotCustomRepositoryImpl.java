@@ -4,7 +4,7 @@ import static com.nightletter.domain.tarot.entity.QTarot.*;
 
 import java.util.List;
 
-import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.dto.TarotKeyword;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -16,8 +16,8 @@ public class TarotCustomRepositoryImpl implements TarotCustomRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<TarotDto> getAllTarots() {
-		return queryFactory.select(Projections.constructor(TarotDto.class,
+	public List<TarotKeyword> getAllTarots() {
+		return queryFactory.select(Projections.constructor(TarotKeyword.class,
 				tarot.id,
 				tarot.name,
 				tarot.imgUrl,

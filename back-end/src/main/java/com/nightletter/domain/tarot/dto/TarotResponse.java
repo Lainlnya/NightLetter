@@ -1,5 +1,7 @@
 package com.nightletter.domain.tarot.dto;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TarotResponse {
 	int id;
-	String vector;
+	List<List<Double>> keywords;
 }
