@@ -1,4 +1,4 @@
-FROM gradle:jdk17-alpine AS BUILD
+FROM gradle:8.7-jdk17-alpine AS BUILD
 
 WORKDIR /home/gradle/src/
 
