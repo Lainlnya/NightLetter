@@ -26,7 +26,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://letter-for.me:3306/letterforme
+    url: jdbc:mysql://localhost:3306/letterforme
     #    url: jdbc:mysql://localhost:3306/letter4u?useSSL=false&characterEncoding=UTF-8&serverTimezone=UT
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
