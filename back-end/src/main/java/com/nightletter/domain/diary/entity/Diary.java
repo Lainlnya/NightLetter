@@ -1,33 +1,19 @@
 package com.nightletter.domain.diary.entity;
 
-import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.springframework.data.annotation.CreatedBy;
-
 import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
-
 import lombok.Getter;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.data.annotation.CreatedBy;
-
-import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.tarot.entity.Tarot;
-import com.nightletter.global.common.BaseEntity;
-
 import jakarta.annotation.Nullable;
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,8 +22,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Builder
@@ -76,19 +60,19 @@ public class Diary extends BaseTimeEntity {
 	}
 
 	public DiaryResponse toDiaryResponse() {
-		Tarot pastCard = null;
-		Tarot nowCard = null;
-		Tarot futureCard = null;
+		TarotDto pastCard = null;
+		TarotDto nowCard = null;
+		TarotDto futureCard = null;
 
 		for (DiaryTarot tarot : this.diaryTarots) {
 			DiaryTarotType type = tarot.getType();
 
 			if (type.equals(DiaryTarotType.PAST)) {
-				pastCard = tarot.getTarot();
+				pastCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
 			} else if (type.equals(DiaryTarotType.NOW)) {
-				nowCard = tarot.getTarot();
+				nowCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
 			} else if (type.equals(DiaryTarotType.FUTURE)) {
-				futureCard = tarot.getTarot();
+				futureCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
 			}
 		}
 
@@ -104,14 +88,5 @@ public class Diary extends BaseTimeEntity {
 				.date(this.date)
 				.build();
 	}
-
-	//	public DiaryResponse toDto() {
-	//		return DiaryResponse.builder()
-	//			.diaryId(this.writer.getId())
-	//			.content(this.content)
-	//			.type(this.type)
-	//			.gptComment(this.gptComment)
-	//			.build();
-	//	}
 }
 

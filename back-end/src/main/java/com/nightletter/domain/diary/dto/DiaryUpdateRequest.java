@@ -28,7 +28,7 @@ public class DiaryUpdateRequest {
 		return Diary.builder()
 			.diaryId(diaryId)
 			.content(this.content)
-			.type(this.diaryType)
+			.type(this.type)
 			.build();
 	}
 }

@@ -1,24 +1,13 @@
 package com.nightletter.domain.diary.api;
 
 import com.nightletter.domain.diary.dto.*;
-import com.nightletter.domain.diary.entity.DiaryType;
-import com.nightletter.global.common.ResponseDto;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryCreateResponse;
-import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.service.DiaryService;
 
 import lombok.RequiredArgsConstructor;
@@ -45,8 +34,6 @@ public class DiaryController {
 
 		Optional<DiaryResponse> diary =
 				diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
-
-//		System.out.println(diary.get().toString());
 
 		return diary.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());

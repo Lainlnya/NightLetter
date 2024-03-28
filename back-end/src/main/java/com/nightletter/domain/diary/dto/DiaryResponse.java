@@ -3,19 +3,11 @@ package com.nightletter.domain.diary.dto;
 import java.time.LocalDate;
 
 import com.nightletter.domain.diary.entity.DiaryOpenType;
-import com.nightletter.domain.tarot.entity.Tarot;
-
+import com.nightletter.domain.tarot.dto.TarotDto;
 import lombok.Builder;
 import lombok.Data;
 
 import com.nightletter.domain.diary.entity.*;
-
-import com.nightletter.domain.member.entity.Member;
-import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class DiaryResponse {
@@ -25,14 +17,14 @@ public class DiaryResponse {
 	private DiaryOpenType type;
 	private String content;
 	private String gptComment;
-	private TarotResponse pastCard;
-	private TarotResponse nowCard;
-	private TarotResponse futureCard;
+	private TarotDto pastCard;
+	private TarotDto nowCard;
+	private TarotDto futureCard;
 	private LocalDate date;
 
 	@Builder
-	public DiaryResponse(Integer writerId, Long diaryId, String content, DiaryType type, String gptComment,
-						 TarotResponse pastCard, TarotResponse nowCard, TarotResponse futureCard, LocalDate date) {
+	public DiaryResponse(Integer writerId, Long diaryId, String content, DiaryOpenType type, String gptComment,
+						 TarotDto pastCard, TarotDto nowCard, TarotDto futureCard, LocalDate date) {
 		this.writerId = writerId;
 		this.diaryId = diaryId;
 		this.type = type;
@@ -45,20 +37,22 @@ public class DiaryResponse {
 	}
 
 	public static DiaryResponse of(Diary diary) {
-		TarotResponse past = null;
-		TarotResponse curr = null;
-		TarotResponse future = null;
+		TarotDto past = null;
+		TarotDto curr = null;
+		TarotDto future = null;
 
 		for (DiaryTarot diaryTarot : diary.getDiaryTarots()) {
-			TarotResponse tarot = TarotResponse.of(diaryTarot.getTarot(), diaryTarot.getDirection());
+			if (diaryTarot.getTarot() == null) continue;
 
-			if (diaryTarot.getType() == TarotType.PAST) {
+			TarotDto tarot = TarotDto.of(diaryTarot.getTarot(), diaryTarot.getDirection());
+
+			if (diaryTarot.getType() == DiaryTarotType.PAST) {
 				past = tarot;
 			}
-			if (diaryTarot.getType() == TarotType.NOW) {
+			if (diaryTarot.getType() == DiaryTarotType.NOW) {
 				curr = tarot;
 			}
-			if (diaryTarot.getType() == TarotType.FUTURE) {
+			if (diaryTarot.getType() == DiaryTarotType.FUTURE) {
 				future = tarot;
 			}
 			System.out.println(tarot);

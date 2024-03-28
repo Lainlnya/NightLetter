@@ -1,9 +1,6 @@
 package com.nightletter.domain.diary.dto;
 
 import java.time.LocalDate;
-
-import com.nightletter.domain.tarot.entity.Tarot;
-
 import lombok.Data;
 
 @Data

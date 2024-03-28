@@ -1,14 +1,9 @@
 package com.nightletter.domain.diary.service;
 
 import com.nightletter.domain.diary.dto.*;
-import com.nightletter.domain.diary.entity.*;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import com.nightletter.global.common.ResponseDto;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +51,8 @@ public class DiaryServiceImpl implements DiaryService {
 		DiaryCreateResponse temp = DiaryCreateResponse.createTemp();
 		log.info(" create temp file : {}", temp);
 
+		diaryRepository.save(diaryRequest.toEntity(getCurrentMember()));
+
 		// Mono<JSONArray> responseMono = webClient.post()
 		// 	.uri("/get-embedding")
 		// 	.body(BodyInserters.fromValue(Map.of("query", diaryRequest.getContent())))
@@ -76,17 +73,6 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Optional<Diary> updateDiaryDisclosure(Long diaryId, DiaryOpenType diaryOpenType) {
-		Diary diary = null;
-
-		try {
-			diary = diaryRepository.getReferenceById(diaryId);
-			return Optional.of(diary.modifyDiaryDisclosure(diaryOpenType));
-	public Optional<Diary> createDiary(DiaryCreateRequest diaryCreateRequest) {
-		return Optional.of(diaryRepository.save(diaryCreateRequest.toEntity(getCurrentMember())));
-	}
-
-	@Override
 	public Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request) {
 
 		try {
@@ -94,15 +80,10 @@ public class DiaryServiceImpl implements DiaryService {
 
 			Diary diary = diaryRepository.getReferenceById(request.getDiaryId());
 
-			diary.modifyDiaryDisclosure(request.getDiaryType());
+			diary.modifyDiaryDisclosure(request.getType());
 
 			return Optional.of(DiaryResponse.of(diaryRepository.save(diary)));
-//			long res = diaryRepository.updateDiaryType(request.getDiaryId(), request.getDiaryType())
 
-//			if (res == 0)
-//				return Optional.empty();
-
-//			return Optional.of(DiaryResponse.of(diaryRepository.findDiaryByDiaryId(request.getDiaryId())));
 		} catch (Exception e) {
 			log.info("Error Occured: " + e.toString());
 		}
@@ -162,7 +143,6 @@ public class DiaryServiceImpl implements DiaryService {
 						.message("Diary Deleted Successfully.")
 						.build());
 	}
-
 
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
