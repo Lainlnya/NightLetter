@@ -1,1 +1,1 @@
-export const DRAG_BUFFER = 100;
+export const DRAG_BUFFER = 30;

@@ -14,9 +14,11 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <RQProvider>
-        <body>{children}</body>
-      </RQProvider>
+      <body>
+        <RQProvider>
+          {children}
+        </RQProvider>
+      </body>
     </html>
   );
 }
