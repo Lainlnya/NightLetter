@@ -10,6 +10,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	Member findMemberByOAuth2Id(String OAuth2Id);
 
-    Member findById(Long currentMemberId);
+	Member findById(Long currentMemberId);
 }
 
