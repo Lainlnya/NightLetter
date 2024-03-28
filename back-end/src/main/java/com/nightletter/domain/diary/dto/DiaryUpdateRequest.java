@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryType;
+import com.nightletter.domain.diary.entity.DiaryOpenType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import lombok.ToString;
 public class DiaryUpdateRequest {
 	private Long diaryId;
 	private String content;
-	private DiaryType type;
+	private DiaryOpenType type;
 
 	public Diary toEntity() {
 		LocalDate today = LocalDate.now();

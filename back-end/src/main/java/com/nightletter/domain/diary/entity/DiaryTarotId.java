@@ -14,18 +14,20 @@ public class DiaryTarotId implements Serializable {
     private Long diaryId;
     private Integer tarotId;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || this.getClass() != obj.getClass())
+			return false;
 
-        DiaryTarotId other = (DiaryTarotId) obj;
+		DiaryTarotId other = (DiaryTarotId)obj;
 
-        return this.diaryId.equals(other.diaryId) && this.tarotId.equals(other.tarotId);
-    }
+		return this.diaryId.equals(other.diaryId) && this.tarotId.equals(other.tarotId);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.diaryId, this.tarotId);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.diaryId, this.tarotId);
+	}
 }

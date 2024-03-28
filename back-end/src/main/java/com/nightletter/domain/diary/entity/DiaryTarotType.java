@@ -1,5 +1,5 @@
 package com.nightletter.domain.diary.entity;
 
-public enum DiaryType {
-	PUBLIC, PRIVATE
+public enum DiaryTarotType {
+	PAST, NOW, FUTURE
 }

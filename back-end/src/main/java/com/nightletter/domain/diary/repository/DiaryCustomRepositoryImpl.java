@@ -8,10 +8,18 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.QDiary;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import lombok.RequiredArgsConstructor;
+
 @RequiredArgsConstructor
 public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 
-    private final JPAQueryFactory queryFactory;
+	private final JPAQueryFactory queryFactory;
 
     @Override
     public List<Diary> findDiariesByMemberId(Integer memberId, LocalDate sttDate, LocalDate endDate) {
@@ -22,6 +30,6 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
                         .and(diary.date.between(sttDate, endDate)))
                 .fetch();
 
-        return null;
+        return diaries;
     }
 }

@@ -1,19 +1,19 @@
 package com.nightletter.domain.diary.dto;
 
-import com.nightletter.domain.diary.entity.DiaryType;
+import java.time.LocalDate;
 
-import com.nightletter.domain.diary.entity.Tarot;
+import com.nightletter.domain.diary.entity.DiaryOpenType;
+import com.nightletter.domain.tarot.entity.Tarot;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class DiaryResponse {
 
 	private Integer writerId;
 	private Long diaryId;
-	private DiaryType type;
+	private DiaryOpenType type;
 	private String content;
 	private String gptComment;
 	private Tarot pastCard;
