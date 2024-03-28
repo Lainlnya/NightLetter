@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import styles from './mainPage.module.scss';
-import alarm from '../../../../public/Icons/alarm_icon.svg';
-import calender from '../../../../public/Icons/calender_icon.svg';
-import useStore from '@/store/date';
-import CardSlider from './CardSlider';
-import { Messages } from '@/utils/msg';
-import { useEffect, useRef, useState } from 'react';
-import CalendarComponent from '../diaries/Calendar';
+import Image from "next/image";
+import styles from "./mainPage.module.scss";
+import alarm from "../../../../public/Icons/alarm_icon.svg";
+import calender from "../../../../public/Icons/calender_icon.svg";
+import useStore from "@/store/date";
+import CardSlider from "./CardSlider";
+import { Messages } from "@/utils/msg";
+import { useEffect, useRef, useState } from "react";
+import CalendarComponent from "../diaries/Calendar";
 
 // TODO:
 // 1.서버 데이터 받아서 날짜 동적으로 수정
@@ -19,22 +19,28 @@ import CalendarComponent from '../diaries/Calendar';
 export default function Home() {
   const { date } = useStore();
   const [isSeen, setIsSeen] = useState<boolean>(false);
-  const calendarRef = useRef(null);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // useRef를 통해 안전하게 DOM요소에 접근이 가능
-    function handleTouchOutside(e) {
-      if (calendarRef.current && !calendarRef.current.contains(e.target)) {
+    function handleTouchOutside(e: TouchEvent) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target as Node)
+      ) {
+        setIsClicked(true);
         setIsSeen(false);
       }
     }
+
     // 클릭 이벤트 리스너 추가
-    document.addEventListener('touchstart', handleTouchOutside);
+    document.addEventListener("touchstart", handleTouchOutside);
     return () => {
       // 언마운트 시 이벤트 리스너 제거
-      document.removeEventListener('touchstart', handleTouchOutside);
+      document.removeEventListener("touchstart", handleTouchOutside);
     };
-  }, [calendarRef]);
+  }, [calendarRef, isClicked]);
 
   return (
     <>
@@ -42,13 +48,19 @@ export default function Home() {
         <div className={styles.header_icons}>
           <Image
             src={alarm}
-            alt='alarm'
+            alt="alarm"
             width={24}
             height={24}
             className={styles.header_icon}
             onClick={() => setIsSeen(true)}
           />
-          <Image src={calender} alt='calender' width={24} height={24} className={styles.header_icon} />
+          <Image
+            src={calender}
+            alt="calender"
+            width={24}
+            height={24}
+            className={styles.header_icon}
+          />
           {isSeen && (
             <div ref={calendarRef}>
               <CalendarComponent />
@@ -61,8 +73,13 @@ export default function Home() {
       </header>
       <section className={styles.section}>
         <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-        <CardSlider />
+        <CardSlider
+          isSeen={isSeen}
+          isClicked={isClicked}
+          setIsClicked={setIsClicked}
+        />
       </section>
+      {isSeen && <div className={styles.darken}></div>}
     </>
   );
 }
