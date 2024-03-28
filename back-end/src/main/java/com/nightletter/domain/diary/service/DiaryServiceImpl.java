@@ -2,18 +2,15 @@ package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import net.minidev.json.JSONArray;
-
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.DiaryCreateResponse;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryRequestDirection;
@@ -24,7 +21,6 @@ import com.nightletter.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -37,24 +33,28 @@ public class DiaryServiceImpl implements DiaryService {
 	private final MemberRepository memberRepository;
 
 	@Override
-	public Optional<Diary> createDiary(DiaryCreateRequest diaryRequest) {
-		Mono<JSONArray> responseMono = webClient.post()
-			.uri("/get-embedding")
-			.body(BodyInserters.fromValue(Map.of("query", diaryRequest.getContent())))
-			.retrieve()
-			.bodyToMono(JSONArray.class);
+	public Optional<DiaryCreateResponse> createDiary(DiaryCreateRequest diaryRequest) {
 
-		responseMono.subscribe(
-			response -> {
-				System.out.println("Response from FastAPI2: " + response);
-				diaryRequest.setVector(response.toString());
-				diaryRepository.save(diaryRequest.toEntity());
-			},
-			error -> {
-				System.err.println("Error occurred: " + error.getMessage());
-			}
-		);
-		return null;
+		DiaryCreateResponse temp = DiaryCreateResponse.createTemp();
+		log.info(" create temp file : {}", temp);
+
+		// Mono<JSONArray> responseMono = webClient.post()
+		// 	.uri("/get-embedding")
+		// 	.body(BodyInserters.fromValue(Map.of("query", diaryRequest.getContent())))
+		// 	.retrieve()
+		// 	.bodyToMono(JSONArray.class);
+		//
+		// responseMono.subscribe(
+		// 	response -> {
+		// 		System.out.println("Response from FastAPI2: " + response);
+		// 		diaryRequest.setVector(response.toString());
+		// 		diaryRepository.save(diaryRequest.toEntity());
+		// 	},
+		// 	error -> {
+		// 		System.err.println("Error occurred: " + error.getMessage());
+		// 	}
+		// );
+		return Optional.of(temp);
 	}
 
 	@Override
