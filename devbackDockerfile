@@ -1,19 +1,15 @@
-FROM openjdk:17 as build
+FROM gradle:jdk17-alpine AS BUILD
+WORKDIR /home/gradle/src/
 
-WORKDIR /app
+COPY --chown=gradle:gradle . /home/gradle/src/
+USER root
+RUN chown -R gradle /home/gradle/src/
 
 COPY ./back-end .
+RUN gradle clean bootJar
 
-RUN chmod +x ./gradlew
+FROM eclipse-temurin:17-jdk-alpine
 
-RUN apt-get update && apt-get install -y findutils
+COPY --from=BUILD /home/gradle/src//build/libs/*.jar  /app.jar
 
-RUN ./gradlew build
-
-FROM openjdk:17
-
-WORKDIR /app
-
-COPY --from=build /app/build/libs/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]
