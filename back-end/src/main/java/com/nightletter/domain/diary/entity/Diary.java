@@ -32,11 +32,13 @@ public class Diary extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id", referencedColumnName = "member_id", updatable = false)
 	private Member writer;
+	@Column(length = 5000)
 	private String content;
 	// 날짜 필요 (CreatedAt과 다른 컬럼)
 	private LocalDate date;
 	@Enumerated(EnumType.STRING)
 	private DiaryOpenType type;
+	@Column(length = 3000)
 	private String gptComment;
 	@OneToMany(mappedBy = "diary")
 	private List<DiaryTarot> diaryTarots;
@@ -83,14 +85,5 @@ public class Diary extends BaseEntity {
 			.date(this.date)
 			.build();
 	}
-
-	//	public DiaryResponse toDto() {
-	//		return DiaryResponse.builder()
-	//			.diaryId(this.writer.getId())
-	//			.content(this.content)
-	//			.type(this.type)
-	//			.gptComment(this.gptComment)
-	//			.build();
-	//	}
 }
 
