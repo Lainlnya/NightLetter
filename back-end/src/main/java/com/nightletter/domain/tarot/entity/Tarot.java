@@ -31,6 +31,7 @@ public class Tarot {
 	@NotNull
 	private String keyword;
 	@NotNull
+	@Column(length = 1500)
 	private String description;
 	@NotNull
 	@Enumerated(EnumType.STRING)
