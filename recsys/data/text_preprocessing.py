@@ -39,9 +39,11 @@ def clean_str(text):
 
 def preprocessing(text):
     start = time.time()
-    text = clean(text)
-    text = clean_str(text)
-    text = spacing(text.replace(" ", ''))
+
+    text = clean(text)  # 특수기호 처리
+    text = clean_str(text)  # 기타 전처리
+    text = spacing(text.replace(" ", ''))  # 잘못된 띄어쓰기 처리
+
     end = time.time()
     print(f"finish preprocessing: {end-start:.5f} sec")
 

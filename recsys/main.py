@@ -25,13 +25,14 @@ embedder = SentenceTransformer(os.getcwd()+'\kosbert-klue-bert-base')
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/diaries/recommand")
+@app.get("/diaries/recommend")
 def get_rec(content: str):
-
+    # 자연어 전처리
     content = text_preprocessing.preprocessing(content)
-    print(content)
+    # 벡터화
     vector = embedder.encode(content)
 
+    # 유사한 일기 추천받기
     tree = AnnoyIndex(768, 'angular')
     tree.load('tree.ann')
 
@@ -42,8 +43,9 @@ def get_rec(content: str):
 def build_model():
 
     public_lst=[]
-    diarys = session.query(DiaryTable).all()
 
+    # data 읽어서 model build
+    diarys = session.query(DiaryTable).all()
     for diary in diarys:
         if (diary.type=="PUBLIC"):
             public_lst.append([diary.diary_id, diary.vector])
@@ -56,10 +58,10 @@ def build_model():
 
     file_path = 'tree.ann'
     if os.path.exists(file_path):
-        print("이미 있는 트리 지우기")
+        print("기존 트리 지우기")
         os.remove(file_path)
     tree.save('tree.ann')
-    print("트리 만들기")
+    print("새로운 트리 저장하기")
 
     return {"message": "success tree building"}
 
@@ -73,6 +75,7 @@ def get_deck(tarots: List[model.Tarot]):
         card['id'] = tarot.id
         card['keywords'] = []
         for keyword in tarot.keywords:
+            # 타로 카드 키워드 벡터화
             card['keywords'].append(embedder.encode(keyword.strip()))
 
         card_lst.append(card)
