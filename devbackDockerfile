@@ -1,12 +1,10 @@
 FROM gradle:jdk17-alpine AS BUILD
+
 WORKDIR /home/gradle/src/
 
-COPY --chown=gradle:gradle . /home/gradle/src/
-USER root
-RUN chown -R gradle /home/gradle/src/
+COPY --chown=gradle:gradle ./back-end .
 
-COPY ./back-end .
-RUN chmod +x gradle clean build
+RUN ./gradlew clean build --no-daemon
 
 FROM eclipse-temurin:17-jdk-alpine
 
