@@ -1,6 +1,9 @@
 package com.nightletter.domain.tarot.entity;
 
+import java.util.List;
+
 import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.dto.TarotKeyword;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,17 +36,21 @@ public class Tarot {
 	@Enumerated(EnumType.STRING)
 	private TarotDirection dir;
 	@Transient
-	private String vector;
+	private List<List<Double>> vector;
 
 	protected Tarot() {
 	}
 
-	public Tarot(TarotDto tarotDto, String vector) {
-		this.name = tarotDto.name();
-		this.imgUrl = tarotDto.imgUrl();
-		this.keyword = tarotDto.keyword();
-		this.description = tarotDto.description();
-		this.dir = tarotDto.dir();
+	public TarotKeyword toKeywordDto(){
+		return new TarotKeyword(id, keyword);
+	}
+
+	public TarotDto toDto(){
+		return new TarotDto(id, name, imgUrl, keyword, description, dir, vector);
+	}
+
+	public Tarot setVector(List<List<Double>> vector) {
 		this.vector = vector;
+		return this;
 	}
 }
