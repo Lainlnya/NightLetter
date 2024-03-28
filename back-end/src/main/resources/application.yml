@@ -2,6 +2,7 @@ server:
   port: 8081
 
 spring:
+
   security:
     oauth2:
       client:
@@ -25,14 +26,30 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://letter-for.me:3306/letterforme
-    url: jdbc:mysql://localhost:3306/letter4u?useSSL=false&characterEncoding=UTF-8&serverTimezone=UT
+    url: jdbc:mysql://letter-for.me:3306/letterforme
+    #    url: jdbc:mysql://localhost:3306/letter4u?useSSL=false&characterEncoding=UTF-8&serverTimezone=UT
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
+    properties:
+      hibernate:
+        dialect=org:
+          hibernate:
+            dialect:
+              MySQL5Dialect:
+        transaction:
+          jta:
+            platform=org:
+              hibernate:
+                service:
+                  jta:
+                    platform:
+                      internal:
+                        JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
+
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
