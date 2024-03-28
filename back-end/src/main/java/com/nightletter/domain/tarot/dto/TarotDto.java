@@ -6,7 +6,6 @@ import com.nightletter.domain.tarot.entity.TarotDirection;
 
 import lombok.Getter;
 
-@Getter
 public record TarotDto(
 	Integer id,
 	String name,
