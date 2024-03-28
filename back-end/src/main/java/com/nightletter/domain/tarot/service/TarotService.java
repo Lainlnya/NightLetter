@@ -28,22 +28,22 @@ public class TarotService {
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
 
-	@PostConstruct
-	private void getTarotEmbedded() {
-		List<Tarot> allTarots = tarotRepository.findAll();
-		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
-		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
-
-		TarotListResponse tarotVectors = webClient.post()
-			.uri("/tarot/init")
-			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
-			.retrieve()
-			.bodyToMono(TarotListResponse.class)
-			.block();
-
-		tarotVectors.getTarots().forEach(tarotVec -> {
-			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setVector(tarotVec.getKeywords());
-			deck.put(tarotVec.getId() , tarot.toDto());
-		});
-	}
+//	@PostConstruct
+//	private void getTarotEmbedded() {
+//		List<Tarot> allTarots = tarotRepository.findAll();
+//		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
+//		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
+//
+//		TarotListResponse tarotVectors = webClient.post()
+//			.uri("/tarot/init")
+//			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
+//			.retrieve()
+//			.bodyToMono(TarotListResponse.class)
+//			.block();
+//
+//		tarotVectors.getTarots().forEach(tarotVec -> {
+//			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setVector(tarotVec.getKeywords());
+//			deck.put(tarotVec.getId() , tarot.toDto());
+//		});
+//	}
 }
