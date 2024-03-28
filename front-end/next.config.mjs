@@ -8,19 +8,11 @@ const withPWA = withPWAInit({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  async rewrites() {
-    return [
-      {
-        source: "/:path*",
-        destination: `http://letter-for.me/:path*`,
-      },
-    ];
-  },
   async redirects() {
     return [
       {
         source: "/auth/oauth-response",
-        destination: `http://letter-for.me/tarot`,
+        destination: `https://letter-for.me/tarot`,
         permanent: true,
       },
     ];
