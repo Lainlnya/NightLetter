@@ -4,7 +4,7 @@ import styles from "./login.module.scss";
 
 const Login = () => {
   const handleClick = () => {
-    window.location.href = `https://letter-for.me/api/v1/auth/oauth2/kakao`;
+    window.location.href = `https://dev.letter-for.me/api/v1/auth/oauth2/kakao`;
   };
 
   return (
