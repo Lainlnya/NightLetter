@@ -26,7 +26,6 @@ spring:
       response-uri:
         kakao: ${KAKAO_TOKEN_RESPONSE_URI}
 
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_URL}
