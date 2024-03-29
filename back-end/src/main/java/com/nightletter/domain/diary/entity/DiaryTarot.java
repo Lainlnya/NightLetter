@@ -12,7 +12,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 
 @Getter
@@ -27,7 +26,9 @@ public class DiaryTarot extends BaseTimeEntity {
 	@JoinColumn(name = "diary_id")
 	private Diary diary;
 
-	@OneToOne
+	@MapsId("tarotId")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tarot_id")
 	private Tarot tarot;
 
 	@Enumerated(EnumType.STRING)

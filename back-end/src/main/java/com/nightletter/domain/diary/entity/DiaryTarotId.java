@@ -1,18 +1,18 @@
 package com.nightletter.domain.diary.entity;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor
 @Embeddable
 public class DiaryTarotId implements Serializable {
-	private Long diaryId;
-	private Long tarotId;
+    private Long diaryId;
+    private Integer tarotId;
 
 	@Override
 	public boolean equals(Object obj) {

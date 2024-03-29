@@ -47,5 +47,4 @@ public class DiaryCreateResponse {
 
 		return temp;
 	}
-
 }

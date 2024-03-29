@@ -1,17 +1,19 @@
 package com.nightletter.domain.diary.entity;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.data.annotation.CreatedBy;
-
+import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.global.common.BaseTimeEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.tarot.entity.Tarot;
-import com.nightletter.global.common.BaseEntity;
-
+import lombok.Getter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,15 +22,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@SQLDelete(sql = "UPDATE Diary SET deleted_at = now() WHERE diary_id = ?")
+@SQLRestriction("deleted_at IS NULL")
 @Entity
-@AttributeOverride(name = "id", column = @Column(name = "diary_id"))
-@SuperBuilder
-public class Diary extends BaseEntity {
-	@CreatedBy
+public class Diary extends BaseTimeEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long diaryId;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id", referencedColumnName = "member_id", updatable = false)
 	private Member writer;
@@ -42,6 +46,7 @@ public class Diary extends BaseEntity {
 	private String gptComment;
 	@OneToMany(mappedBy = "diary")
 	private List<DiaryTarot> diaryTarots;
+	private LocalDateTime deletedAt;
 
 	@Nullable
 	@Column(columnDefinition = "json")
@@ -57,33 +62,33 @@ public class Diary extends BaseEntity {
 	}
 
 	public DiaryResponse toDiaryResponse() {
-		Tarot pastCard = null;
-		Tarot nowCard = null;
-		Tarot futureCard = null;
+		TarotDto pastCard = null;
+		TarotDto nowCard = null;
+		TarotDto futureCard = null;
 
 		for (DiaryTarot tarot : this.diaryTarots) {
 			DiaryTarotType type = tarot.getType();
 
 			if (type.equals(DiaryTarotType.PAST)) {
-				pastCard = tarot.getTarot();
+				pastCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
 			} else if (type.equals(DiaryTarotType.NOW)) {
-				nowCard = tarot.getTarot();
+				nowCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
 			} else if (type.equals(DiaryTarotType.FUTURE)) {
-				futureCard = tarot.getTarot();
+				futureCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
 			}
 		}
 
 		return DiaryResponse.builder()
-			.writerId(this.writer.getId())
-			.diaryId(this.getId())
-			.type(this.type)
-			.content(this.content)
-			.gptComment(this.gptComment)
-			.pastCard(pastCard)
-			.nowCard(nowCard)
-			.futureCard(futureCard)
-			.date(this.date)
-			.build();
+				.writerId(this.writer.getMemberId())
+				.diaryId(this.diaryId)
+				.type(this.type)
+				.content(this.content)
+				.gptComment(this.gptComment)
+				.pastCard(pastCard)
+				.nowCard(nowCard)
+				.futureCard(futureCard)
+				.date(this.date)
+				.build();
 	}
 }
 

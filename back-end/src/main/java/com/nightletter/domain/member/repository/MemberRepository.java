@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.nightletter.domain.member.entity.Member;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+public interface MemberRepository extends JpaRepository<Member, Integer>, MemberCustomRepository{
 
 	Member findMemberByOAuth2Id(String OAuth2Id);
 
-	Member findById(Long currentMemberId);
+    Member findByMemberId(Integer currentMemberId);
 }
 
