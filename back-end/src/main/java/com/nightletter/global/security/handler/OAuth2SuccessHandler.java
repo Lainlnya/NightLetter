@@ -66,11 +66,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		System.out.println(request.getRequestURL().toString());
 
-		if (request.getRequestURL().toString().contains("localhost")) {
-			response.sendRedirect(tokenResponseLocalUrl);
-		}
-		else {
-			response.sendRedirect(tokenResponseUri);
-		}
+		response.sendRedirect(tokenResponseLocalUrl);
+		// if (request.getRequestURL().toString().contains("localhost")) {
+		// }
+		// else {
+		// 	response.sendRedirect(tokenResponseUri);
+		// }
 	}
 }
