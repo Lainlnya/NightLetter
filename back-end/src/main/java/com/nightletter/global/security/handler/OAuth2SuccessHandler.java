@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -20,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+	@Value("${spring.security.provider.response-uri.kakao}")
+	private String tokenResponseUri;
 
 	private final JwtProvider jwtProvider;
 
@@ -45,6 +49,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String token = jwtProvider.create(memberId);
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
-		response.sendRedirect("http://dev.letter-for.me/auth/oauth-response/");
+
+		response.sendRedirect(tokenResponseUri);
 	}
 }
