@@ -12,7 +12,7 @@ const nextConfig = {
     return [
       {
         source: "/auth/oauth-response",
-        destination: `https://letter-for.me/tarot`,
+        destination: `https://dev.letter-for.me/tarot`,
         permanent: true,
       },
     ];
