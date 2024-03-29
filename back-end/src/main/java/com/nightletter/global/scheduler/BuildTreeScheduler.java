@@ -18,27 +18,27 @@ public class BuildTreeScheduler {
 	private final WebClient webClient;
 	private final FastApiConnection connection;
 
-	@Scheduled(cron = "0 0 0/2 * * *")
-	@PostConstruct
-	private void buildTreeSchedule() {
-		connection.isServerAvailable()
-			.subscribe(isAvailable -> {
-			if (isAvailable) {
-				buildTree();
-			} else {
-				log.error("Fast API Server is down. ");
-			}
-		});
-	}
-
-	private void buildTree() {
-		webClient.post()
-			.uri("/diaries/tree")
-			.retrieve()
-			.bodyToMono(String.class)
-			.doOnSuccess(response -> log.info("Response: {}", response))
-			.doOnError(error -> log.error("Error occurred: ", error))
-			.onErrorResume(error -> Mono.empty())
-			.subscribe();
-	}
+	// @Scheduled(cron = "0 0 0/2 * * *")
+	// @PostConstruct
+	// private void buildTreeSchedule() {
+	// 	connection.isServerAvailable()
+	// 		.subscribe(isAvailable -> {
+	// 		if (isAvailable) {
+	// 			buildTree();
+	// 		} else {
+	// 			log.error("Fast API Server is down. ");
+	// 		}
+	// 	});
+	// }
+	//
+	// private void buildTree() {
+	// 	webClient.post()
+	// 		.uri("/diaries/tree")
+	// 		.retrieve()
+	// 		.bodyToMono(String.class)
+	// 		.doOnSuccess(response -> log.info("Response: {}", response))
+	// 		.doOnError(error -> log.error("Error occurred: ", error))
+	// 		.onErrorResume(error -> Mono.empty())
+	// 		.subscribe();
+	// }
 }
