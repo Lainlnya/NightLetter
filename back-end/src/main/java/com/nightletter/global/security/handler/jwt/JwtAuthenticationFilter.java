@@ -86,23 +86,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		Cookie[] cookies = request.getCookies();
 
-	   boolean hasAuthorization = false;
-	   String authorization = request.getHeader("Authorization");
-	   // Authorization 보유하고 있나?
-	   if (! hasAuthorization) return null;
-	   // Bearer 방식인가?
-	   boolean isBearer = authorization.startsWith("Bearer ");
-	   if (! isBearer) return null;
+	   // boolean hasAuthorization = false;
+	   // String authorization = request.getHeader("Authorization");
+	   // // Authorization 보유하고 있나?
+	   // if (! hasAuthorization) return null;
+	   // // Bearer 방식인가?
+	   // boolean isBearer = authorization.startsWith("Bearer ");
+	   // if (! isBearer) return null;
+	   // String accessToken = authorization.substring(7);
+	   String accessToken = null;
 
-	   String accessToken = authorization.substring(7);
-	   // String accessToken = null;
-	   //
-		// for (Cookie cookie : cookies) {
-		// 	if (cookie.getName().equals("access-token")) {
-		// 		accessToken = cookie.getValue();
-		// 		log.info("token type: ACCESS // token : " + accessToken);
-		// 	}
-		// }
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals("access-token")) {
+				accessToken = cookie.getValue();
+				log.info("token type: ACCESS // token : " + accessToken);
+			}
+		}
 
 		return accessToken;
 	}
