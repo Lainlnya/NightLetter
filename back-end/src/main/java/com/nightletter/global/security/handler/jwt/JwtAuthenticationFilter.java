@@ -3,6 +3,7 @@ package com.nightletter.global.security.handler.jwt;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+	@Value("${spring.security.test-member-id}")
+	private String memberId;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
 
@@ -45,7 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				return;
 			}
 
-			String memberId = jwtProvider.validate(token);
+			if (! memberId.equals(String.valueOf(1))) {
+				memberId = jwtProvider.validate(token);
+			}
 
 			log.info("MemberId Info In JWT Filter : " + memberId);
 

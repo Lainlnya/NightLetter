@@ -33,7 +33,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	private static ResponseCookie accessCookie(String token) {
 		return ResponseCookie.from("access-token", token)
 			.maxAge(Duration.of(30, ChronoUnit.HOURS))
-			// .httpOnly(true)
+			.httpOnly(true)
 			.path("/")
 			.sameSite("None")
 			.secure(true)
