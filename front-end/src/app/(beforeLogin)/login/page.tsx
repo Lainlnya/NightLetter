@@ -4,7 +4,7 @@ import styles from "./login.module.scss";
 
 const Login = () => {
   const handleClick = () => {
-    window.location.href = `${process.env.NEXT_API_URL}/auth/oauth2/kakao`;
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/oauth2/kakao`;
   };
 
   return (
