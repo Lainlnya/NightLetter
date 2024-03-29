@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 
+import io.micrometer.common.lang.NonNullApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -107,9 +108,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 		}
 
-		if (accessToken == null){
-			return null;
-		}
 		return accessToken;
 	}
 }
