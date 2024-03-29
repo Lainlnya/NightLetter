@@ -1,14 +1,18 @@
 package com.nightletter.domain.tarot.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.nightletter.domain.tarot.dto.TarotDto;
-import com.nightletter.domain.tarot.dto.TarotListResponse;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import com.nightletter.domain.tarot.dto.TarotKeyword;
+import com.nightletter.domain.tarot.dto.TarotListResponse;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 
@@ -21,24 +25,26 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TarotService {
 
-	private static final Map<Integer, Tarot> Deck = new HashMap<>();
+	private static final Map<Integer, TarotDto> deck = new HashMap<>();
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
 
 	@PostConstruct
 	private void getTarotEmbedded() {
-		List<TarotDto> allTarots = tarotRepository.getAllTarots();
+		List<Tarot> allTarots = tarotRepository.findAll();
+		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
+		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
 
-		TarotListResponse tarots = webClient.post()
+		TarotListResponse tarotVectors = webClient.post()
 			.uri("/tarot/init")
-			.body(BodyInserters.fromValue(Map.of("tarots", allTarots)))
+			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
 			.retrieve()
 			.bodyToMono(TarotListResponse.class)
 			.block();
 
-		tarots.getTarots().forEach(tarotResponse ->
-			Deck.put(tarotResponse.getId(),
-				new Tarot(allTarots.get(tarotResponse.getId() - 1), tarotResponse.getVector()
-				)));
+		tarotVectors.getTarots().forEach(tarotVec -> {
+			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setVector(tarotVec.getKeywords());
+			deck.put(tarotVec.getId() , tarot.toDto());
+		});
 	}
 }

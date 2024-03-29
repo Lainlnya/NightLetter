@@ -25,13 +25,14 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://letter-for.me:3306/letterforme
-#    url: jdbc:mysql://localhost:3306/letter4u?useSSL=false&characterEncoding=UTF-8&serverTimezone=UT
+    url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
     properties:
       hibernate:
+        jdbc:
+          time_zone: Asia/Seoul
         dialect=org:
           hibernate:
             dialect:
