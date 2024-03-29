@@ -25,6 +25,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Value("${spring.security.provider.response-uri.kakao}")
 	private String tokenResponseUri;
 
+	@Value("${spring.security.provider.response-uri.local-kakao}")
+	private String tokenResponseLocalUrl;
+
 	private final JwtProvider jwtProvider;
 
 	private static ResponseCookie accessCookie(String token) {
@@ -50,6 +53,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
 
+		String contextPath = request.getContextPath();
+		String pathInfo = request.getPathInfo();
+
+		System.out.println(request.getRequestURL().toString());
+
+		if (request.getRequestURL().toString().contains("localhost")) {
+			response.sendRedirect(tokenResponseLocalUrl);
+			return;
+		}
 		response.sendRedirect(tokenResponseUri);
 	}
 }
