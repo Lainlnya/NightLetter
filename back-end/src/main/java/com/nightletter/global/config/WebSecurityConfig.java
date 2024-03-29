@@ -1,6 +1,7 @@
 package com.nightletter.global.config;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -70,14 +71,20 @@ public class WebSecurityConfig {
 	@Bean
 	protected CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
-		corsConfiguration.addAllowedOrigin("http://dev.letter-for.me");
-		corsConfiguration.addAllowedOrigin("http://letter-for.me");
-		corsConfiguration.addAllowedOrigin("https://dev.letter-for.me");
-		corsConfiguration.addAllowedOrigin("https://letter-for.me");
+
+		corsConfiguration.setAllowedOrigins(
+				List.of("http://dev.letter-for.me",
+						"https://dev.letter-for.me",
+						"http://letter-for.me",
+						"https://letter-for.me",
+						"http://localhost:3000",
+						"http://localhost:3001",
+						"https://localhost:3000",
+						"https://localhost:3001")
+				);
+
 		corsConfiguration.addAllowedMethod("*");
 		corsConfiguration.addAllowedHeader("*");
-		corsConfiguration.addAllowedOrigin("https://localhost:3001");
-		corsConfiguration.addAllowedOrigin("http://localhost:3000");
 		corsConfiguration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
