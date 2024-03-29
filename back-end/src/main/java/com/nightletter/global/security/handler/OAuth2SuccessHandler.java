@@ -53,20 +53,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
 
-		System.out.println("=====Server Name=====");
-		System.out.println(request.getServerName());
-		System.out.println("=====HEADER NAMES=====");
-		System.out.println(request.getHeaderNames());
-		System.out.println("=====Server SERVLET MAPPING=====");
-		System.out.println(request.getHttpServletMapping());
-		System.out.println("=====PATH INFO=====");
-		System.out.println(request.getPathInfo());
-		System.out.println("=====Servlet Context=====");
 		System.out.println(request.getServletContext().toString());
 
 		System.out.println(request.getRequestURL().toString());
 
 		response.sendRedirect(tokenResponseLocalUrl);
+
+		System.out.println(tokenResponseLocalUrl);
 		// if (request.getRequestURL().toString().contains("localhost")) {
 		// }
 		// else {
