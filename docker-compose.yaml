@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: devbackDockerfile
+    environment:
+      - KAKAO_LOGIN_RESTAPI_KEY
+      - KAKAO_LOGIN_CLIENT_SECRET
+      - MYSQL_USERNAME
+      - MYSQL_PASSWORD
+      - MYSQL_URL
+      - JWT_SECRET_KEY
+      - KAKAO_LOGIN_REDIRECT_URI
+      - KAKAO_TOKEN_RESPONSE_URI
+    networks:
+      - tarot-network
+
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: devfrontDockerfile
+    environment:
+      - NEXT_PUBLIC_MODE
+      - NEXT_URL
+      - NEXT_API_URL
+    networks:
+      - tarot-network
+
+networks:
+  tarot-network:
+    driver: bridge
+    external: true
