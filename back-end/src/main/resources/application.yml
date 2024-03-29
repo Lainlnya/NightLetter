@@ -9,7 +9,7 @@ spring:
           kakao:
             client-id: ${KAKAO_LOGIN_RESTAPI_KEY}
             client-secret: ${KAKAO_LOGIN_CLIENT_SECRET}
-            redirect-uri: "dev.letter-for.me/oauth2/callback/{registrationId}"
+            redirect-uri: ${KAKAO_LOGIN_REDIRECT_URI}
             scope:
               - profile_nickname
               - profile_image
@@ -22,6 +22,9 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+    provider:
+      response-uri:
+        kakao: ${KAKAO_TOKEN_RESPONSE_URI}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -53,7 +56,7 @@ spring:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access:
-    expiration: 180000000 # 30 mins (180000L secs)
+    expiration: 1800000 # 30 mins (180000L secs)
     header: Authorization
   refresh:
     expiration: 604800000 # 1 weeks
