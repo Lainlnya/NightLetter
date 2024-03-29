@@ -18,6 +18,7 @@ import com.nightletter.domain.tarot.repository.TarotRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -28,22 +29,29 @@ public class TarotService {
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
 
-//	@PostConstruct
-//	private void getTarotEmbedded() {
-//		List<Tarot> allTarots = tarotRepository.findAll();
-//		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
-//		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
-//
-//		TarotListResponse tarotVectors = webClient.post()
-//			.uri("/tarot/init")
-//			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
-//			.retrieve()
-//			.bodyToMono(TarotListResponse.class)
-//			.block();
-//
-//		tarotVectors.getTarots().forEach(tarotVec -> {
-//			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setVector(tarotVec.getKeywords());
-//			deck.put(tarotVec.getId() , tarot.toDto());
-//		});
-//	}
+	@PostConstruct
+	private void getTarotEmbedded() {
+		List<Tarot> allTarots = tarotRepository.findAll();
+		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
+		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
+
+		TarotListResponse tarotVectors = webClient.post()
+			.uri("/tarot/init")
+			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
+			.retrieve()
+			.bodyToMono(TarotListResponse.class)
+			.doOnError(error -> log.error("Fast API CONNECT ERROR: {}",error.getMessage()))
+			.onErrorResume(error -> Mono.empty())
+			.block();
+
+		if (tarotVectors == null || tarotVectors.getTarots() == null) {
+			log.error("Tarot vectors response is null or empty.");
+			return;
+		}
+
+		tarotVectors.getTarots().forEach(tarotVec -> {
+			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setVector(tarotVec.getKeywords());
+			deck.put(tarotVec.getId() , tarot.toDto());
+		});
+	}
 }

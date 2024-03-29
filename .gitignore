@@ -3,3 +3,4 @@ node_modules
 back-end/src/main/generated
 
 recsys/env.py
+/recsys/.idea

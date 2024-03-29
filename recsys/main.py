@@ -22,15 +22,21 @@ app.add_middleware(
 embedder = SentenceTransformer(os.getcwd() + '\kosbert-klue-bert-base')
 
 
-@app.get("/")
+@app.get("/health-check")
 async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/diaries/recommend")
-def get_rec(content: str):
+@app.post("/diaries/init")
+async def init(diaryRequest: model.DiaryRequest):
+    content = text_preprocessing.preprocessing(diaryRequest.content)
+    vector = embedder.encode(content)
+    return {"vector": vector.tolist()}
+
+@app.post("/diaries/recommend")
+def get_rec(diaryRequest: model.DiaryRequest):
     # 자연어 전처리
-    content = text_preprocessing.preprocessing(content)
+    content = text_preprocessing.preprocessing(diaryRequest.content)
     # 벡터화
     vector = embedder.encode(content)
 
