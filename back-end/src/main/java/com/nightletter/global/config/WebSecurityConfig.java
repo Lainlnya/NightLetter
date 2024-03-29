@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeHttpRequests(request -> request
-				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
+				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**xr").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2 -> oauth2
@@ -70,7 +70,10 @@ public class WebSecurityConfig {
 	@Bean
 	protected CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
-		corsConfiguration.addAllowedOrigin("*");
+		corsConfiguration.addAllowedOrigin("http://dev.letter-for.me");
+		corsConfiguration.addAllowedOrigin("http://letter-for.me");
+		corsConfiguration.addAllowedOrigin("https://dev.letter-for.me");
+		corsConfiguration.addAllowedOrigin("https://letter-for.me");
 		corsConfiguration.addAllowedMethod("*");
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.addAllowedOrigin("https://localhost:3001");
