@@ -83,15 +83,16 @@ public class WebSecurityConfig {
 					"https://localhost:3001")
 			);
 
-		corsConfiguration.setAllowedHeaders(
-			List.of(
-			"authorization",
-			"Authorization",
-			"content-type",
-			"Content-Type",
-			"x-auth-token"));
+		// corsConfiguration.setAllowedHeaders(
+		// 	List.of(
+		// 	"authorization",
+		// 	"Authorization",
+		// 	"content-type",
+		// 	"Content-Type",
+		// 	"x-auth-token"));
 
 		corsConfiguration.addAllowedMethod("*");
+		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
