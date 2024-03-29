@@ -52,7 +52,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String token = jwtProvider.create(memberId);
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
-
+		response.addHeader("Access-Control-Allow-Origin", "localhost:3000");
+		response.addHeader("Access-Control-Allow-Credentials", "true");
 //		System.out.println(request.getServletContext().toString());
 
 //		System.out.println(request.getRequestURL().toString());
