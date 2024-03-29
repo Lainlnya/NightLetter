@@ -3,7 +3,6 @@ server:
 
 spring:
   security:
-    test-member-id: ${KAKAO_TEST_MEMBER_ID}
     oauth2:
       client:
         registration:
