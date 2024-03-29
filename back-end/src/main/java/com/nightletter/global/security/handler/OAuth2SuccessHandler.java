@@ -46,24 +46,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		HttpServletResponse response,
 		Authentication authentication
 	) throws IOException, ServletException {
-		CustomOAuth2User oAuth2User = (CustomOAuth2User)authentication.getPrincipal();
+		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
 		String memberId = oAuth2User.getName();
 		String token = jwtProvider.create(memberId);
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
 
-		System.out.println(request.getServletContext().toString());
+//		System.out.println(request.getServletContext().toString());
 
-		System.out.println(request.getRequestURL().toString());
+//		System.out.println(request.getRequestURL().toString());
 
-		response.sendRedirect("redirect:" + tokenResponseLocalUrl);
+		response.sendRedirect(tokenResponseLocalUrl);
 
 		System.out.println(tokenResponseLocalUrl);
-		// if (request.getRequestURL().toString().contains("localhost")) {
-		// }
-		// else {
-		// 	response.sendRedirect(tokenResponseUri);
-		// }
 	}
 }
