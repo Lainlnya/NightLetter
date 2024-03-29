@@ -25,7 +25,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 	private static ResponseCookie accessCookie(String token) {
 		return ResponseCookie.from("access-token", token)
-			.maxAge(Duration.of(30, ChronoUnit.MINUTES))
+			.maxAge(Duration.of(30, ChronoUnit.HOURS))
 			.httpOnly(true)
 			.path("/")
 			.sameSite("None")
@@ -45,6 +45,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String token = jwtProvider.create(memberId);
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
-		response.sendRedirect("http://dev.letter-for.me/auth/oauth-response/");
+		response.sendRedirect("http://localhost:3000/auth/oauth-response/");
 	}
 }

@@ -9,7 +9,7 @@ spring:
           kakao:
             client-id: ${KAKAO_LOGIN_RESTAPI_KEY}
             client-secret: ${KAKAO_LOGIN_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirect-uri: "dev.letter-for.me/oauth2/callback/{registrationId}"
             scope:
               - profile_nickname
               - profile_image
@@ -53,7 +53,7 @@ spring:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access:
-    expiration: 1800000 # 30 mins (180000L secs)
+    expiration: 180000000 # 30 mins (180000L secs)
     header: Authorization
   refresh:
     expiration: 604800000 # 1 weeks
