@@ -45,6 +45,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String token = jwtProvider.create(memberId);
 
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
-		response.sendRedirect("http://localhost:3000/auth/oauth-response/");
+		response.sendRedirect("http://dev.letter-for.me/auth/oauth-response/");
 	}
 }
