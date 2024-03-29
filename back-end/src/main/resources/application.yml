@@ -51,7 +51,7 @@ spring:
                       internal:
                         JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
 
 jwt:
