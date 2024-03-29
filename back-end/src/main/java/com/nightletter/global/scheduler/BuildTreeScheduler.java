@@ -14,15 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 public class BuildTreeScheduler {
 	private final WebClient webClient;
 
-	@Scheduled(cron = "0 0 */2 * * *")
-	@PostConstruct
-	public void buildTree() {
-		webClient.post()
-			.uri("/diaries/tree")
-			.retrieve()
-			.bodyToMono(String.class)
-			.doOnSuccess(response -> log.info("Response: {}", response))
-			.doOnError(error -> log.error("Error occurred: ", error))
-			.subscribe();
-	}
+	// @Scheduled(cron = "0 0 */2 * * *")
+	// @PostConstruct
+	// public void buildTree() {
+	// 	webClient.post()
+	// 		.uri("/diaries/tree")
+	// 		.retrieve()
+	// 		.bodyToMono(String.class)
+	// 		.doOnSuccess(response -> log.info("Response: {}", response))
+	// 		.doOnError(error -> log.error("Error occurred: ", error))
+	// 		.subscribe();
+	// }
 }
