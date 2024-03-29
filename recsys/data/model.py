@@ -17,6 +17,8 @@ class Diary(BaseModel):
     type: str
     vector: dict
 
+class DiaryRequest(BaseModel):
+    content: str
 
 class Tarot(BaseModel):
     id: int
