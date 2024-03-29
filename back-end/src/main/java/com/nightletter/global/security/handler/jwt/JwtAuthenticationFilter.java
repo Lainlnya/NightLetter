@@ -31,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	@Value("${spring.security.test-member-id}")
-	private String memberId;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
 
@@ -49,9 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				return;
 			}
 
-			if (! memberId.equals(String.valueOf(1))) {
-				memberId = jwtProvider.validate(token);
-			}
+			String memberId = jwtProvider.validate(token);
 
 			log.info("MemberId Info In JWT Filter : " + memberId);
 
@@ -90,23 +86,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		Cookie[] cookies = request.getCookies();
 
-		//        boolean hasAuthorization = false;
-		//        String authorization = request.getHeader("Authorization");
-		//        Authorization 보유하고 있나?
-		//        if (! hasAuthorization) return null;
-		//        Bearer 방식인가?
-		//        boolean isBearer = authorization.startsWith("Bearer ");
-		//        if (! isBearer) return null;
-		//
-		//        String token = authorization.substring(7);
-		String accessToken = null;
+	   boolean hasAuthorization = false;
+	   String authorization = request.getHeader("Authorization");
+	   // Authorization 보유하고 있나?
+	   if (! hasAuthorization) return null;
+	   // Bearer 방식인가?
+	   boolean isBearer = authorization.startsWith("Bearer ");
+	   if (! isBearer) return null;
 
-		for (Cookie cookie : cookies) {
-			if (cookie.getName().equals("access-token")) {
-				accessToken = cookie.getValue();
-				log.info("token type: ACCESS // token : " + accessToken);
-			}
-		}
+	   String accessToken = authorization.substring(7);
+	   // String accessToken = null;
+	   //
+		// for (Cookie cookie : cookies) {
+		// 	if (cookie.getName().equals("access-token")) {
+		// 		accessToken = cookie.getValue();
+		// 		log.info("token type: ACCESS // token : " + accessToken);
+		// 	}
+		// }
 
 		return accessToken;
 	}
