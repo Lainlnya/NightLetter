@@ -2,7 +2,6 @@ server:
   port: 8081
 
 spring:
-
   security:
     oauth2:
       client:
@@ -26,8 +25,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-container:3306/letterforme
-    #    url: jdbc:mysql://localhost:3306/letter4u?useSSL=false&characterEncoding=UTF-8&serverTimezone=UT
+    url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
@@ -49,9 +47,8 @@ spring:
                       internal:
                         JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
-
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
