@@ -16,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/diary")
+@RequestMapping("/api/v1/diaries")
 public class DiaryController {
 
 	private final DiaryService diaryService;
 
-	@PostMapping("/diaries")
+	@PostMapping("/")
 	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
 		Optional<DiaryCreateResponse> diary = diaryService.createDiary(diaryCreateRequest);
 
@@ -29,7 +29,7 @@ public class DiaryController {
 			.orElseGet(() -> ResponseEntity.badRequest().build());
 	}
 
-	@PatchMapping("/diaries")
+	@PatchMapping("/")
 	public ResponseEntity<?> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
 
 		Optional<DiaryResponse> diary =
@@ -39,7 +39,7 @@ public class DiaryController {
 			.orElseGet(() -> ResponseEntity.badRequest().build());
 	}
 
-	@GetMapping("/diaries")
+	@GetMapping("/")
 	public ResponseEntity<?> findDiaries(@RequestBody DiaryListRequest diaryListRequest) {
 		System.out.println(diaryListRequest.toString());
 
@@ -48,7 +48,7 @@ public class DiaryController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/diaries/{diaryId}")
+	@GetMapping("/{diaryId}")
 	public ResponseEntity<?> findDiary(@PathVariable Long diaryId) {
 
 		Optional<DiaryResponse> response = diaryService.findDiary(diaryId);
@@ -57,7 +57,7 @@ public class DiaryController {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@DeleteMapping("/diaries/{diaryId}")
+	@DeleteMapping("/{diaryId}")
 	public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
 
 		return diaryService.deleteDiary(diaryId).map(ResponseEntity::ok)
