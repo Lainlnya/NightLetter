@@ -32,9 +32,14 @@ class TarotInput(BaseModel):
     tarots: List[Tarot]
 
 
+class VectorEmbed(BaseModel):
+    embed: List[float]
+
+
 class TarotVector(BaseModel):
     id: int
-    keywords: List[List[float]]
+    keywords: List[VectorEmbed]
+
 
 
 class TarotVectors(BaseModel):

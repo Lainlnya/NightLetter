@@ -2,6 +2,7 @@ package com.nightletter.domain.tarot.entity;
 
 import java.util.List;
 
+import com.nightletter.domain.diary.dto.EmbedVector;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
 
@@ -38,21 +39,21 @@ public class Tarot {
 	@Enumerated(EnumType.STRING)
 	private TarotDirection dir;
 	@Transient
-	private List<List<Double>> vector;
+	private List<EmbedVector> embedVector;
 
 	protected Tarot() {
 	}
 
 	@Builder
 	public Tarot(Integer id, String name, String imgUrl, String keyword, String description, TarotDirection dir,
-		List<List<Double>> vector) {
+		List<EmbedVector> embedVector) {
 		this.id = id;
 		this.name = name;
 		this.imgUrl = imgUrl;
 		this.keyword = keyword;
 		this.description = description;
 		this.dir = dir;
-		this.vector = vector;
+		this.embedVector = embedVector;
 	}
 
 	public TarotKeyword toKeywordDto() {
@@ -60,11 +61,11 @@ public class Tarot {
 	}
 
 	public TarotDto toDto() {
-		return new TarotDto(id, name, imgUrl, keyword, description, dir, vector);
+		return new TarotDto(id, name, imgUrl, keyword, description, dir, embedVector);
 	}
 
-	public Tarot setVector(List<List<Double>> vector) {
-		this.vector = vector;
+	public Tarot setEmbedVector(List<EmbedVector> embedVector) {
+		this.embedVector = embedVector;
 		return this;
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
@@ -47,7 +48,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final MemberRepository memberRepository;
 
 	@Override
-	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
+	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) throws JsonProcessingException {
 
 		RecommendDataResponse recommendDataResponse = webClient.post()
 			.uri("/diaries/recommend")
@@ -59,16 +60,16 @@ public class DiaryServiceImpl implements DiaryService {
 			.block();
 
 		RecommendResponse recommendResponse = new RecommendResponse(); // 응답
-		log.info("================== vec : {}", recommendDataResponse.getVector().size());
+		log.info("================== vec : {}", recommendDataResponse.getEmbedVector().getEmbed().size());
 		log.info("================== diary ids : {}", recommendDataResponse.getDiariesId().size());
 		recommendResponse.setRecommendDiaries(diaryRepository
 			.findRecommendDiaries(recommendDataResponse.getDiariesId()));
 
-		TarotDto similarTarot = tarotService.findSimilarTarot(recommendDataResponse.getVector());
+		TarotDto similarTarot = tarotService.findSimilarTarot(recommendDataResponse.getEmbedVector());
 		recommendResponse.setCard(similarTarot);
 
 		// todo. Security  적용
-		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(null));
+		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(getCurrentMember(), recommendDataResponse.getEmbedVector()));
 		DiaryTarotId diaryTarotId = new DiaryTarotId(saveDiary.getDiaryId(), similarTarot.id());
 		diaryTarotRepository.save(new DiaryTarot(diaryTarotId, DiaryTarotType.NOW));
 

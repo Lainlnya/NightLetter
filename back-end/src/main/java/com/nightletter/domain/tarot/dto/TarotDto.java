@@ -2,6 +2,7 @@ package com.nightletter.domain.tarot.dto;
 
 import java.util.List;
 
+import com.nightletter.domain.diary.dto.EmbedVector;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
 
@@ -15,7 +16,7 @@ public record TarotDto(
 	String keyword,
 	String description,
 	TarotDirection dir,
-	List<List<Double>> vector) {
+	List<EmbedVector> embedVector) {
 
 	public static TarotDto of(Tarot tarot, TarotDirection direction) {
 
@@ -26,7 +27,7 @@ public record TarotDto(
 			.dir(direction)
 			.keyword(tarot.getKeyword())
 			.description(tarot.getDescription())
-			.vector(tarot.getVector())
+			.embedVector(tarot.getEmbedVector())
 			.build();
 	}
 
@@ -37,7 +38,7 @@ public record TarotDto(
 			.keyword(keyword)
 			.description(description)
 			.dir(dir)
-			.vector(vector).
+			.embedVector(embedVector).
 			build();
 	}
 }

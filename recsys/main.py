@@ -45,10 +45,9 @@ def get_rec(diaryRequest: model.DiaryRequest):
     tree = AnnoyIndex(768, 'angular')
     tree.load('tree.ann')
 
-    print(" 비슷한 일기 : ", vector.tolist())
     print(" 비슷한 일기 : ", tree.get_nns_by_vector(vector.tolist(), 10))
 
-    return {"vector": vector.tolist(),
+    return {"vector": {"embed": vector.tolist()},
             "diariesId": tree.get_nns_by_vector(vector.tolist(), 10)}
 
 
@@ -81,9 +80,10 @@ def build_model():
 def get_deck(tarots: model.TarotInput):
     card_lst = []
     for tarot in tarots.tarots:
-        card = {'id': tarot.id, 'keywords': []}
+        card = model.TarotVector(id=tarot.id, keywords=[])
         for keyword in tarot.keywords.split(','):
-            card['keywords'].append(embedder.encode(keyword.strip()).tolist())
+            keyword_vector = embedder.encode(keyword.strip()).tolist()
+            card.keywords.append(model.VectorEmbed(embed=keyword_vector))
         card_lst.append(card)
 
     return model.TarotVectors(tarots=card_lst)

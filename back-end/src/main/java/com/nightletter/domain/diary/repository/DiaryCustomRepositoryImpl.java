@@ -1,6 +1,8 @@
 package com.nightletter.domain.diary.repository;
 
 import static com.nightletter.domain.diary.entity.QDiary.*;
+import static com.nightletter.domain.diary.entity.QDiaryTarot.*;
+import static com.nightletter.domain.tarot.entity.QTarot.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 import com.nightletter.domain.diary.dto.RecommendDiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.member.entity.Member;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,9 +25,13 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 	@Override
 	public List<RecommendDiaryResponse> findRecommendDiaries(List<Long> diariesId) {
 		return queryFactory.select(Projections.constructor(RecommendDiaryResponse.class,
-				diary.content
+				diary.content,
+				tarot.imgUrl
 			))
 			.from(diary)
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.on(diaryTarot.type.eq(DiaryTarotType.NOW))
+			.innerJoin(diaryTarot.tarot,tarot)
 			.where(diary.diaryId.in(diariesId)
 				.and(diary.type.eq(DiaryOpenType.PUBLIC)))
 			.fetch();
