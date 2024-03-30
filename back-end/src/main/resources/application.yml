@@ -3,6 +3,7 @@ server:
 
 spring:
   security:
+    dev-token: ${KAKAO_LOCAL_TOKEN}
     oauth2:
       client:
         registration:
@@ -51,7 +52,7 @@ spring:
                       internal:
                         JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
 
 jwt:
