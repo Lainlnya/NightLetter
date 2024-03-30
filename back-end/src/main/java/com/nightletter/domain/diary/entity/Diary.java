@@ -1,27 +1,32 @@
 package com.nightletter.domain.diary.entity;
 
-import com.nightletter.domain.tarot.dto.TarotDto;
-import com.nightletter.global.common.BaseTimeEntity;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.member.entity.Member;
-import lombok.Getter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.global.common.BaseTimeEntity;
+
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
@@ -34,7 +39,7 @@ public class Diary extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long diaryId;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "writer_id", referencedColumnName = "member_id", updatable = false)
+	@JoinColumn(name = "writer_id", updatable = false)
 	private Member writer;
 	@Column(length = 5000)
 	private String content;
@@ -70,25 +75,25 @@ public class Diary extends BaseTimeEntity {
 			DiaryTarotType type = tarot.getType();
 
 			if (type.equals(DiaryTarotType.PAST)) {
-				pastCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
+				pastCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
 			} else if (type.equals(DiaryTarotType.NOW)) {
-				nowCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
+				nowCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
 			} else if (type.equals(DiaryTarotType.FUTURE)) {
-				futureCard = TarotDto.of(tarot.getTarot(), tarot.getDirection());
+				futureCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
 			}
 		}
 
 		return DiaryResponse.builder()
-				.writerId(this.writer.getMemberId())
-				.diaryId(this.diaryId)
-				.type(this.type)
-				.content(this.content)
-				.gptComment(this.gptComment)
-				.pastCard(pastCard)
-				.nowCard(nowCard)
-				.futureCard(futureCard)
-				.date(this.date)
-				.build();
+			.writerId(this.writer.getMemberId())
+			.diaryId(this.diaryId)
+			.type(this.type)
+			.content(this.content)
+			.gptComment(this.gptComment)
+			.pastCard(pastCard)
+			.nowCard(nowCard)
+			.futureCard(futureCard)
+			.date(this.date)
+			.build();
 	}
 }
 

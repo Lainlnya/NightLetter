@@ -1,18 +1,23 @@
 package com.nightletter.domain.diary.entity;
 
-import jakarta.persistence.Embeddable;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class DiaryTarotId implements Serializable {
-    private Long diaryId;
-    private Integer tarotId;
+
+	private Long diaryId;
+	private Integer tarotId;
+
+	protected DiaryTarotId() {
+
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -23,7 +28,8 @@ public class DiaryTarotId implements Serializable {
 
 		DiaryTarotId other = (DiaryTarotId)obj;
 
-		return this.diaryId.equals(other.diaryId) && this.tarotId.equals(other.tarotId);
+		return this.diaryId.equals(other.diaryId)
+			&& this.tarotId.equals(other.tarotId);
 	}
 
 	@Override

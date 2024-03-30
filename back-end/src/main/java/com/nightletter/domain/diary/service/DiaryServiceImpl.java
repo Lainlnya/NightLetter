@@ -1,39 +1,39 @@
 package com.nightletter.domain.diary.service;
 
-import com.nightletter.domain.diary.dto.*;
-import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.member.repository.MemberRepository;
-import com.nightletter.global.common.ResponseDto;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import com.nightletter.domain.diary.repository.DiaryRepository;
-
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryCreateResponse;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryRequestDirection;
+import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.RecommendDataResponse;
+import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryOpenType;
+import com.nightletter.domain.diary.entity.DiaryTarot;
+import com.nightletter.domain.diary.entity.DiaryTarotId;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
+import com.nightletter.domain.diary.repository.DiaryTarotRepository;
+import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.service.TarotService;
+import com.nightletter.global.common.ResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -41,35 +41,38 @@ import lombok.extern.slf4j.Slf4j;
 public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
+	private final DiaryTarotRepository diaryTarotRepository;
 	private final WebClient webClient;
-
+	private final TarotService tarotService;
 	private final MemberRepository memberRepository;
 
 	@Override
-	public Optional<DiaryCreateResponse> createDiary(DiaryCreateRequest diaryRequest) {
+	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
 
-		DiaryCreateResponse temp = DiaryCreateResponse.createTemp();
-		log.info(" create temp file : {}", temp);
+		RecommendDataResponse recommendDataResponse = webClient.post()
+			.uri("/diaries/recommend")
+			.body(BodyInserters.fromValue(Map.of("content", diaryRequest.getContent())))
+			.retrieve()
+			.bodyToMono(RecommendDataResponse.class)
+			.doOnError(error -> log.error("Fast API CONNECT ERROR: {}", error.getMessage()))
+			.onErrorResume(error -> Mono.empty())
+			.block();
 
-		diaryRepository.save(diaryRequest.toEntity(getCurrentMember()));
+		RecommendResponse recommendResponse = new RecommendResponse(); // 응답
+		log.info("================== vec : {}", recommendDataResponse.getVector().size());
+		log.info("================== diary ids : {}", recommendDataResponse.getDiariesId().size());
+		recommendResponse.setRecommendDiaries(diaryRepository
+			.findRecommendDiaries(recommendDataResponse.getDiariesId()));
 
-		// Mono<JSONArray> responseMono = webClient.post()
-		// 	.uri("/get-embedding")
-		// 	.body(BodyInserters.fromValue(Map.of("query", diaryRequest.getContent())))
-		// 	.retrieve()
-		// 	.bodyToMono(JSONArray.class);
-		//
-		// responseMono.subscribe(
-		// 	response -> {
-		// 		System.out.println("Response from FastAPI2: " + response);
-		// 		diaryRequest.setVector(response.toString());
-		// 		diaryRepository.save(diaryRequest.toEntity());
-		// 	},
-		// 	error -> {
-		// 		System.err.println("Error occurred: " + error.getMessage());
-		// 	}
-		// );
-		return Optional.of(temp);
+		TarotDto similarTarot = tarotService.findSimilarTarot(recommendDataResponse.getVector());
+		recommendResponse.setCard(similarTarot);
+
+		// todo. Security  적용
+		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(null));
+		DiaryTarotId diaryTarotId = new DiaryTarotId(saveDiary.getDiaryId(), similarTarot.id());
+		diaryTarotRepository.save(new DiaryTarot(diaryTarotId, DiaryTarotType.NOW));
+
+		return Optional.of(recommendResponse);
 	}
 
 	@Override
@@ -138,14 +141,14 @@ public class DiaryServiceImpl implements DiaryService {
 		diaryRepository.delete(diary);
 
 		return Optional.of(
-				ResponseDto.builder()
-						.code("SU")
-						.message("Diary Deleted Successfully.")
-						.build());
+			ResponseDto.builder()
+				.code("SU")
+				.message("Diary Deleted Successfully.")
+				.build());
 	}
 
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return memberRepository.findByMemberId(Integer.parseInt((String) authentication.getPrincipal()));
+		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 	}
 }

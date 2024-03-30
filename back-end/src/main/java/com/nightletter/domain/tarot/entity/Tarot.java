@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -42,11 +43,23 @@ public class Tarot {
 	protected Tarot() {
 	}
 
-	public TarotKeyword toKeywordDto(){
+	@Builder
+	public Tarot(Integer id, String name, String imgUrl, String keyword, String description, TarotDirection dir,
+		List<List<Double>> vector) {
+		this.id = id;
+		this.name = name;
+		this.imgUrl = imgUrl;
+		this.keyword = keyword;
+		this.description = description;
+		this.dir = dir;
+		this.vector = vector;
+	}
+
+	public TarotKeyword toKeywordDto() {
 		return new TarotKeyword(id, keyword);
 	}
 
-	public TarotDto toDto(){
+	public TarotDto toDto() {
 		return new TarotDto(id, name, imgUrl, keyword, description, dir, vector);
 	}
 
