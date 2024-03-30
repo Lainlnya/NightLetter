@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import styles from "./login.module.scss";
+import styles from './login.module.scss';
 
 const Login = () => {
   const handleClick = () => {
@@ -12,7 +12,7 @@ const Login = () => {
       <main className={styles.main}>
         <h1>밤편지</h1>
         <div>당신의 하루를 기록해보세요</div>
-        <img onClick={handleClick} src="/images/kakao-login-large-narrow.png" />
+        <img onClick={handleClick} src='/images/kakao-login-large-narrow.png' />
       </main>
     </>
   );

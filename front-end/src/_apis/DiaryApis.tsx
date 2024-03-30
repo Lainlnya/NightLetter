@@ -1,10 +1,10 @@
 export async function saveData(newData: any) {
-  console.log(newData);
-  const response = await fetch(`${process.env.NEXT_API_URL}/diary/diaries`, {
-    method: "POST",
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diary/diaries`, {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(newData),
   });
 
