@@ -1,7 +1,6 @@
 package com.nightletter.domain.diary.entity;
 
 import com.nightletter.domain.tarot.entity.Tarot;
-import com.nightletter.domain.tarot.entity.TarotDirection;
 import com.nightletter.global.common.BaseTimeEntity;
 
 import jakarta.persistence.EmbeddedId;
@@ -12,10 +11,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @Entity
+@AllArgsConstructor
 public class DiaryTarot extends BaseTimeEntity {
 
 	@EmbeddedId
@@ -32,8 +33,14 @@ public class DiaryTarot extends BaseTimeEntity {
 	private Tarot tarot;
 
 	@Enumerated(EnumType.STRING)
-	private TarotDirection direction;
-
-	@Enumerated(EnumType.STRING)
 	private DiaryTarotType type;
+
+	public DiaryTarot() {
+
+	}
+
+	public DiaryTarot(DiaryTarotId id, DiaryTarotType type) {
+		this.id = id;
+		this.type = type;
+	}
 }

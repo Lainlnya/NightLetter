@@ -1,13 +1,23 @@
 package com.nightletter.domain.diary.api;
 
-import com.nightletter.domain.diary.dto.*;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryCreateResponse;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.service.DiaryService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +33,7 @@ public class DiaryController {
 
 	@PostMapping("/")
 	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
-		Optional<DiaryCreateResponse> diary = diaryService.createDiary(diaryCreateRequest);
+		Optional<RecommendResponse> diary = diaryService.createDiary(diaryCreateRequest);
 
 		return diary.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());
@@ -33,7 +43,7 @@ public class DiaryController {
 	public ResponseEntity<?> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
 
 		Optional<DiaryResponse> diary =
-				diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
+			diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
 
 		return diary.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());
@@ -54,13 +64,13 @@ public class DiaryController {
 		Optional<DiaryResponse> response = diaryService.findDiary(diaryId);
 
 		return response.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{diaryId}")
 	public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
 
 		return diaryService.deleteDiary(diaryId).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

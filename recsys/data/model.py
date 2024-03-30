@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, JSON
 from pydantic import BaseModel
-from . import db
+from sqlalchemy import Column, Integer, String, JSON
 from typing import List
+
+from . import db
 
 
 class DiaryTable(db.Base):
@@ -17,12 +18,15 @@ class Diary(BaseModel):
     type: str
     vector: dict
 
+
 class DiaryRequest(BaseModel):
     content: str
+
 
 class Tarot(BaseModel):
     id: int
     keywords: str
+
 
 class TarotInput(BaseModel):
     tarots: List[Tarot]
