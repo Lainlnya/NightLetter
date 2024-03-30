@@ -11,7 +11,7 @@ import com.nightletter.domain.member.entity.Member;
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryCustomRepository {
 
-    List<Diary> findDiariesByWriter(Member writer);
+	List<Diary> findDiariesByWriter(Member writer);
 
-    Diary findDiaryByDiaryId(Long diaryId);
+	Diary findDiaryByDiaryId(Long diaryId);
 }

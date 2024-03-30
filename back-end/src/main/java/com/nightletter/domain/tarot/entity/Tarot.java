@@ -55,11 +55,11 @@ public class Tarot {
 		this.vector = vector;
 	}
 
-	public TarotKeyword toKeywordDto(){
+	public TarotKeyword toKeywordDto() {
 		return new TarotKeyword(id, keyword);
 	}
 
-	public TarotDto toDto(){
+	public TarotDto toDto() {
 		return new TarotDto(id, name, imgUrl, keyword, description, dir, vector);
 	}
 

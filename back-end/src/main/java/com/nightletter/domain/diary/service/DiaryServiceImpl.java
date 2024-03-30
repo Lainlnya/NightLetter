@@ -59,14 +59,13 @@ public class DiaryServiceImpl implements DiaryService {
 			.block();
 
 		RecommendResponse recommendResponse = new RecommendResponse(); // 응답
-		log.info("================== vec : {}" , recommendDataResponse.getVector().size());
-		log.info("================== diary ids : {}" , recommendDataResponse.getDiariesId().size());
+		log.info("================== vec : {}", recommendDataResponse.getVector().size());
+		log.info("================== diary ids : {}", recommendDataResponse.getDiariesId().size());
 		recommendResponse.setRecommendDiaries(diaryRepository
 			.findRecommendDiaries(recommendDataResponse.getDiariesId()));
 
 		TarotDto similarTarot = tarotService.findSimilarTarot(recommendDataResponse.getVector());
 		recommendResponse.setCard(similarTarot);
-
 
 		// todo. Security  적용
 		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(null));
@@ -142,14 +141,14 @@ public class DiaryServiceImpl implements DiaryService {
 		diaryRepository.delete(diary);
 
 		return Optional.of(
-				ResponseDto.builder()
-						.code("SU")
-						.message("Diary Deleted Successfully.")
-						.build());
+			ResponseDto.builder()
+				.code("SU")
+				.message("Diary Deleted Successfully.")
+				.build());
 	}
 
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return memberRepository.findByMemberId(Integer.parseInt((String) authentication.getPrincipal()));
+		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 	}
 }

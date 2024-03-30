@@ -1,13 +1,13 @@
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
-from annoy import AnnoyIndex
 import os
+from annoy import AnnoyIndex
+from fastapi import FastAPI
 from sentence_transformers import SentenceTransformer
+from starlette.middleware.cors import CORSMiddleware
+
+from data import model
+from data import text_preprocessing
 from data.db import session
 from data.model import DiaryTable
-from data import text_preprocessing
-from data import model
-from typing import List
 
 app = FastAPI()
 
@@ -29,7 +29,6 @@ async def root():
 
 @app.post("/diaries/init")
 async def init(diaryRequest: model.DiaryRequest):
-
     content = text_preprocessing.preprocessing(diaryRequest.content)
     vector = embedder.encode(content)
     return {"embed": vector.tolist()}

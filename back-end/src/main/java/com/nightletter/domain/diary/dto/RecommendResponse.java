@@ -25,7 +25,7 @@ public class RecommendResponse {
 	private List<RecommendDiaryResponse> recommendDiaries;
 
 	public void setCard(TarotDto tarot) {
-		this.cardNo = tarot.id()/2 + tarot.id()%2 - 1;
+		this.cardNo = tarot.id() / 2 + tarot.id() % 2 - 1;
 		this.cardName = tarot.name();
 		this.cardImgUrl = tarot.imgUrl();
 		this.cardDir = tarot.dir();

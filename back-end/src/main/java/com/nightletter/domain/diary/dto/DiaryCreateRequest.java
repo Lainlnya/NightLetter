@@ -5,8 +5,8 @@ import java.time.LocalTime;
 
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
-
 import com.nightletter.domain.member.entity.Member;
+
 import lombok.Data;
 
 @Data

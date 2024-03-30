@@ -2,12 +2,14 @@ package com.nightletter.domain.diary.dto;
 
 import java.time.LocalDate;
 
+import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
+import com.nightletter.domain.diary.entity.DiaryTarot;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.tarot.dto.TarotDto;
+
 import lombok.Builder;
 import lombok.Data;
-
-import com.nightletter.domain.diary.entity.*;
 
 @Data
 public class DiaryResponse {
@@ -24,7 +26,7 @@ public class DiaryResponse {
 
 	@Builder
 	public DiaryResponse(Integer writerId, Long diaryId, String content, DiaryOpenType type, String gptComment,
-						 TarotDto pastCard, TarotDto nowCard, TarotDto futureCard, LocalDate date) {
+		TarotDto pastCard, TarotDto nowCard, TarotDto futureCard, LocalDate date) {
 		this.writerId = writerId;
 		this.diaryId = diaryId;
 		this.type = type;
@@ -42,7 +44,8 @@ public class DiaryResponse {
 		TarotDto future = null;
 
 		for (DiaryTarot diaryTarot : diary.getDiaryTarots()) {
-			if (diaryTarot.getTarot() == null) continue;
+			if (diaryTarot.getTarot() == null)
+				continue;
 
 			TarotDto tarot = TarotDto.of(diaryTarot.getTarot(), diaryTarot.getTarot().getDir());
 
@@ -59,15 +62,15 @@ public class DiaryResponse {
 		}
 
 		return DiaryResponse.builder()
-				.writerId(diary.getWriter().getMemberId())
-				.diaryId(diary.getDiaryId())
-				.type(diary.getType())
-				.content(diary.getContent())
-				.gptComment(diary.getGptComment())
-				.pastCard(past)
-				.nowCard(curr)
-				.futureCard(future)
-				.date(diary.getDate())
-				.build();
+			.writerId(diary.getWriter().getMemberId())
+			.diaryId(diary.getDiaryId())
+			.type(diary.getType())
+			.content(diary.getContent())
+			.gptComment(diary.getGptComment())
+			.pastCard(past)
+			.nowCard(curr)
+			.futureCard(future)
+			.date(diary.getDate())
+			.build();
 	}
 }

@@ -6,5 +6,4 @@ import com.nightletter.domain.tarot.entity.Tarot;
 
 public interface TarotRepository extends JpaRepository<Tarot, Integer> {
 
-
 }

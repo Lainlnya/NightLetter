@@ -43,7 +43,7 @@ public class DiaryController {
 	public ResponseEntity<?> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
 
 		Optional<DiaryResponse> diary =
-				diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
+			diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
 
 		return diary.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());
@@ -64,13 +64,13 @@ public class DiaryController {
 		Optional<DiaryResponse> response = diaryService.findDiary(diaryId);
 
 		return response.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{diaryId}")
 	public ResponseEntity<?> deleteDiary(@PathVariable Long diaryId) {
 
 		return diaryService.deleteDiary(diaryId).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

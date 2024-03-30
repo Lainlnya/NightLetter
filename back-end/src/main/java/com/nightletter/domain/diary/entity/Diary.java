@@ -84,16 +84,16 @@ public class Diary extends BaseTimeEntity {
 		}
 
 		return DiaryResponse.builder()
-				.writerId(this.writer.getMemberId())
-				.diaryId(this.diaryId)
-				.type(this.type)
-				.content(this.content)
-				.gptComment(this.gptComment)
-				.pastCard(pastCard)
-				.nowCard(nowCard)
-				.futureCard(futureCard)
-				.date(this.date)
-				.build();
+			.writerId(this.writer.getMemberId())
+			.diaryId(this.diaryId)
+			.type(this.type)
+			.content(this.content)
+			.gptComment(this.gptComment)
+			.pastCard(pastCard)
+			.nowCard(nowCard)
+			.futureCard(futureCard)
+			.date(this.date)
+			.build();
 	}
 }
 

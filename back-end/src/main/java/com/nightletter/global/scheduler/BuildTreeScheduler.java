@@ -23,12 +23,12 @@ public class BuildTreeScheduler {
 	private void buildTreeSchedule() {
 		connection.isServerAvailable()
 			.subscribe(isAvailable -> {
-			if (isAvailable) {
-				buildTree();
-			} else {
-				log.error("Fast API Server is down. ");
-			}
-		});
+				if (isAvailable) {
+					buildTree();
+				} else {
+					log.error("Fast API Server is down. ");
+				}
+			});
 	}
 
 	private void buildTree() {
