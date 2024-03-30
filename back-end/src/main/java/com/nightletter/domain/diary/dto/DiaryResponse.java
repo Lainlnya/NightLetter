@@ -44,7 +44,7 @@ public class DiaryResponse {
 		for (DiaryTarot diaryTarot : diary.getDiaryTarots()) {
 			if (diaryTarot.getTarot() == null) continue;
 
-			TarotDto tarot = TarotDto.of(diaryTarot.getTarot(), diaryTarot.getDirection());
+			TarotDto tarot = TarotDto.of(diaryTarot.getTarot(), diaryTarot.getTarot().getDir());
 
 			if (diaryTarot.getType() == DiaryTarotType.PAST) {
 				past = tarot;

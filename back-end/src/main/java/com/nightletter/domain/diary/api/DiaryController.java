@@ -1,16 +1,23 @@
 package com.nightletter.domain.diary.api;
 
-import com.nightletter.domain.diary.dto.*;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryCreateResponse;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.RecommendResponse;
-import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.service.DiaryService;
 
 import lombok.RequiredArgsConstructor;

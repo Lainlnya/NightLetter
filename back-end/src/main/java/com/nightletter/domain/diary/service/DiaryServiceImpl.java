@@ -1,18 +1,5 @@
 package com.nightletter.domain.diary.service;
 
-import com.nightletter.domain.diary.dto.*;
-import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.member.repository.MemberRepository;
-import com.nightletter.global.common.ResponseDto;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import com.nightletter.domain.diary.repository.DiaryRepository;
-
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -25,21 +12,24 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryRequestDirection;
+import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotId;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.diary.repository.DiaryTarotRepository;
+import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.service.TarotService;
+import com.nightletter.global.common.ResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +59,8 @@ public class DiaryServiceImpl implements DiaryService {
 			.block();
 
 		RecommendResponse recommendResponse = new RecommendResponse(); // 응답
-
+		log.info("================== vec : {}" , recommendDataResponse.getVector().size());
+		log.info("================== diary ids : {}" , recommendDataResponse.getDiariesId().size());
 		recommendResponse.setRecommendDiaries(diaryRepository
 			.findRecommendDiaries(recommendDataResponse.getDiariesId()));
 
@@ -78,8 +69,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 
 		// todo. Security  적용
-		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity());
-		DiaryTarotId diaryTarotId = new DiaryTarotId(saveDiary.getId(), similarTarot.id());
+		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(null));
+		DiaryTarotId diaryTarotId = new DiaryTarotId(saveDiary.getDiaryId(), similarTarot.id());
 		diaryTarotRepository.save(new DiaryTarot(diaryTarotId, DiaryTarotType.NOW));
 
 		return Optional.of(recommendResponse);

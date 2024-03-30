@@ -60,8 +60,7 @@ def build_model():
     # data 읽어서 model build
     diarys = session.query(DiaryTable).all()
     for diary in diarys:
-
-        if (diary.type == "PUBLIC"):
+        if diary.type == "PUBLIC" and diary.vector is not None:
             public_lst.append([diary.diary_id, diary.vector['embed']])
 
     tree = AnnoyIndex(768, 'angular')
