@@ -12,7 +12,6 @@ import lombok.Data;
 public class DiaryCreateRequest {
 	private String content;
 	private DiaryOpenType type;
-	private String vector;
 
 	public Diary toEntity() {
 		LocalDate today = LocalDate.now();
@@ -25,7 +24,6 @@ public class DiaryCreateRequest {
 			.content(this.content)
 			.date(today)
 			.type(this.type)
-			.vector(this.vector)
 			.build();
 	}
 }

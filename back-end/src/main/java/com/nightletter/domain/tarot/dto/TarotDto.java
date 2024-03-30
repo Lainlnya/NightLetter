@@ -2,9 +2,8 @@ package com.nightletter.domain.tarot.dto;
 
 import java.util.List;
 
+import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
-
-import lombok.Getter;
 
 public record TarotDto(
 	Integer id,
@@ -14,4 +13,15 @@ public record TarotDto(
 	String description,
 	TarotDirection dir,
 	List<List<Double>> vector) {
+
+	public Tarot toEntity() {
+		return Tarot.builder().id(id)
+			.name(name)
+			.imgUrl(imgUrl)
+			.keyword(keyword)
+			.description(description)
+			.dir(dir)
+			.vector(vector).
+			build();
+	}
 }

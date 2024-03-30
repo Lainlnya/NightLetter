@@ -32,6 +32,7 @@ public class BuildTreeScheduler {
 	}
 
 	private void buildTree() {
+		log.info("======= START Build Tree ====== ");
 		webClient.post()
 			.uri("/diaries/tree")
 			.retrieve()
@@ -40,5 +41,6 @@ public class BuildTreeScheduler {
 			.doOnError(error -> log.error("Error occurred: ", error))
 			.onErrorResume(error -> Mono.empty())
 			.subscribe();
+		log.info("======= COMPLETE Build Tree ====== ");
 	}
 }

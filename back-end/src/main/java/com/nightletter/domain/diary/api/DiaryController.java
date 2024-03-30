@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryCreateResponse;
+import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.service.DiaryService;
@@ -31,7 +31,7 @@ public class DiaryController {
 
 	@PostMapping("/diaries")
 	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
-		Optional<DiaryCreateResponse> diary = diaryService.createDiary(diaryCreateRequest);
+		Optional<RecommendResponse> diary = diaryService.createDiary(diaryCreateRequest);
 
 		return diary.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());

@@ -29,9 +29,11 @@ async def root():
 
 @app.post("/diaries/init")
 async def init(diaryRequest: model.DiaryRequest):
+
     content = text_preprocessing.preprocessing(diaryRequest.content)
     vector = embedder.encode(content)
-    return {"vector": vector.tolist()}
+    return {"embed": vector.tolist()}
+
 
 @app.post("/diaries/recommend")
 def get_rec(diaryRequest: model.DiaryRequest):
@@ -44,6 +46,9 @@ def get_rec(diaryRequest: model.DiaryRequest):
     tree = AnnoyIndex(768, 'angular')
     tree.load('tree.ann')
 
+    print(" 비슷한 일기 : ", vector.tolist())
+    print(" 비슷한 일기 : ", tree.get_nns_by_vector(vector.tolist(), 10))
+
     return {"vector": vector.tolist(),
             "diariesId": tree.get_nns_by_vector(vector.tolist(), 10)}
 
@@ -55,8 +60,9 @@ def build_model():
     # data 읽어서 model build
     diarys = session.query(DiaryTable).all()
     for diary in diarys:
+
         if (diary.type == "PUBLIC"):
-            public_lst.append([diary.diary_id, diary.vector])
+            public_lst.append([diary.diary_id, diary.vector['embed']])
 
     tree = AnnoyIndex(768, 'angular')
     for id, vector in public_lst:
@@ -69,8 +75,7 @@ def build_model():
         print("기존 트리 지우기")
         os.remove(file_path)
     tree.save('tree.ann')
-    print("새로운 트리 저장하기")
-
+    print("새로운 트리 저장")
     return {"message": "success tree building"}
 
 
