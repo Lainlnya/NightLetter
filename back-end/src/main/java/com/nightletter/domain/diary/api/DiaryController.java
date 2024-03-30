@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
@@ -32,7 +33,8 @@ public class DiaryController {
 	private final DiaryService diaryService;
 
 	@PostMapping("/")
-	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
+	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) throws
+		JsonProcessingException {
 		Optional<RecommendResponse> diary = diaryService.createDiary(diaryCreateRequest);
 
 		return diary.map(ResponseEntity::ok)

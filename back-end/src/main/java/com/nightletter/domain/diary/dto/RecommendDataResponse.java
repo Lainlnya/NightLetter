@@ -9,6 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RecommendDataResponse {
 
-	private List<Double> vector;
+	private EmbedVector embedVector;
 	private List<Long> diariesId;
 }
