@@ -1,6 +1,7 @@
 package com.nightletter.global.config;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -50,7 +51,7 @@ public class WebSecurityConfig {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeHttpRequests(request -> request
-				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
+				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**xr").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2 -> oauth2
@@ -70,9 +71,29 @@ public class WebSecurityConfig {
 	@Bean
 	protected CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
-		corsConfiguration.addAllowedOrigin("*");
+
+		corsConfiguration.setAllowedOrigins(
+			List.of("http://dev.letter-for.me",
+					"https://dev.letter-for.me",
+					"http://letter-for.me",
+					"https://letter-for.me",
+					"http://localhost:3000",
+					"http://localhost:3001",
+					"https://localhost:3000",
+					"https://localhost:3001")
+			);
+
+		// corsConfiguration.setAllowedHeaders(
+		// 	List.of(
+		// 	"authorization",
+		// 	"Authorization",
+		// 	"content-type",
+		// 	"Content-Type",
+		// 	"x-auth-token"));
+
 		corsConfiguration.addAllowedMethod("*");
 		corsConfiguration.addAllowedHeader("*");
+		corsConfiguration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 

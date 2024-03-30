@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nightletter.domain.tarot.dto.TarotDto;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
 import com.nightletter.domain.tarot.dto.TarotListResponse;
 import com.nightletter.domain.tarot.entity.Tarot;

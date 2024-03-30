@@ -16,18 +16,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Repository
 public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	@Override
-	public List<Diary> findDiariesByMemberId(Long memberId, LocalDate sttDate, LocalDate endDate) {
-		return queryFactory.select(diary)
-			.where(diary.writer.id.eq(memberId)
-				.and(diary.date.between(sttDate, endDate)))
-			.fetch();
-	}
 
 	@Override
 	public List<RecommendDiaryResponse> findRecommendDiaries(List<Long> diariesId) {
@@ -40,4 +32,16 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.fetch();
 	}
 
+    @Override
+    public List<Diary> findDiariesByMember(Member member, LocalDate sttDate, LocalDate endDate) {
+        QDiary diary = QDiary.diary;
+
+        List<Diary> diaries = queryFactory.select(diary)
+                .from(diary)
+                .where(diary.writer.eq(member)
+                        .and(diary.date.between(sttDate, endDate)))
+                .fetch();
+
+        return diaries;
+    }
 }

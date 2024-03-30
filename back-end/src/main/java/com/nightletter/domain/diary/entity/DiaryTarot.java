@@ -28,7 +28,7 @@ public class DiaryTarot extends BaseTimeEntity {
 	private Diary diary;
 
 	@MapsId("tarotId")
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tarot_id")
 	private Tarot tarot;
 

@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 
+import com.nightletter.domain.member.entity.Member;
 import lombok.Data;
 
 @Data
@@ -13,7 +14,7 @@ public class DiaryCreateRequest {
 	private String content;
 	private DiaryOpenType type;
 
-	public Diary toEntity() {
+	public Diary toEntity(Member writer) {
 		LocalDate today = LocalDate.now();
 
 		if (LocalTime.now().isBefore(LocalTime.of(4, 0))) {
@@ -22,6 +23,7 @@ public class DiaryCreateRequest {
 
 		return Diary.builder()
 			.content(this.content)
+			.writer(writer)
 			.date(today)
 			.type(this.type)
 			.build();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,11 +22,17 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+	@Value("${spring.security.provider.response-uri.kakao}")
+	private String tokenResponseUri;
+
+	@Value("${spring.security.provider.response-uri.local-kakao}")
+	private String tokenResponseLocalUrl;
+
 	private final JwtProvider jwtProvider;
 
 	private static ResponseCookie accessCookie(String token) {
 		return ResponseCookie.from("access-token", token)
-			.maxAge(Duration.of(30, ChronoUnit.MINUTES))
+			.maxAge(Duration.of(30, ChronoUnit.HOURS))
 			.httpOnly(true)
 			.path("/")
 			.sameSite("None")
@@ -39,12 +46,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		HttpServletResponse response,
 		Authentication authentication
 	) throws IOException, ServletException {
-		CustomOAuth2User oAuth2User = (CustomOAuth2User)authentication.getPrincipal();
+		CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
 		String memberId = oAuth2User.getName();
 		String token = jwtProvider.create(memberId);
 
+		// response.addHeader("Authorization", "Bearer " + token);
+
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
-		response.sendRedirect("http://localhost:3000/auth/oauth-response/");
+
+		response.sendRedirect(tokenResponseLocalUrl);
+
+		System.out.println(tokenResponseLocalUrl);
 	}
 }

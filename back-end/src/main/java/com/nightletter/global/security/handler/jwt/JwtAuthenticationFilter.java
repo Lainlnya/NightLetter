@@ -3,6 +3,7 @@ package com.nightletter.global.security.handler.jwt;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 
+import io.micrometer.common.lang.NonNullApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -29,6 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+	@Value("${spring.security.dev-token}")
+	private String devToken;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
 
@@ -36,9 +40,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
 		try {
+			// 토큰 확인.
 			String token = parseBearerToken(request);
 
-			log.info("Token Info In JWT Filter : " + token);
+			// log.info("Token Info In JWT Filter : " + token);
+
+			// 로컬 개발 위한 임시토큰 사용
+			// if (token == null) {
+			token = devToken;
+			// }
 
 			if (token == null) {
 				filterChain.doFilter(request, response);
@@ -54,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				return;
 			}
 
-			Member member = memberRepository.findById(Long.parseLong(memberId));
+			Member member = memberRepository.findByMemberId(Integer.parseInt(memberId));
 			//            Member member = memberRepository.findMemberByOAuth2Id(memberId);
 
 			List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
@@ -84,16 +94,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		Cookie[] cookies = request.getCookies();
 
-		//        boolean hasAuthorization = false;
-		//        String authorization = request.getHeader("Authorization");
-		//        Authorization 보유하고 있나?
-		//        if (! hasAuthorization) return null;
-		//        Bearer 방식인가?
-		//        boolean isBearer = authorization.startsWith("Bearer ");
-		//        if (! isBearer) return null;
-		//
-		//        String token = authorization.substring(7);
-		String accessToken = null;
+	   // boolean hasAuthorization = false;
+	   // String authorization = request.getHeader("Authorization");
+	   // // Authorization 보유하고 있나?
+	   // if (! hasAuthorization) return null;
+	   // // Bearer 방식인가?
+	   // boolean isBearer = authorization.startsWith("Bearer ");
+	   // if (! isBearer) return null;
+	   // String accessToken = authorization.substring(7);
+	   String accessToken = null;
 
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().equals("access-token")) {
@@ -102,9 +111,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 		}
 
-		if (accessToken == null){
-			return null;
-		}
 		return accessToken;
 	}
 }

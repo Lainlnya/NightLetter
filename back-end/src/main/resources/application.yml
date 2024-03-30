@@ -2,15 +2,15 @@ server:
   port: 8081
 
 spring:
-
   security:
+    dev-token: ${KAKAO_LOCAL_TOKEN}
     oauth2:
       client:
         registration:
           kakao:
             client-id: ${KAKAO_LOGIN_RESTAPI_KEY}
             client-secret: ${KAKAO_LOGIN_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirect-uri: ${KAKAO_LOGIN_REDIRECT_URI}
             scope:
               - profile_nickname
               - profile_image
@@ -23,11 +23,14 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+    provider:
+      response-uri:
+        kakao: ${KAKAO_TOKEN_RESPONSE_URI}
+        local-kakao: ${KAKAO_LOCAL_TOKEN_RESPONSE_URI}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-container:3306/letterforme
-    #    url: jdbc:mysql://localhost:3306/letter4u?useSSL=false&characterEncoding=UTF-8&serverTimezone=UT
+    url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
@@ -49,9 +52,8 @@ spring:
                       internal:
                         JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
-
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
