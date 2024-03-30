@@ -2,6 +2,8 @@ package com.nightletter.domain.tarot.dto;
 
 import java.util.List;
 
+import com.nightletter.domain.diary.dto.EmbedVector;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TarotResponse {
 	int id;
-	List<List<Double>> keywords;
+	List<EmbedVector> keywords;
 }

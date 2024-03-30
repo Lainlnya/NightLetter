@@ -14,7 +14,7 @@ public class DiaryCreateRequest {
 	private String content;
 	private DiaryOpenType type;
 
-	public Diary toEntity(Member writer) {
+	public Diary toEntity(Member writer, EmbedVector embedVector) {
 		LocalDate today = LocalDate.now();
 
 		if (LocalTime.now().isBefore(LocalTime.of(4, 0))) {
@@ -26,6 +26,7 @@ public class DiaryCreateRequest {
 			.writer(writer)
 			.date(today)
 			.type(this.type)
+			.vector(embedVector.convertString())
 			.build();
 	}
 }

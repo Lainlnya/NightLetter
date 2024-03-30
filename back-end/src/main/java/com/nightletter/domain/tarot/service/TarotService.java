@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.nightletter.domain.diary.dto.EmbedVector;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
 import com.nightletter.domain.tarot.dto.TarotListResponse;
@@ -34,7 +35,7 @@ public class TarotService {
 
 	@PostConstruct
 	private void getTarotEmbedded() {
-		log.info("======== START MAKING DECK ==========");
+		log.info("======== START MAKING DECK : Just wait 20sec. ==========");
 
 		List<Tarot> allTarots = tarotRepository.findAll();
 		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
@@ -55,20 +56,20 @@ public class TarotService {
 		}
 
 		tarotVectors.getTarots().forEach(tarotVec -> {
-			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setVector(tarotVec.getKeywords());
+			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setEmbedVector(tarotVec.getKeywords());
 			deck.put(tarotVec.getId(), tarot.toDto());
 		});
 		log.info("======== COMPLETE MAKING DECK : {} ==========", deck.size());
 	}
 
-	public TarotDto findSimilarTarot(List<Double> diaryVector) {
+	public TarotDto findSimilarTarot(EmbedVector diaryEmbedVector) {
 		Map<Integer, Double> score = new HashMap<>();
 
 		deck.forEach((tarotId, tarotDto) -> {
 			List<Double> similarityVector = new ArrayList<>();
 
-			tarotDto.vector().forEach(vector -> {
-				double similarity = calculateCosineSimilarity(vector, diaryVector);
+			tarotDto.embedVector().forEach(vector -> {
+				double similarity = calculateCosineSimilarity(vector, diaryEmbedVector);
 				similarityVector.add(similarity);
 			});
 
@@ -89,15 +90,15 @@ public class TarotService {
 		return deck.get(key);
 	}
 
-	private double calculateCosineSimilarity(List<Double> vectorA, List<Double> vectorB) {
+	private double calculateCosineSimilarity(EmbedVector embedVectorA, EmbedVector embedVectorB) {
 		double dotProduct = 0.0;
 		double normA = 0.0;
 		double normB = 0.0;
-		int size = vectorA.size();
+		int size = embedVectorA.getEmbed().size();
 		for (int i = 0; i < size; i++) {
-			dotProduct += vectorA.get(i) * vectorB.get(i);
-			normA += Math.pow(vectorA.get(i), 2);
-			normB += Math.pow(vectorB.get(i), 2);
+			dotProduct += embedVectorA.getEmbed().get(i) * embedVectorB.getEmbed().get(i);
+			normA += Math.pow(embedVectorA.getEmbed().get(i), 2);
+			normB += Math.pow(embedVectorB.getEmbed().get(i), 2);
 		}
 
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
