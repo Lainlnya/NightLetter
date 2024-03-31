@@ -5,8 +5,13 @@ import static com.nightletter.domain.diary.entity.QDiaryTarot.*;
 import static com.nightletter.domain.tarot.entity.QTarot.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryRequestDirection;
 import com.nightletter.domain.diary.dto.RecommendDiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
@@ -35,6 +40,46 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.where(diary.diaryId.in(diariesId)
 				.and(diary.type.eq(DiaryOpenType.PUBLIC)))
 			.fetch();
+	}
+
+	// 수정 예정
+	@Override
+	public List<Diary> findDiariesByMemberInDir(Member member, DiaryListRequest request) {
+		List<Diary> diaries = new LinkedList<>();
+
+		LocalDate queryDate = request.getDate();
+		DiaryRequestDirection dir = request.getDirection();
+
+		Integer limitSize = request.getSize();
+		if (dir.equals(DiaryRequestDirection.BEFORE) || dir.equals(DiaryRequestDirection.BOTH)) {
+			diaries.addAll(queryFactory.select(diary)
+				.from(diary)
+				.where(diary.writer.eq(member)
+					.and(diary.date.loe(queryDate)))
+				.orderBy(diary.date.asc())
+				.limit(limitSize)
+				.fetch()
+			);
+		}
+
+		if (dir.equals(DiaryRequestDirection.BOTH) &&
+			! diaries.isEmpty() &&
+			diaries.get(diaries.size()-1).getDate().isEqual(queryDate)) {
+			diaries.remove(diaries.get(diaries.size()-1));
+		}
+
+		if (dir.equals(DiaryRequestDirection.AFTER) || dir.equals(DiaryRequestDirection.BOTH)) {
+			diaries.addAll(queryFactory.select(diary)
+				.from(diary)
+				.where(diary.writer.eq(member)
+					.and(diary.date.goe(queryDate)))
+				.orderBy(diary.date.asc())
+				.limit(limitSize)
+				.fetch()
+			);
+		}
+
+		return diaries;
 	}
 
 	@Override
