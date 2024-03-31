@@ -65,10 +65,6 @@ sympy==1.12
 tensorboard==2.11.2
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.1
-tensorflow==2.11.1
-tensorflow-estimator==2.11.0
-tensorflow-intel==2.11.1
-tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.4.0
 threadpoolctl==3.4.0
 tokenizers==0.15.2
