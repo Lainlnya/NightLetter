@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-embedder = SentenceTransformer(os.getcwd() + '\kosbert-klue-bert-base')
+embedder = SentenceTransformer(os.getcwd() + '/kosbert-klue-bert-base')
 
 
 @app.get("/health-check")
