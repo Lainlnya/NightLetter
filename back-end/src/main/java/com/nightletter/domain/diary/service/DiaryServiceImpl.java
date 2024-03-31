@@ -8,10 +8,10 @@ import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
@@ -21,14 +21,14 @@ import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryTarot;
-import com.nightletter.domain.diary.entity.DiaryTarotId;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.diary.repository.DiaryTarotRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.entity.Tarot;
+import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.domain.tarot.service.TarotService;
 import com.nightletter.global.common.ResponseDto;
 
@@ -45,12 +45,16 @@ public class DiaryServiceImpl implements DiaryService {
 	private final DiaryTarotRepository diaryTarotRepository;
 	private final WebClient webClient;
 	private final TarotService tarotService;
+	private final TarotRepository tarotRepository;
 	private final MemberRepository memberRepository;
 
 	@Override
-	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) throws JsonProcessingException {
+	@Transactional
+	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
 
-		RecommendDataResponse recommendDataResponse = webClient.post()
+		Member olrlobt = memberRepository.findByMemberId(1);
+
+		RecommendDataResponse recDataResponse = webClient.post()
 			.uri("/diaries/recommend")
 			.body(BodyInserters.fromValue(Map.of("content", diaryRequest.getContent())))
 			.retrieve()
@@ -59,21 +63,32 @@ public class DiaryServiceImpl implements DiaryService {
 			.onErrorResume(error -> Mono.empty())
 			.block();
 
-		RecommendResponse recommendResponse = new RecommendResponse(); // 응답
-		log.info("================== vec : {}", recommendDataResponse.getEmbedVector().getEmbed().size());
-		log.info("================== diary ids : {}", recommendDataResponse.getDiariesId().size());
-		recommendResponse.setRecommendDiaries(diaryRepository
-			.findRecommendDiaries(recommendDataResponse.getDiariesId()));
+		log.info("======= vec : {},  diary ids : {}",
+			recDataResponse.getEmbedVector().getEmbed().size(),
+			recDataResponse.getDiariesId().size());
 
-		TarotDto similarTarot = tarotService.findSimilarTarot(recommendDataResponse.getEmbedVector());
-		recommendResponse.setCard(similarTarot);
+		RecommendResponse recResponse = new RecommendResponse(); // 응답
 
-		// todo. Security  적용
-		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(getCurrentMember(), recommendDataResponse.getEmbedVector()));
-		DiaryTarotId diaryTarotId = new DiaryTarotId(saveDiary.getDiaryId(), similarTarot.id());
-		diaryTarotRepository.save(new DiaryTarot(diaryTarotId, DiaryTarotType.NOW));
+		recResponse.setRecommendDiaries(diaryRepository
+			.findRecommendDiaries(recDataResponse.getDiariesId()));
 
-		return Optional.of(recommendResponse);
+		TarotDto recommendTarot = tarotService.findSimilarTarot(recDataResponse.getEmbedVector());
+		recResponse.setCard(recommendTarot);
+
+		// Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(getCurrentMember(), recDataResponse.getEmbedVector()));
+		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(olrlobt, recDataResponse.getEmbedVector()));
+		//todo. 과거 카드 설정
+		// DiaryTarot pastTarot = diaryTarotRepository.findByDiary(saveDiary);
+		Tarot nowTarot = tarotRepository.findById(recommendTarot.id()).get();
+		Tarot pastTarot = tarotRepository.findById(155).get();
+
+		int randomTarotId = tarotService.getRandomTarotId(pastTarot.getId(), nowTarot.getId());
+		Tarot futureTarot = tarotRepository.findById(randomTarotId).get();
+
+		saveDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
+		saveDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
+		saveDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
+		return Optional.of(recResponse);
 	}
 
 	@Override

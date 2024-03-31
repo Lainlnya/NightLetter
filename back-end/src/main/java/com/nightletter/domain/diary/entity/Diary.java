@@ -2,6 +2,7 @@ package com.nightletter.domain.diary.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
@@ -10,9 +11,11 @@ import org.hibernate.annotations.SQLRestriction;
 import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.global.common.BaseTimeEntity;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,7 +52,7 @@ public class Diary extends BaseTimeEntity {
 	private DiaryOpenType type;
 	@Column(length = 3000)
 	private String gptComment;
-	@OneToMany(mappedBy = "diary")
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
 	private List<DiaryTarot> diaryTarots;
 	private LocalDateTime deletedAt;
 
@@ -64,6 +67,20 @@ public class Diary extends BaseTimeEntity {
 	public Diary modifyDiaryDisclosure(DiaryOpenType diaryOpenType) {
 		this.type = diaryOpenType;
 		return this;
+	}
+
+	public void addDiaryTarot(DiaryTarot diaryTarot) {
+		this.diaryTarots.add(diaryTarot);
+		diaryTarot.setDiary(this);
+	}
+
+	public void addDiaryTarot(Tarot tarot, DiaryTarotType type) {
+		DiaryTarot diaryTarot = new DiaryTarot(this, tarot, type);
+		if(this. diaryTarots == null){
+			diaryTarots = new ArrayList<>();
+		}
+		this.diaryTarots.add(diaryTarot);
+		diaryTarot.setDiary(this);
 	}
 
 	public DiaryResponse toDiaryResponse() {

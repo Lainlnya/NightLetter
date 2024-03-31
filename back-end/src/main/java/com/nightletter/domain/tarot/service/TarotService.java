@@ -1,10 +1,12 @@
 package com.nightletter.domain.tarot.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -28,7 +30,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class TarotService {
 
-	@Getter
 	private static final Map<Integer, TarotDto> deck = new HashMap<>();
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
@@ -102,5 +103,24 @@ public class TarotService {
 		}
 
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+	}
+
+	public int getRandomTarotId(int... ignoreTarotsId){
+		Random random = new Random();
+		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();
+
+
+		//todo. 뒤집힌것도 ignore
+		int id = 0;
+		int pair = 0;
+		boolean isIgnored;
+		do {
+			id = random.nextInt(156) + 1;
+			pair = (id % 2 == 0) ? id - 1 : id + 1;
+
+			isIgnored = ignoredIdsList.contains(id);
+		} while (isIgnored);
+
+		return id;
 	}
 }
