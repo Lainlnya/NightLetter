@@ -1,6 +1,9 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -98,19 +101,9 @@ public class DiaryServiceImpl implements DiaryService {
 	public Optional<DiaryListResponse> findDiaries(DiaryListRequest request) {
 		// User Id 가져오는 부분. 이후 수정 필요.
 
-		LocalDate querySttDate = request.getDate();
-		LocalDate queryEndDate = request.getDate();
+		LocalDate queryDate = request.getDate();
 
-		if (request.getDirection() == DiaryRequestDirection.BOTH ||
-			request.getDirection() == DiaryRequestDirection.BEFORE) {
-			querySttDate = querySttDate.minusDays(request.getSize());
-		}
-		if (request.getDirection() == DiaryRequestDirection.BOTH ||
-			request.getDirection() == DiaryRequestDirection.AFTER) {
-			queryEndDate = queryEndDate.plusDays(request.getSize());
-		}
-
-		List<Diary> diaries = diaryRepository.findDiariesByMember(getCurrentMember(), querySttDate, queryEndDate);
+		List<Diary> diaries = diaryRepository.findDiariesByMemberInDir(getCurrentMember(), request);
 
 		DiaryListResponse diaryListResponse = new DiaryListResponse();
 
