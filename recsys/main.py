@@ -47,7 +47,7 @@ def get_rec(diaryRequest: model.DiaryRequest):
 
     print(" 비슷한 일기 : ", tree.get_nns_by_vector(vector.tolist(), 10))
 
-    return {"vector": {"embed": vector.tolist()},
+    return {"embedVector": {"embed": vector.tolist()},
             "diariesId": tree.get_nns_by_vector(vector.tolist(), 10)}
 
 
@@ -59,7 +59,7 @@ def build_model():
     diarys = session.query(DiaryTable).all()
     for diary in diarys:
         if diary.type == "PUBLIC" and diary.vector is not None:
-            public_lst.append([diary.diary_id, diary.vector['embed']])
+            public_lst.append([diary.diary_id, diary.vector])
 
     tree = AnnoyIndex(768, 'angular')
     for id, vector in public_lst:
