@@ -5,36 +5,28 @@ import styles from "./cardSlider.module.scss";
 import tarot_background from "../../../../public/images/tarot-background.png";
 import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
 import { motion, useMotionValue } from "framer-motion";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { DRAG_BUFFER } from "@/utils/animation";
+import getInitialCards from "@/libs/getInitialCards";
+import { useQuery } from "@tanstack/react-query";
 import useStore from "@/store/date";
-
-const DRAG_BUFFER = 100;
-
-interface CalendarProps {
-  isSeen: boolean;
-  isClicked: boolean;
-  setIsClicked: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import {CalendarProps} from "@/types/calender";
+import {DiaryEntry} from "@/types/card";
+import { TODAY } from "@/utils/dateFormat";
 
 export default function CardSlider({
   isSeen,
   isClicked,
   setIsClicked,
 }: CalendarProps) {
+  const { data, isLoading, isError } = useQuery({queryKey : ["card", "cards"], queryFn: getInitialCards});
+
   const router = useRouter();
   const [dragging, setDragging] = useState(false);
-  const [contents, setContents] = useState([1, 2, 3, 4, 5]);
-  const [cardIndex, setCardIndex] = useState(contents.length - 1);
-  const [isNotNotedToday, setIsNotNotedToday] = useState(true);
-  const { setDate, daysDifference, setDaysDifference } = useStore();
-
-  useEffect(() => {}, []);
-
-  useEffect(() => {
-    setDate(parseDateToKoreanFormatWithDay(daysDifference));
-  }, [daysDifference]);
-
+  const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
+  const { setDate } = useStore();
+  
   const dragX = useMotionValue(0);
 
   const onDragStart = () => {
@@ -46,14 +38,28 @@ export default function CardSlider({
 
     const x = dragX.get();
 
-    if (x <= -DRAG_BUFFER && cardIndex < contents.length - 1) {
+    if (x <= -DRAG_BUFFER && cardIndex < data?.diaries?.length - 1) {
       setCardIndex((prev) => prev + 1);
-      setDaysDifference(daysDifference + 1);
+      setDate(data?.diaries?.[cardIndex]?.date);
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev) => prev - 1);
-      setDaysDifference(daysDifference - 1);
+      setDate(data?.diaries?.[cardIndex]?.date);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div>
+        <>로딩중입니다.</>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>에러발생</>
+    );
+  }
 
   return (
     <div className={styles.carousel_container}>
@@ -73,7 +79,10 @@ export default function CardSlider({
         onDragEnd={onDragEnd}
         className={styles.carousel}
       >
-        {contents.map((_, idx) => {
+        {data?.diaries?.map((cardData : DiaryEntry, idx : number) => {
+          // 나중에 과거, 미래로 교체
+          const {pastCard, nowCard, futureCard} = cardData;
+
           return (
             <div
               key={idx}
@@ -87,32 +96,30 @@ export default function CardSlider({
               }}
             >
               <Image
-                src={tarot_background}
+                src={ nowCard?.imgUrl ?? tarot_background}
                 className={`${styles.card} ${styles.past}`}
                 alt="past_card"
                 width={120}
                 height={205}
               />
               <Image
-                src={tarot_background}
+                src={nowCard?.imgUrl ?? tarot_background}
                 className={`${styles.card} ${styles.current} `}
                 alt="current_card"
                 width={120}
                 height={205}
               />
               <Image
-                src={tarot_background}
+                src={nowCard?.imgUrl ?? tarot_background}
                 className={`${styles.card} ${styles.future}`}
                 alt="future_card"
                 width={120}
                 height={205}
               />
-              {isNotNotedToday && (
-                <div className={styles.note_notification}>오늘의 일기 작성</div>
-              )}
             </div>
           );
         })}
+
       </motion.div>
     </div>
   );
