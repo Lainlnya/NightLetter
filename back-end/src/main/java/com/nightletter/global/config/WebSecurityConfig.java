@@ -51,7 +51,7 @@ public class WebSecurityConfig {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeHttpRequests(request -> request
-				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**xr").permitAll()
+				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2 -> oauth2
@@ -80,7 +80,8 @@ public class WebSecurityConfig {
 					"http://localhost:3000",
 					"http://localhost:3001",
 					"https://localhost:3000",
-					"https://localhost:3001")
+					"https://localhost:3001",
+					"*")
 			);
 
 		// corsConfiguration.setAllowedHeaders(
