@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -25,6 +26,7 @@ public class DiaryTarot extends BaseTimeEntity {
 	@MapsId("diaryId")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "diary_id")
+	@Setter
 	private Diary diary;
 
 	@MapsId("tarotId")
@@ -39,8 +41,10 @@ public class DiaryTarot extends BaseTimeEntity {
 
 	}
 
-	public DiaryTarot(DiaryTarotId id, DiaryTarotType type) {
-		this.id = id;
+	public DiaryTarot(Diary diary, Tarot tarot, DiaryTarotType type) {
+		this.id = new DiaryTarotId(diary.getDiaryId(), tarot.getId());
+		this.diary = diary;
+		this.tarot = tarot;
 		this.type = type;
 	}
 }
