@@ -41,13 +41,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 		try {
 			// 토큰 확인.
-			String token = parseBearerToken(request);
+			// String token = parseBearerToken(request);
 
 			// log.info("Token Info In JWT Filter : " + token);
 
 			// 로컬 개발 위한 임시토큰 사용
 			// if (token == null) {
-			token = devToken;
+
+			System.out.println(devToken);
+			String token = devToken;
+
 			// }
 
 			if (token == null) {

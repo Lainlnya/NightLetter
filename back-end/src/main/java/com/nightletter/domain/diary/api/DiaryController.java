@@ -32,16 +32,17 @@ public class DiaryController {
 
 	private final DiaryService diaryService;
 
-	@PostMapping("/")
+	@PostMapping("")
 	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) throws
 		JsonProcessingException {
+
 		Optional<RecommendResponse> diary = diaryService.createDiary(diaryCreateRequest);
 
 		return diary.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());
 	}
 
-	@PatchMapping("/")
+	@PatchMapping("")
 	public ResponseEntity<?> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
 
 		Optional<DiaryResponse> diary =
@@ -51,7 +52,7 @@ public class DiaryController {
 			.orElseGet(() -> ResponseEntity.badRequest().build());
 	}
 
-	@GetMapping("/")
+	@PostMapping("/self")
 	public ResponseEntity<?> findDiaries(@RequestBody DiaryListRequest diaryListRequest) {
 		System.out.println(diaryListRequest.toString());
 
