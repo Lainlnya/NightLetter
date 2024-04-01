@@ -25,6 +25,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.tarot.dto.PastTarotResponse;
 import com.nightletter.domain.tarot.dto.TarotDto;
@@ -50,6 +51,7 @@ public class TarotServiceImpl implements TarotService {
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
 	private final TarotRedisRepository tarotRedisRepository;
+	private final DiaryRepository diaryRepository;
 
 	@PostConstruct
 	private void getTarotEmbedded() {
@@ -80,6 +82,7 @@ public class TarotServiceImpl implements TarotService {
 		log.info("======== COMPLETE MAKING DECK : {} ==========", deck.size());
 	}
 
+	@Override
 	public TarotDto findSimilarTarot(EmbedVector diaryEmbedVector) {
 		Map<Integer, Double> score = new HashMap<>();
 
@@ -122,24 +125,6 @@ public class TarotServiceImpl implements TarotService {
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 
-	public int getRandomTarotId(int... ignoreTarotsId){
-		Random random = new Random();
-		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();
-
-
-		//todo. 뒤집힌것도 ignore
-		int id = 0;
-		int pair = 0;
-		boolean isIgnored;
-		do {
-			id = random.nextInt(156) + 1;
-			pair = (id % 2 == 0) ? id - 1 : id + 1;
-
-			isIgnored = ignoredIdsList.contains(id);
-		} while (isIgnored);
-
-		return id;
-	}
 
 	@Override
 	public Optional<PastTarotResponse> createRandomPastTarot() {
@@ -177,6 +162,7 @@ public class TarotServiceImpl implements TarotService {
 		return pastTarot.flatMap(
 			value -> tarotRepository.findById(value.getTarotId()).map(tarot -> PastTarotResponse.of(tarot, tarot.getDir())));
 	}
+
 
 	private Integer getCurrentMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

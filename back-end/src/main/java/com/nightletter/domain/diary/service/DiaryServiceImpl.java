@@ -1,9 +1,11 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -77,13 +79,30 @@ public class DiaryServiceImpl implements DiaryService {
 		Tarot nowTarot = tarotRepository.findById(recommendTarot.id()).get();
 		Tarot pastTarot = tarotRepository.findById(155).get();
 
-		int randomTarotId = tarotService.getRandomTarotId(pastTarot.getId(), nowTarot.getId());
+		int randomTarotId = getRandomTarotId(pastTarot.getId(), nowTarot.getId());
 		Tarot futureTarot = tarotRepository.findById(randomTarotId).get();
 
 		saveDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
 		saveDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
 		saveDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
 		return Optional.of(recResponse);
+	}
+
+	private int getRandomTarotId(int... ignoreTarotsId){
+		Random random = new Random();
+		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();
+
+		int id = 0;
+		int pair = 0;
+		boolean isIgnored;
+		do {
+			id = random.nextInt(156) + 1;
+			pair = (id % 2 == 0) ? id - 1 : id + 1;
+
+			isIgnored = ignoredIdsList.contains(id) || ignoredIdsList.contains(pair);
+		} while (isIgnored);
+
+		return id;
 	}
 
 	@Override
