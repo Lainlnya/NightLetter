@@ -3,21 +3,15 @@ package com.nightletter.domain.tarot.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.TimeZone;
 
-import org.springframework.cglib.core.Local;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,15 +19,16 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryTarot;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
-import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.tarot.dto.PastTarotResponse;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
-import com.nightletter.domain.tarot.dto.TarotListResponse;
+import com.nightletter.domain.tarot.dto.RecTarotResponse;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
-import com.nightletter.domain.tarot.entity.TarotDirection;
 import com.nightletter.domain.tarot.repository.TarotRedisRepository;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 
@@ -61,11 +56,11 @@ public class TarotServiceImpl implements TarotService {
 		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
 		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
 
-		TarotListResponse tarotVectors = webClient.post()
+		RecTarotResponse tarotVectors = webClient.post()
 			.uri("/tarots/init")
 			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
 			.retrieve()
-			.bodyToMono(TarotListResponse.class)
+			.bodyToMono(RecTarotResponse.class)
 			.doOnError(error -> log.error("Fast API CONNECT ERROR: {}", error.getMessage()))
 			.onErrorResume(error -> Mono.empty())
 			.block();
@@ -111,15 +106,30 @@ public class TarotServiceImpl implements TarotService {
 		return deck.get(key);
 	}
 
+	@Override
+	public TarotResponse findFutureTarot() {
+
+		Diary diary = diaryRepository.findByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
+		DiaryTarot futureDiaryTarot = diary.getDiaryTarots()
+			.stream()
+			.filter(diaryTarot -> diaryTarot.getType() == DiaryTarotType.FUTURE)
+			.findFirst()
+			.get();
+
+		futureDiaryTarot.getTarot().toDto();
+		// todo. DTO 다시 반환
+		return null;
+	}
+
 	private double calculateCosineSimilarity(EmbedVector embedVectorA, EmbedVector embedVectorB) {
 		double dotProduct = 0.0;
 		double normA = 0.0;
 		double normB = 0.0;
-		int size = embedVectorA.getEmbed().size();
+		int size = embedVectorA.embed().size();
 		for (int i = 0; i < size; i++) {
-			dotProduct += embedVectorA.getEmbed().get(i) * embedVectorB.getEmbed().get(i);
-			normA += Math.pow(embedVectorA.getEmbed().get(i), 2);
-			normB += Math.pow(embedVectorB.getEmbed().get(i), 2);
+			dotProduct += embedVectorA.embed().get(i) * embedVectorB.embed().get(i);
+			normA += Math.pow(embedVectorA.embed().get(i), 2);
+			normB += Math.pow(embedVectorB.embed().get(i), 2);
 		}
 
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
@@ -127,7 +137,7 @@ public class TarotServiceImpl implements TarotService {
 
 
 	@Override
-	public Optional<PastTarotResponse> createRandomPastTarot() {
+	public Optional<TarotResponse> createRandomPastTarot() {
 		// 과거 카드 redis 저장.
 		// redisTemplate.
 		int tarotId = new Random().nextInt(1, 157);
@@ -152,15 +162,15 @@ public class TarotServiceImpl implements TarotService {
 			.build()
 		);
 
-		return tarotResponse.map(tarot -> PastTarotResponse.of(tarot, tarot.getDir()));
+		return tarotResponse.map(tarot -> TarotResponse.of(tarot, tarot.getDir()));
 	}
 
 	@Override
-	public Optional<PastTarotResponse> getRandomPastTarot() {
+	public Optional<TarotResponse> getRandomPastTarot() {
 		Optional<PastTarot> pastTarot = tarotRedisRepository.findById(getCurrentMemberId());
 
 		return pastTarot.flatMap(
-			value -> tarotRepository.findById(value.getTarotId()).map(tarot -> PastTarotResponse.of(tarot, tarot.getDir())));
+			value -> tarotRepository.findById(value.getTarotId()).map(tarot -> TarotResponse.of(tarot, tarot.getDir())));
 	}
 
 

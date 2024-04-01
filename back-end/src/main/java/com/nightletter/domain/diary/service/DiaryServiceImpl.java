@@ -62,7 +62,7 @@ public class DiaryServiceImpl implements DiaryService {
 			.block();
 
 		log.info("======= vec : {},  diary ids : {}",
-			recDataResponse.getEmbedVector().getEmbed().size(),
+			recDataResponse.getEmbedVector().embed().size(),
 			recDataResponse.getDiariesId().size());
 
 		RecommendResponse recResponse = new RecommendResponse(); // 응답
