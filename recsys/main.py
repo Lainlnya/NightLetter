@@ -13,7 +13,9 @@ app = FastAPI()
 
 origins = [
     "http://letter-for.me:8081",
+    "http://dev.letter-for.me:8081",
     "https://letter-for.me",
+    "https://dev.letter-for.me",
     "http://localhost",
     "http://localhost:8081",
 ]
