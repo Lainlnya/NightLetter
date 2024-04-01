@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +24,11 @@ import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
-import com.nightletter.domain.tarot.dto.TarotResponse;
+import com.nightletter.domain.tarot.dto.RecTarotResponse;
+import com.nightletter.domain.tarot.dto.RecVectorResponse;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
-import com.nightletter.domain.tarot.dto.RecTarotResponse;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRedisRepository;
@@ -35,6 +37,7 @@ import com.nightletter.domain.tarot.repository.TarotRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -42,39 +45,39 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class TarotServiceImpl implements TarotService {
 
-	private static final Map<Integer, TarotDto> deck = new HashMap<>();
+	private static final Map<Integer, TarotDto> deck = new ConcurrentHashMap<>();
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
 	private final TarotRedisRepository tarotRedisRepository;
 	private final DiaryRepository diaryRepository;
 
 	@PostConstruct
-	private void getTarotEmbedded() {
-		log.info("======== START MAKING DECK : Just wait 20sec. ==========");
+	public void getTarotEmbedded() {
+		log.info("======== START MAKING DECK : Just wait. ==========");
+		Flux.fromIterable(tarotRepository.findAll())
+			.map(Tarot::toKeywordDto)
+			.collectList()
+			.flatMap(this::fetchTarotVectors)
+			.flatMapMany(recTarotResponse -> Flux.fromIterable(recTarotResponse.getTarots()))
+			.flatMap(this::updateTarotWithVector)
+			.doOnNext(tarotDto -> deck.put(tarotDto.id(), tarotDto))
+			.thenMany(Flux.fromIterable(deck.values()))
+			.collectList()
+			.doOnSuccess(tarotDtos -> log.info("======== COMPLETE MAKING DECK : {} ==========", tarotDtos.size()))
+			.subscribe();
+	}
 
-		List<Tarot> allTarots = tarotRepository.findAll();
-		List<TarotKeyword> allTarotsKeyword = new ArrayList<>();
-		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
-
-		RecTarotResponse tarotVectors = webClient.post()
+	private Mono<RecTarotResponse> fetchTarotVectors(List<TarotKeyword> keywords) {
+		return webClient.post()
 			.uri("/tarots/init")
-			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
+			.body(BodyInserters.fromValue(Map.of("tarots", keywords)))
 			.retrieve()
-			.bodyToMono(RecTarotResponse.class)
-			.doOnError(error -> log.error("Fast API CONNECT ERROR: {}", error.getMessage()))
-			.onErrorResume(error -> Mono.empty())
-			.block();
+			.bodyToMono(RecTarotResponse.class);
+	}
 
-		if (tarotVectors == null || tarotVectors.getTarots() == null) {
-			log.error("Tarot vectors response is null or empty.");
-			return;
-		}
-
-		tarotVectors.getTarots().forEach(tarotVec -> {
-			Tarot tarot = allTarots.get(tarotVec.getId() - 1).setEmbedVector(tarotVec.getKeywords());
-			deck.put(tarotVec.getId(), tarot.toDto());
-		});
-		log.info("======== COMPLETE MAKING DECK : {} ==========", deck.size());
+	private Mono<TarotDto> updateTarotWithVector(RecVectorResponse tarotVector) {
+		return Mono.justOrEmpty(
+			tarotRepository.findAll().get(tarotVector.getId() - 1).setEmbedVector(tarotVector.getKeywords()).toDto());
 	}
 
 	@Override
