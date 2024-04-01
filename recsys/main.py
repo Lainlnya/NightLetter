@@ -76,7 +76,7 @@ def build_model():
     return {"message": "success tree building"}
 
 
-@app.post("/tarot/init", response_model=model.TarotVectors)
+@app.post("/tarots/init", response_model=model.TarotVectors)
 def get_deck(tarots: model.TarotInput):
     card_lst = []
     for tarot in tarots.tarots:
