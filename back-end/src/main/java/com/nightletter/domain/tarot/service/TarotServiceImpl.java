@@ -214,7 +214,12 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public Tarot findPastTarot(Member currentMember) {
 		return tarotRepository.findPastTarot(LocalDate.now(), currentMember.getMemberId())
-			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"PAST TAROT NOT FOUND"));
-		// todo. 예외가 아닌 REDIS에서 가져오기
+			.orElseGet(() -> {
+				PastTarot pastTarot = tarotRedisRepository.findById(getCurrentMemberId())
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"PAST TAROT IN REDIS NOT FOUND"));
+
+				return tarotRepository.findById(pastTarot.getTarotId())
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"TAROT NOT FOUND"));
+			});
 	}
 }
