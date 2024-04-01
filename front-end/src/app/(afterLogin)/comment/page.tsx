@@ -1,4 +1,5 @@
 import styles from "./comment.module.scss";
+import Image from "next/image";
 
 const Comment: React.FC = () => {
   const today = new Date();
@@ -22,9 +23,27 @@ const Comment: React.FC = () => {
             <div>미래</div>
           </section>
           <section>
-            <img className={styles.past} src="/deleted_card/1.png" />
-            <img className={styles.present} src="/deleted_card/10.png" />
-            <img className={styles.future} src="/deleted_card/21.png" />
+            <Image
+              className={styles.past}
+              src="/deleted_card/1.png"
+              width={110}
+              height={190}
+              alt="과거 카드"
+            />
+            <Image
+              className={styles.present}
+              alt="현재 카드"
+              src="/deleted_card/10.png"
+              width={110}
+              height={190}
+            />
+            <Image
+              width={110}
+              height={190}
+              alt="미래 카드"
+              className={styles.future}
+              src="/deleted_card/21.png"
+            />
           </section>
         </section>
         <section className={styles.commentSec}>

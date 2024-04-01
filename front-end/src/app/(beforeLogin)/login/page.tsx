@@ -1,6 +1,6 @@
-'use client';
-
-import styles from './login.module.scss';
+"use client";
+import Image from "next/image";
+import styles from "./login.module.scss";
 
 const Login = () => {
   const handleClick = () => {
@@ -12,7 +12,13 @@ const Login = () => {
       <main className={styles.main}>
         <h1>밤편지</h1>
         <div>당신의 하루를 기록해보세요</div>
-        <img onClick={handleClick} src='/images/kakao-login-large-narrow.png' />
+        <Image
+          width={200}
+          height={50}
+          alt="카카오 로그인 버튼"
+          onClick={handleClick}
+          src="/images/kakao-login-large-narrow.png"
+        />
       </main>
     </>
   );
