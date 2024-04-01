@@ -1,6 +1,6 @@
-import { getTodayDate } from "@/utils/dateFormat";
+import { CardsRequestBody } from "../types/apis";
 
-export default async function getInitialCards() {
+export default async function getAdditionalCards({ date, direction, size }: CardsRequestBody) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries/self`, {
         method: "POST",
         headers: {
@@ -11,9 +11,9 @@ export default async function getInitialCards() {
             tags: ["card", 'cards'],
         },
         body: JSON.stringify({
-            date: getTodayDate(),
-            direction: "BEFORE",
-            size: 5
+            date: date,
+            direction: direction,
+            size: size
         }),
 
     });
