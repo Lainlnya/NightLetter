@@ -14,11 +14,10 @@ import { Messages } from "@/utils/msg";
 import { useQuery } from "@tanstack/react-query";
 
 interface CardInfo {
-  cardNo: number;
-  cardName: string;
-  cardImgUrl: string;
-  cardKeyWord: string;
-  cardDesc: string;
+  name: string;
+  imgUrl: string;
+  keyword: string;
+  desc: string;
 }
 
 const ViewCard: React.FC = () => {
@@ -29,22 +28,33 @@ const ViewCard: React.FC = () => {
   const searchParams: ReadonlyURLSearchParams = useSearchParams();
 
   const { isLoading, data: pastCard } = useQuery({
-    queryKey: ["tarotCard"],
-    queryFn: () => getTarotCard(searchParams.get("info") as string),
+    queryKey: ["PastTarotCard"],
+    queryFn: () => getTarotCard(searchParams.get("info") as string, "POST"),
+    enabled: searchParams.get("info") === "past",
+  });
+
+  const { data: futureCard } = useQuery({
+    queryKey: ["FutureTarotCard"],
+    queryFn: () => getTarotCard(searchParams.get("info") as string, "GET"),
+    enabled: searchParams.get("info") === "future",
   });
 
   useEffect(() => {
     const presentCardInfo = sessionStorage.getItem("presentCardInfo");
     if (searchParams.get("info") === "present" && presentCardInfo !== null) {
-      const { cardNo, cardName, cardImgUrl, cardKeyWord, cardDesc } =
-        JSON.parse(presentCardInfo);
-      setCard({ cardNo, cardName, cardImgUrl, cardKeyWord, cardDesc });
+      const { name, imgUrl, keyword, desc } = JSON.parse(presentCardInfo);
+      setCard({ name, imgUrl, keyword, desc });
     }
 
     if (pastCard && searchParams.get("info") === "past") {
       setCard(pastCard);
     }
-  }, [pastCard]);
+
+    if (futureCard && searchParams.get("info") === "future") {
+      setCard(futureCard);
+      console.log(futureCard);
+    }
+  }, [pastCard, futureCard]);
 
   if (!card || isLoading) {
     return <Loading loadingMessage={Messages.LOADING_CARD_INFO} />;
@@ -56,11 +66,11 @@ const ViewCard: React.FC = () => {
         {searchParams.get("info") === "present" && (
           <div className={styles.today}>오늘의 감정을 나타내는 카드는...</div>
         )}
-        <div>{card.cardName}</div>
+        <div>{card.name}</div>
         <div className={`${styles.card} ${isBack ? styles.isRight : ""}`}>
           <Image
             className={styles.front}
-            src={card.cardImgUrl}
+            src={card.imgUrl}
             alt="tarot image"
             width={230}
             height={400}
@@ -69,7 +79,7 @@ const ViewCard: React.FC = () => {
             <Image
               className={styles.back}
               onClick={() => setIsBack(!isBack)}
-              src={card.cardImgUrl}
+              src={card.imgUrl}
               alt="tarot image"
               width={230}
               height={400}
@@ -78,11 +88,11 @@ const ViewCard: React.FC = () => {
               className={`${isBack ? styles.nonView : styles.view}`}
               onClick={() => setIsBack(!isBack)}
             >
-              {card.cardDesc}
+              {card.desc}
             </div>
           </div>
         </div>
-        <div className={styles.meaning}>{card.cardKeyWord}</div>
+        <div className={styles.meaning}>{card.keyword}</div>
         {searchParams.get("info") === "present" && (
           <button
             className={styles.comment}
