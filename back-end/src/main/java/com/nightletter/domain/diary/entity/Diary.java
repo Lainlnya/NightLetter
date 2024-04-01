@@ -8,9 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.global.common.BaseTimeEntity;
 
@@ -41,19 +39,25 @@ public class Diary extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long diaryId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "writer_id", updatable = false)
 	private Member writer;
+
 	@Column(length = 5000)
 	private String content;
-	// 날짜 필요 (CreatedAt과 다른 컬럼)
+
 	private LocalDate date;
+
 	@Enumerated(EnumType.STRING)
 	private DiaryOpenType type;
+
 	@Column(length = 3000)
 	private String gptComment;
+
 	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
 	private List<DiaryTarot> diaryTarots;
+
 	private LocalDateTime deletedAt;
 
 	@Nullable
@@ -64,53 +68,17 @@ public class Diary extends BaseTimeEntity {
 		super();
 	}
 
-	public Diary modifyDiaryDisclosure(DiaryOpenType diaryOpenType) {
+	public void modifyDiaryDisclosure(DiaryOpenType diaryOpenType) {
 		this.type = diaryOpenType;
-		return this;
-	}
-
-	public void addDiaryTarot(DiaryTarot diaryTarot) {
-		this.diaryTarots.add(diaryTarot);
-		diaryTarot.setDiary(this);
 	}
 
 	public void addDiaryTarot(Tarot tarot, DiaryTarotType type) {
 		DiaryTarot diaryTarot = new DiaryTarot(this, tarot, type);
-		if(this. diaryTarots == null){
+		if (this.diaryTarots == null) {
 			diaryTarots = new ArrayList<>();
 		}
 		this.diaryTarots.add(diaryTarot);
 		diaryTarot.setDiary(this);
-	}
-
-	public DiaryResponse toDiaryResponse() {
-		TarotDto pastCard = null;
-		TarotDto nowCard = null;
-		TarotDto futureCard = null;
-
-		for (DiaryTarot tarot : this.diaryTarots) {
-			DiaryTarotType type = tarot.getType();
-
-			if (type.equals(DiaryTarotType.PAST)) {
-				pastCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
-			} else if (type.equals(DiaryTarotType.NOW)) {
-				nowCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
-			} else if (type.equals(DiaryTarotType.FUTURE)) {
-				futureCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
-			}
-		}
-
-		return DiaryResponse.builder()
-			.writerId(this.writer.getMemberId())
-			.diaryId(this.diaryId)
-			.type(this.type)
-			.content(this.content)
-			.gptComment(this.gptComment)
-			.pastCard(pastCard)
-			.nowCard(nowCard)
-			.futureCard(futureCard)
-			.date(this.date)
-			.build();
 	}
 }
 
