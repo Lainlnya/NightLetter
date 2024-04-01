@@ -2,6 +2,7 @@ package com.nightletter.domain.diary.api;
 
 import java.util.Optional;
 
+import com.nightletter.domain.diary.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.service.DiaryService;
 
 import lombok.RequiredArgsConstructor;
@@ -75,5 +70,11 @@ public class DiaryController {
 
 		return diaryService.deleteDiary(diaryId).map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@GetMapping("/get_comment")
+	public ResponseEntity<?> findGptComment(){
+		Optional<GPTResponse> response = diaryService.findGptComment();
+		return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

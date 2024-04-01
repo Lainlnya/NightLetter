@@ -1,5 +1,6 @@
 package com.nightletter.domain.diary.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryCustom
 	List<Diary> findDiariesByWriter(Member writer);
 
 	Diary findDiaryByDiaryId(Long diaryId);
+
+	Diary findByDateAndWriter(LocalDate date, Member writer);
 }

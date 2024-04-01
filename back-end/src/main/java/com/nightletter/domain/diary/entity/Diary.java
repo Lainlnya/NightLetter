@@ -83,6 +83,10 @@ public class Diary extends BaseTimeEntity {
 		diaryTarot.setDiary(this);
 	}
 
+	public void addDiaryComment(String gptComment){
+		this.gptComment = gptComment;
+	}
+
 	public DiaryResponse toDiaryResponse() {
 		TarotDto pastCard = null;
 		TarotDto nowCard = null;
@@ -112,5 +116,7 @@ public class Diary extends BaseTimeEntity {
 			.date(this.date)
 			.build();
 	}
+
+
 }
 
