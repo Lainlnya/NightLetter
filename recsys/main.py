@@ -2,7 +2,7 @@ import os
 from annoy import AnnoyIndex
 from fastapi import FastAPI
 from sentence_transformers import SentenceTransformer
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from data import model
 from data import text_preprocessing
@@ -24,8 +24,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["X-Custom-Header", "Content-Type"],
 )
 
 embedder = SentenceTransformer(os.getcwd() + '/kosbert-klue-bert-base')
