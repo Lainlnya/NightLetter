@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
 
 import lombok.AllArgsConstructor;
@@ -24,13 +25,13 @@ public class RecommendResponse {
 	private String desc;
 	private List<RecommendDiaryResponse> recommendDiaries;
 
-	public void setCard(TarotDto tarot) {
-		this.no = tarot.id() / 2 + tarot.id() % 2 - 1;
-		this.name = tarot.name();
-		this.imgUrl = tarot.imgUrl();
-		this.dir = tarot.dir();
+	public void setCard(Tarot tarot) {
+		this.no = tarot.getId() / 2 + tarot.getId() % 2 - 1;
+		this.name = tarot.getName();
+		this.imgUrl = tarot.getImgUrl();
+		this.dir = tarot.getDir();
 		this.type = DiaryTarotType.NOW;
-		this.keyword = tarot.keyword();
-		this.desc = tarot.description();
+		this.keyword = tarot.getKeyword();
+		this.desc = tarot.getDescription();
 	}
 }
