@@ -54,6 +54,11 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+  data:
+    redis:
+      host: ${REDIS_HOSTNAME}
+      port: ${REDIS_PORT}
+
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
