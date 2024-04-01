@@ -1,9 +1,6 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +16,6 @@ import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryRequestDirection;
 import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.RecommendResponse;
@@ -32,7 +28,7 @@ import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRepository;
-import com.nightletter.domain.tarot.service.TarotService;
+import com.nightletter.domain.tarot.service.TarotServiceImpl;
 import com.nightletter.global.common.ResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +43,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final DiaryRepository diaryRepository;
 	private final DiaryTarotRepository diaryTarotRepository;
 	private final WebClient webClient;
-	private final TarotService tarotService;
+	private final TarotServiceImpl tarotService;
 	private final TarotRepository tarotRepository;
 	private final MemberRepository memberRepository;
 
