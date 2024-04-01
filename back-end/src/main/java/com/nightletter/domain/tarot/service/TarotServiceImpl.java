@@ -60,7 +60,7 @@ public class TarotServiceImpl implements TarotService {
 		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
 
 		TarotListResponse tarotVectors = webClient.post()
-			.uri("/tarot/init")
+			.uri("/tarots/init")
 			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
 			.retrieve()
 			.bodyToMono(TarotListResponse.class)
