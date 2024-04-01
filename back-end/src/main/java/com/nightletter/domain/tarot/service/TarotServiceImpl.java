@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +30,9 @@ import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRedisRepository;
 import com.nightletter.domain.tarot.repository.TarotRepository;
+import com.nightletter.global.exception.CommonErrorCode;
+import com.nightletter.global.exception.RecsysConnectionException;
+import com.nightletter.global.exception.ResourceNotFoundException;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -72,52 +72,60 @@ public class TarotServiceImpl implements TarotService {
 			.uri("/tarots/init")
 			.body(BodyInserters.fromValue(Map.of("tarots", keywords)))
 			.retrieve()
-			.bodyToMono(RecTarotResponse.class);
+			.bodyToMono(RecTarotResponse.class)
+			.onErrorResume(e ->
+				Mono.error(new RecsysConnectionException(CommonErrorCode.RECOMMEND_SYS_CONNECTION_ERROR)));
 	}
 
 	private Mono<TarotDto> updateTarotWithVector(RecVectorResponse tarotVector) {
-		return Mono.justOrEmpty(
-			tarotRepository.findAll().get(tarotVector.getId() - 1).setEmbedVector(tarotVector.getKeywords()).toDto());
+		return Mono.justOrEmpty(tarotRepository.findAll()
+				.stream()
+				.filter(tarot -> tarot.getId().equals(tarotVector.getId()))
+				.findFirst()
+				.map(tarot -> tarot.setEmbedVector(tarotVector.getKeywords()).toDto()))
+			.onErrorResume(e -> {
+				return Mono.error(new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND")); // 에러 시 대체 동작
+			});
 	}
 
 	@Override
 	public TarotDto findSimilarTarot(EmbedVector diaryEmbedVector) {
-		Map<Integer, Double> score = new HashMap<>();
+		Map<Integer, Double> score = new ConcurrentHashMap<>();
 
-		deck.forEach((tarotId, tarotDto) -> {
-			List<Double> similarityVector = new ArrayList<>();
+		deck.entrySet().parallelStream().forEach(entry -> {
+			double maxSimilarity = 0.0;
+			double sumSimilarity = 0.0;
 
-			tarotDto.embedVector().forEach(vector -> {
+			for (EmbedVector vector : entry.getValue().embedVector()) {
 				double similarity = calculateCosineSimilarity(vector, diaryEmbedVector);
-				similarityVector.add(similarity);
-			});
-
-			Double max = Collections.max(similarityVector);
-			double sum = similarityVector.stream()
-				.mapToDouble(Double::doubleValue)
-				.sum();
-
-			score.put(tarotId, max + sum);
+				sumSimilarity += similarity;
+				if (similarity > maxSimilarity) {
+					maxSimilarity = similarity;
+				}
+			}
+			score.put(entry.getKey(), maxSimilarity + sumSimilarity);
 		});
-		log.info("score.size == {}", score.size());
-		Integer key = score.entrySet()
-			.stream()
-			.max(Map.Entry.comparingByValue())
-			.map(Map.Entry::getKey).get();
+		log.info("======== Find Similar Tarots.score.size : {} ========", score.size());
 
-		log.info("{} no : this card == {}", key, deck.get(key).name());
+		int key = score.entrySet().stream()
+			.max(Map.Entry.comparingByValue())
+			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT KEY NOT FOUND"))
+			.getKey();
+		log.info("======== Similar Tarots : {} , no : {} ======== ", deck.get(key).name(), key);
 		return deck.get(key);
 	}
 
 	@Override
 	public TarotResponse findFutureTarot() {
+		Diary diary = diaryRepository.findByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now())
+			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
+					"DIARY NOT FOUND - MEMBER ID : " + getCurrentMemberId()));
 
-		Diary diary = diaryRepository.findByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
 		DiaryTarot futureDiaryTarot = diary.getDiaryTarots()
 			.stream()
 			.filter(diaryTarot -> diaryTarot.getType() == DiaryTarotType.FUTURE)
 			.findFirst()
-			.get();
+			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "DIARY-TAROT NOT FOUND"));
 
 		return futureDiaryTarot.getTarot().toResponse();
 	}
@@ -136,7 +144,6 @@ public class TarotServiceImpl implements TarotService {
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 
-
 	@Override
 	public Optional<TarotResponse> createRandomPastTarot() {
 		// 과거 카드 redis 저장.
@@ -145,7 +152,8 @@ public class TarotServiceImpl implements TarotService {
 
 		Optional<Tarot> tarotResponse = tarotRepository.findById(tarotId);
 
-		if (tarotResponse.isEmpty()) return Optional.empty();
+		if (tarotResponse.isEmpty())
+			return Optional.empty();
 
 		LocalDateTime expiredTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(4, 0));
 
@@ -171,12 +179,12 @@ public class TarotServiceImpl implements TarotService {
 		Optional<PastTarot> pastTarot = tarotRedisRepository.findById(getCurrentMemberId());
 
 		return pastTarot.flatMap(
-			value -> tarotRepository.findById(value.getTarotId()).map(tarot -> TarotResponse.of(tarot, tarot.getDir())));
+			value -> tarotRepository.findById(value.getTarotId())
+				.map(tarot -> TarotResponse.of(tarot, tarot.getDir())));
 	}
-
 
 	private Integer getCurrentMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return Integer.parseInt((String) authentication.getPrincipal());
+		return Integer.parseInt((String)authentication.getPrincipal());
 	}
 }

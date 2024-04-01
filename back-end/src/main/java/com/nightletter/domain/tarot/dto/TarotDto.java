@@ -10,7 +10,7 @@ import lombok.Builder;
 
 @Builder
 public record TarotDto(
-	Integer id,
+	int id,
 	String name,
 	String imgUrl,
 	String keyword,
