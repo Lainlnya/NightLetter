@@ -26,6 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nightletter.domain.diary.dto.EmbedVector;
 import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.dto.PastTarotResponse;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
 import com.nightletter.domain.tarot.dto.TarotListResponse;
@@ -141,13 +142,11 @@ public class TarotServiceImpl implements TarotService {
 	}
 
 	@Override
-	public Optional<TarotDto> createRandomPastTarot() {
+	public Optional<PastTarotResponse> createRandomPastTarot() {
 		// 과거 카드 redis 저장.
 		// redisTemplate.
-		Integer tarotId = new Random().nextInt(1, 157);
+		int tarotId = new Random().nextInt(1, 157);
 
-		// 임시로 1번 카드로 고정.
-		tarotId = 1;
 		Optional<Tarot> tarotResponse = tarotRepository.findById(tarotId);
 
 		if (tarotResponse.isEmpty()) return Optional.empty();
@@ -168,15 +167,15 @@ public class TarotServiceImpl implements TarotService {
 			.build()
 		);
 
-		return tarotResponse.map(tarot -> TarotDto.of(tarot, tarot.getDir()));
+		return tarotResponse.map(tarot -> PastTarotResponse.of(tarot, tarot.getDir()));
 	}
 
 	@Override
-	public Optional<TarotDto> getRandomPastTarot() {
+	public Optional<PastTarotResponse> getRandomPastTarot() {
 		Optional<PastTarot> pastTarot = tarotRedisRepository.findById(getCurrentMemberId());
 
 		return pastTarot.flatMap(
-			value -> tarotRepository.findById(value.getTarotId()).map(tarot -> TarotDto.of(tarot, tarot.getDir())));
+			value -> tarotRepository.findById(value.getTarotId()).map(tarot -> PastTarotResponse.of(tarot, tarot.getDir())));
 	}
 
 	private Integer getCurrentMemberId() {

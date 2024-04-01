@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.RecommendResponse;
+import com.nightletter.domain.tarot.dto.PastTarotResponse;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.service.TarotService;
 
@@ -38,7 +39,7 @@ public class TarotController {
 	@PostMapping("/past")
 	public ResponseEntity<?> addPastTarot() {
 
-		Optional<TarotDto> response = tarotService.createRandomPastTarot();
+		Optional<PastTarotResponse> response = tarotService.createRandomPastTarot();
 
 		if (response.isEmpty())
 			return databaseError();
