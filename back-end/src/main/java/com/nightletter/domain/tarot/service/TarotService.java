@@ -20,7 +20,6 @@ import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -43,7 +42,7 @@ public class TarotService {
 		allTarots.forEach(tarot -> allTarotsKeyword.add(tarot.toKeywordDto()));
 
 		TarotListResponse tarotVectors = webClient.post()
-			.uri("/tarot/init")
+			.uri("/tarots/init")
 			.body(BodyInserters.fromValue(Map.of("tarots", allTarotsKeyword)))
 			.retrieve()
 			.bodyToMono(TarotListResponse.class)
@@ -109,8 +108,6 @@ public class TarotService {
 		Random random = new Random();
 		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();
 
-
-		//todo. 뒤집힌것도 ignore
 		int id = 0;
 		int pair = 0;
 		boolean isIgnored;
