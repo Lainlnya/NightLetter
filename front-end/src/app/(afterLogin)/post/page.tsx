@@ -1,50 +1,38 @@
 'use client';
 import Toast from '@/app/_components/post/Toast';
 import styles from './post.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { saveData } from '@/_apis/DiaryApis';
+import { setData } from '@/_apis/DiaryApis';
 import { Messages } from '@/utils/msg';
 import { useRouter } from 'next/navigation';
-
-interface PostElement {
-  content: string;
-  type: string;
-}
+import { TODAY, TOMORROW } from '@/utils/dateFormat';
 
 const Post: React.FC = () => {
-  const today = new Date();
-  const [year, month, day] = [today.getFullYear(), today.getMonth() + 1, today.getDate()];
-
-  const formattedDate = `${year.toString().substr(2)}.${month.toString().padStart(2, '0')}.${day
-    .toString()
-    .padStart(2, '0')}`;
-
-  // 내일의 날짜
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(new Date().getDate() + 1);
-  tomorrowDate.setHours(4, 0, 0, 0); // 내일 오전 4시
-
-  const [textCount, setTextCount] = useState<number>(0);
-  const [tempDiary, setTempDiary] = useState<string>('');
+  const [diaryText, setDiaryText] = useState('');
   const [toast, setToast] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(false);
+  const [debouncedValue, setDebouncedValue] = useState<string>(diaryText);
   const router = useRouter();
+  const diaryRef = useRef(null);
 
   /** 임시저장 함수 */
   const saveTemp = () => {
     setToast(true);
-    if (tempDiary.trim().length !== 0) {
-      localStorage.setItem('diaryPost', JSON.stringify([tempDiary, tomorrowDate]));
-      setTempDiary(tempDiary);
+    if (debouncedValue.trim().length !== 0) {
+      localStorage.setItem('diaryPost', JSON.stringify([debouncedValue, TOMORROW]));
     }
   };
 
-  /** 변하는 값 감지 및 글자수 감지 함수 */
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextCount(e.target.value.length);
-    setTempDiary(e.target.value);
-  };
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(diaryText);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [diaryText]);
 
   /** 체크박스 값 감지 */
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,48 +48,56 @@ const Post: React.FC = () => {
       // new Date().getTime()
       if (new Date().getTime() > new Date(diaryData[1]).getTime()) {
         localStorage.removeItem('diaryPost');
-        setTempDiary('');
       } else {
-        setTempDiary(diaryData[0]);
-        setTextCount(diaryData[0].length);
+        setDiaryText(diaryData[0]);
       }
     }
   }, []);
 
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDiaryText(e.target.value);
+  };
+
   /** 다이어리 저장 쿼리 */
-  const savePost = useMutation({
+  const setDiary = useMutation({
     mutationKey: ['post'],
     mutationFn: () =>
-      saveData({ content: tempDiary, type: checked ? 'PUBLIC' : 'PRIVATE' })
+      setData({ content: diaryText, type: checked ? 'PUBLIC' : 'PRIVATE' })
         .then((value) => {
-          console.log(value);
           sessionStorage.setItem('presentCardInfo', JSON.stringify(value));
           localStorage.removeItem('diaryPost');
           router.push('/card?info=present');
         })
-        .catch((e) => alert(e)),
+        .catch((e) => console.log(e)),
   });
 
   /** 저장 버튼 눌렀을 때 작동하는 함수 */
   const handleSave = () => {
-    if (tempDiary.trim().length === 0) {
+    if (diaryText.trim().length === 0) {
       setToast(true);
-    } else savePost.mutate();
+    } else setDiary.mutate();
   };
+
   return (
     <main className={styles.post}>
       <h1>오늘의 일기를 작성해주세요</h1>
-      <div className={styles.hr_sect}>{formattedDate}</div>
-      <textarea value={tempDiary} onChange={handleChange} placeholder='일기를 작성해주세요' maxLength={600}></textarea>
+      <div className={styles.hr_sect}>{TODAY}</div>
+      <textarea
+        onChange={handleChange}
+        ref={diaryRef}
+        value={diaryText}
+        placeholder='일기를 작성해주세요'
+        maxLength={600}
+      ></textarea>
       <div className={styles.temperary}>
         {toast &&
-          (tempDiary.trim().length === 0 ? (
+          (diaryText.trim().length === 0 ? (
             <Toast setToast={setToast} text={Messages.DIARY_POST_NO_CONTENT} />
           ) : (
             <Toast setToast={setToast} text={Messages.DIARY_TEMPORARY_SAVE_SUCCESS} />
           ))}
         <button onClick={saveTemp}>임시저장</button>
-        <div>{textCount}/600자</div>
+        <div>{diaryText.length}/600자</div>
       </div>
       <hr />
       <div className={styles.checkbox}>

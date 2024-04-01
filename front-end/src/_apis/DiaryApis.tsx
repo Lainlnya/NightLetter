@@ -1,4 +1,4 @@
-export async function saveData(newData: any) {
+export async function setData(newData: any) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries`, {
     method: "POST",
     headers: {
