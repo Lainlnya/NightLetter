@@ -10,22 +10,22 @@ import lombok.Data;
 @Data
 @Builder
 public class PastTarotResponse {
-	String name;
-	String imgUrl;
-	DiaryTarotType type;
-	String keyword;
-	String description;
-	TarotDirection dir;
+	String cardName;
+	String cardImgUrl;
+	DiaryTarotType cardType;
+	TarotDirection cardDir;
+	String cardKeyWord;
+	String cardDesc;
 
 	public static PastTarotResponse of(Tarot tarot, TarotDirection direction) {
 
 		return PastTarotResponse.builder()
-			.name(tarot.getName())
-			.imgUrl(tarot.getImgUrl())
-			.type(DiaryTarotType.PAST)
-			.dir(direction)
-			.keyword(tarot.getKeyword())
-			.description(tarot.getDescription())
+			.cardName(tarot.getName())
+			.cardImgUrl(tarot.getImgUrl())
+			.cardType(DiaryTarotType.PAST)
+			.cardDir(direction)
+			.cardKeyWord(tarot.getKeyword())
+			.cardDesc(tarot.getDescription())
 			.build();
 	}
 }
