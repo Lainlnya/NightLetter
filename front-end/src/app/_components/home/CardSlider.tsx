@@ -3,7 +3,6 @@
 import Image from "next/image";
 import styles from "./cardSlider.module.scss";
 import tarot_background from "../../../../public/images/tarot-background.png";
-import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
 import { motion, useMotionValue } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,22 +10,22 @@ import { DRAG_BUFFER } from "@/utils/animation";
 import getInitialCards from "@/libs/getInitialCards";
 import { useQuery } from "@tanstack/react-query";
 import useStore from "@/store/date";
-import {CalendarProps} from "@/types/calender";
-import {DiaryEntry} from "@/types/card";
-import { TODAY } from "@/utils/dateFormat";
+import { CalendarProps } from "@/types/calender";
+import { DiaryEntry } from "@/types/card";
+import Loading from "@/app/loading";
 
 export default function CardSlider({
   isSeen,
   isClicked,
   setIsClicked,
 }: CalendarProps) {
-  const { data, isLoading, isError } = useQuery({queryKey : ["card", "cards"], queryFn: getInitialCards});
+  const { data, isLoading, isError } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
 
   const router = useRouter();
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
   const { setDate } = useStore();
-  
+
   const dragX = useMotionValue(0);
 
   const onDragStart = () => {
@@ -49,15 +48,13 @@ export default function CardSlider({
 
   if (isLoading) {
     return (
-      <div>
-        <>로딩중입니다.</>
-      </div>
+      <Loading loadingMessage="로딩중입니다." />
     );
   }
 
   if (isError) {
     return (
-      <>에러발생</>
+      <>에러가 발생했습니다.</>
     );
   }
 
@@ -79,15 +76,16 @@ export default function CardSlider({
         onDragEnd={onDragEnd}
         className={styles.carousel}
       >
-        {data?.diaries?.map((cardData : DiaryEntry, idx : number) => {
+        {data?.diaries?.map((cardData: DiaryEntry, idx: number) => {
           // 나중에 과거, 미래로 교체
-          const {pastCard, nowCard, futureCard} = cardData;
+          const { pastCard, nowCard, futureCard } = cardData;
 
           return (
             <div
               key={idx}
               className={styles.card_wrapper}
               onClick={() => {
+                1
                 if (!isSeen && isClicked) {
                   setIsClicked(false);
                 }
@@ -96,7 +94,7 @@ export default function CardSlider({
               }}
             >
               <Image
-                src={ nowCard?.imgUrl ?? tarot_background}
+                src={nowCard?.imgUrl ?? tarot_background}
                 className={`${styles.card} ${styles.past}`}
                 alt="past_card"
                 width={120}

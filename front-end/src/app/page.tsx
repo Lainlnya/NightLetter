@@ -1,7 +1,8 @@
 import styles from './page.module.scss';
 import MainPage from './_components/home/MainPage';
-import {QueryClient, dehydrate, HydrationBoundary} from '@tanstack/react-query';
+import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import getInitialCards from '@/libs/getInitialCards';
+import { Suspense } from 'react';
 
 export default async function Home() {
   const queryClient = new QueryClient();
@@ -9,12 +10,12 @@ export default async function Home() {
     queryKey: ['card', 'cards'],
     queryFn: getInitialCards,
   });
-  const dehydrateState= dehydrate(queryClient);
+  const dehydrateState = dehydrate(queryClient);
 
   return (
     <main className={styles.main}>
       <HydrationBoundary state={dehydrateState}>
-      <MainPage />
+        <MainPage />
       </HydrationBoundary>
     </main>
   );

@@ -7,7 +7,7 @@ import calender from '../../../../public/Icons/calender_icon.svg';
 import useStore from '@/store/date';
 import CardSlider from './CardSlider';
 import { Messages } from '@/utils/msg';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import CalendarComponent from '../diaries/Calendar';
 
 // TODO:
@@ -40,33 +40,37 @@ export default function Home() {
   }, [calendarRef, isClicked]);
 
   return (
-    <>
-      <header className={styles.header}>
-        <div className={styles.header_icons}>
-          <Image
-            src={alarm}
-            alt='alarm'
-            width={24}
-            height={24}
-            className={styles.header_icon}
-            onClick={() => setIsSeen(true)}
-          />
-          <Image src={calender} alt='calender' width={24} height={24} className={styles.header_icon} />
-          {isSeen && (
-            <div ref={calendarRef}>
-              <CalendarComponent />
-            </div>
-          )}
-        </div>
-        <div className={styles.header_title}>
-          <h1>{date}</h1>
-        </div>
-      </header>
-      <section className={styles.section}>
-        <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-        <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
-      </section>
-      {isSeen && <div className={styles.darken}></div>}
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+
+      <>
+        <header className={styles.header}>
+          <div className={styles.header_icons}>
+            <Image
+              src={alarm}
+              alt='alarm'
+              width={24}
+              height={24}
+              className={styles.header_icon}
+              onClick={() => setIsSeen(true)}
+            />
+            <Image src={calender} alt='calender' width={24} height={24} className={styles.header_icon} />
+            {isSeen && (
+              <div ref={calendarRef}>
+                <CalendarComponent />
+              </div>
+            )}
+          </div>
+          <div className={styles.header_title}>
+            <h1>{date}</h1>
+          </div>
+        </header>
+        <section className={styles.section}>
+          <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
+          <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
+        </section>
+        {isSeen && <div className={styles.darken}></div>}
+      </>
+    </Suspense>
+
   );
 }
