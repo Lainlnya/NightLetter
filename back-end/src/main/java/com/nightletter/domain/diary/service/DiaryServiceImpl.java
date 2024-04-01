@@ -1,9 +1,6 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,14 +16,12 @@ import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryRequestDirection;
 import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
-import com.nightletter.domain.diary.repository.DiaryTarotRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.dto.TarotDto;
@@ -45,7 +40,6 @@ import reactor.core.publisher.Mono;
 public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
-	private final DiaryTarotRepository diaryTarotRepository;
 	private final WebClient webClient;
 	private final TarotService tarotService;
 	private final TarotRepository tarotRepository;
@@ -55,7 +49,6 @@ public class DiaryServiceImpl implements DiaryService {
 	@Transactional
 	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
 
-		Member olrlobt = memberRepository.findByMemberId(1);
 
 		RecommendDataResponse recDataResponse = webClient.post()
 			.uri("/diaries/recommend")
@@ -78,9 +71,8 @@ public class DiaryServiceImpl implements DiaryService {
 		TarotDto recommendTarot = tarotService.findSimilarTarot(recDataResponse.getEmbedVector());
 		recResponse.setCard(recommendTarot);
 
-		// Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(getCurrentMember(), recDataResponse.getEmbedVector()));
-		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(olrlobt, recDataResponse.getEmbedVector()));
-		//todo. 과거 카드 설정
+		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(getCurrentMember(), recDataResponse.getEmbedVector()));
+		// todo. 과거 카드 설정
 		// DiaryTarot pastTarot = diaryTarotRepository.findByDiary(saveDiary);
 		Tarot nowTarot = tarotRepository.findById(recommendTarot.id()).get();
 		Tarot pastTarot = tarotRepository.findById(155).get();
