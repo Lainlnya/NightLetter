@@ -27,7 +27,7 @@ import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRepository;
-import com.nightletter.domain.tarot.service.TarotService;
+import com.nightletter.domain.tarot.service.TarotServiceImpl;
 import com.nightletter.global.common.ResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
 	private final WebClient webClient;
-	private final TarotService tarotService;
+	private final TarotServiceImpl tarotService;
 	private final TarotRepository tarotRepository;
 	private final MemberRepository memberRepository;
 
