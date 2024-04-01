@@ -1,15 +1,26 @@
-import assets from "./assets.json";
-
 interface CardInfo {
-  no: number;
-  name: string;
-  right: string;
-  reverse: string;
-  description: string;
+  cardNo: number;
+  cardName: string;
+  cardImgUrl: string;
+  cardKeyWord: string;
+  cardDesc: string;
 }
 
-export function getTarotCard(): CardInfo | undefined {
-  const randomNum: number = Math.floor(Math.random() * 78);
-  const card: CardInfo = assets[randomNum];
-  return card;
+export async function getTarotCard(info: string) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/tarots/${info}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+
+  const data = await response.json();
+  const { cardNo, cardName, cardImgUrl, cardKeyWord, cardDesc }: CardInfo =
+    data;
+
+  return { cardNo, cardName, cardImgUrl, cardKeyWord, cardDesc };
 }
