@@ -126,8 +126,6 @@ public class TarotServiceImpl implements TarotService {
 		Random random = new Random();
 		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();
 
-
-		//todo. 뒤집힌것도 ignore
 		int id = 0;
 		int pair = 0;
 		boolean isIgnored;
@@ -135,7 +133,7 @@ public class TarotServiceImpl implements TarotService {
 			id = random.nextInt(156) + 1;
 			pair = (id % 2 == 0) ? id - 1 : id + 1;
 
-			isIgnored = ignoredIdsList.contains(id);
+			isIgnored = ignoredIdsList.contains(id) || ignoredIdsList.contains(pair);
 		} while (isIgnored);
 
 		return id;
