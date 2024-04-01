@@ -28,15 +28,8 @@ public class TarotController {
 
 	@GetMapping("/future")
 	public ResponseEntity<TarotResponse> findFutureTarot() {
-		TarotResponse tarotDto = TarotResponse.builder()
-			.name("The Fool")
-			.imgUrl("https://ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com/forward/0.png")
-			.type(DiaryTarotType.FUTURE)
-			.desc("정방향 바보 카드는 당신이 예상치 못한 흥미로운 새 모험의 직전에 있다는 것을 나타냅니다.  ㅋㅋ \n")
-			.keyword("시작, 자유, 무모함, 모험, 가능성")
-			.build();
-		tarotService.findFutureTarot();
-		return ResponseEntity.status(HttpStatus.OK).body(tarotDto);
+		TarotResponse futureTarot = tarotService.findFutureTarot();
+		return ResponseEntity.status(HttpStatus.OK).body(futureTarot);
 	}
 
 	@GetMapping("/past")

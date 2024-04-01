@@ -116,9 +116,7 @@ public class TarotServiceImpl implements TarotService {
 			.findFirst()
 			.get();
 
-		futureDiaryTarot.getTarot().toDto();
-		// todo. DTO 다시 반환
-		return null;
+		return futureDiaryTarot.getTarot().toResponse();
 	}
 
 	private double calculateCosineSimilarity(EmbedVector embedVectorA, EmbedVector embedVectorB) {
