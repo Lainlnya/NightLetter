@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
+import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.tarot.dto.RecTarotResponse;
 import com.nightletter.domain.tarot.dto.RecVectorResponse;
 import com.nightletter.domain.tarot.dto.TarotDto;
@@ -74,7 +76,7 @@ public class TarotServiceImpl implements TarotService {
 			.retrieve()
 			.bodyToMono(RecTarotResponse.class)
 			.onErrorResume(e ->
-				Mono.error(new RecsysConnectionException(CommonErrorCode.RECOMMEND_SYS_CONNECTION_ERROR)));
+				Mono.error(new RecsysConnectionException(CommonErrorCode.REC_SYS_CONNECTION_ERROR)));
 	}
 
 	private Mono<TarotDto> updateTarotWithVector(RecVectorResponse tarotVector) {
@@ -89,7 +91,7 @@ public class TarotServiceImpl implements TarotService {
 	}
 
 	@Override
-	public TarotDto findSimilarTarot(EmbedVector diaryEmbedVector) {
+	public Tarot findSimilarTarot(EmbedVector diaryEmbedVector) {
 		Map<Integer, Double> score = new ConcurrentHashMap<>();
 
 		deck.entrySet().parallelStream().forEach(entry -> {
@@ -112,7 +114,9 @@ public class TarotServiceImpl implements TarotService {
 			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT KEY NOT FOUND"))
 			.getKey();
 		log.info("======== Similar Tarots : {} , no : {} ======== ", deck.get(key).name(), key);
-		return deck.get(key);
+		return tarotRepository.findById(key)
+			.orElseThrow(
+				() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "NOW TAROT NOT FOUND"));
 	}
 
 	@Override
@@ -186,5 +190,31 @@ public class TarotServiceImpl implements TarotService {
 	private Integer getCurrentMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return Integer.parseInt((String)authentication.getPrincipal());
+	}
+
+	@Override
+	public Tarot makeRandomTarot(int... ignoreTarotsId) {
+		Random random = new Random();
+		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();
+
+		int id = 0;
+		int pair = 0;
+		boolean isIgnored;
+		do {
+			id = random.nextInt(156) + 1;
+			pair = (id % 2 == 0) ? id - 1 : id + 1;
+
+			isIgnored = ignoredIdsList.contains(id) || ignoredIdsList.contains(pair);
+		} while (isIgnored);
+
+		return tarotRepository.findById(id).orElseThrow(() ->
+			new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND"));
+	}
+
+	@Override
+	public Tarot findPastTarot(Member currentMember) {
+		return tarotRepository.findPastTarot(LocalDate.now(), currentMember.getMemberId())
+			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"PAST TAROT NOT FOUND"));
+		// todo. 예외가 아닌 REDIS에서 가져오기
 	}
 }

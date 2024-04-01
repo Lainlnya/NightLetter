@@ -16,7 +16,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(RecsysConnectionException.class)
 	public ResponseEntity<?> recsysConnectionException(RecsysConnectionException e){
-		ErrorCode errorCode = CommonErrorCode.RECOMMEND_SYS_CONNECTION_ERROR;
+		ErrorCode errorCode = CommonErrorCode.REC_SYS_CONNECTION_ERROR;
 		return handleExceptionInternal(errorCode);
 	}
 
