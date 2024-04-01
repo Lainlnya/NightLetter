@@ -1,16 +1,15 @@
 interface CardInfo {
-  cardNo: number;
-  cardName: string;
-  cardImgUrl: string;
-  cardKeyWord: string;
-  cardDesc: string;
+  name: string;
+  imgUrl: string;
+  keyword: string;
+  desc: string;
 }
 
-export async function getTarotCard(info: string) {
+export async function getTarotCard(info: string, method: string) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/tarots/${info}`,
     {
-      method: "POST",
+      method: method,
       headers: {
         "Content-Type": "application/json",
       },
@@ -19,8 +18,8 @@ export async function getTarotCard(info: string) {
   );
 
   const data = await response.json();
-  const { cardNo, cardName, cardImgUrl, cardKeyWord, cardDesc }: CardInfo =
-    data;
+  console.log(data);
+  const { name, imgUrl, keyword, desc }: CardInfo = data;
 
-  return { cardNo, cardName, cardImgUrl, cardKeyWord, cardDesc };
+  return { name, imgUrl, keyword, desc };
 }
