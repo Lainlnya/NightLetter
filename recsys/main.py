@@ -11,9 +11,16 @@ from data.model import DiaryTable
 
 app = FastAPI()
 
+origins = [
+    "http://letter-for.me:8081",
+    "https://letter-for.me",
+    "http://localhost",
+    "http://localhost:8081",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
