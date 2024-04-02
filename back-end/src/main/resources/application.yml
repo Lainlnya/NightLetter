@@ -5,6 +5,7 @@ spring:
   security:
     cookie-domain: ${COOKIE_DOMAIN}
     dev-token: ${KAKAO_LOCAL_TOKEN}
+    cookie-domain: ${COOKIE_DOMAIN}
     oauth2:
       client:
         registration:
@@ -59,7 +60,6 @@ spring:
       host: ${REDIS_HOSTNAME}
       port: ${REDIS_PORT}
 
-
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access:
@@ -68,3 +68,6 @@ jwt:
   refresh:
     expiration: 604800000 # 1 weeks
     header: Authorization-refresh
+
+chatgpt:
+  api-key: ${OPENAI_SECRET_KEY}

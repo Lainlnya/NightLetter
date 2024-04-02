@@ -28,12 +28,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Value("${spring.security.cookie-domain}")
 	private static String tokenDomain;
 
+	@Value("${spring.security.cookie-domain}")
+	private static String cookieDomain;
+
 	private final JwtProvider jwtProvider;
 
 	private static ResponseCookie accessCookie(String token) {
 		return ResponseCookie.from("access-token", token)
 			.maxAge(Duration.of(30, ChronoUnit.HOURS))
-			.domain(tokenDomain)
+			.domain(cookieDomain)
 			.httpOnly(true)
 			.path("/")
 			.sameSite("None")

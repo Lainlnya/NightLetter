@@ -2,9 +2,10 @@ package com.nightletter.domain.tarot.entity;
 
 import java.util.List;
 
-import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,6 +63,16 @@ public class Tarot {
 
 	public TarotDto toDto() {
 		return new TarotDto(id, name, imgUrl, keyword, description, dir, embedVector);
+	}
+
+	public TarotResponse toResponse() {
+		return TarotResponse.builder()
+			.name(name)
+			.imgUrl(imgUrl)
+			.keyword(keyword)
+			.desc(description)
+			.dir(dir)
+			.build();
 	}
 
 	public Tarot setEmbedVector(List<EmbedVector> embedVector) {
