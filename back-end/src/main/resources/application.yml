@@ -5,7 +5,6 @@ spring:
   security:
     cookie-domain: ${COOKIE_DOMAIN}
     dev-token: ${KAKAO_LOCAL_TOKEN}
-    cookie-domain: ${COOKIE_DOMAIN}
     oauth2:
       client:
         registration:
