@@ -1,6 +1,5 @@
-import styles from './page.module.scss';
-import MainPage from './_components/home/MainPage';
-import { headers } from 'next/headers';
+import styles from "./page.module.scss";
+import MainPage from "./_components/home/MainPage";
 
 export default function Home() {
   return (
