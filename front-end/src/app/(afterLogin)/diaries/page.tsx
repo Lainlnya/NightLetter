@@ -1,9 +1,21 @@
 import MainPage from '@/app/_components/diaries/MainPage'
+import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import getInitialDiaries from "@/libs/getInitialDiaries"
 
-export default function Diaries() {
+export default async function Diaries() {
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery({
+        queryKey: ['diary', 'diaries'],
+        queryFn: () => getInitialDiaries(),
+
+    });
+    const dehydrateState = dehydrate(queryClient);
+
     return (
-        <div>
-            <MainPage />
-        </div>
+        <>
+            <HydrationBoundary state={dehydrateState}>
+                <MainPage />
+            </HydrationBoundary>
+        </>
     )
 }

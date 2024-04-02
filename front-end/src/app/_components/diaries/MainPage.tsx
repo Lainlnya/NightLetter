@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import styles from "./diaries.module.scss";
 import Image from "next/image";
 import back_button from "../../../../public/Icons/back_button.svg";
@@ -11,18 +11,28 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DRAG_BUFFER } from "@/utils/animation";
 import useStore from "@/store/date";
-import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
+import { convertDateFormat, convertDateFormatToKorean, parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
+import { useQuery } from "@tanstack/react-query";
+import getInitialDiaries from "@/libs/getInitialDiaries";
+import { DiaryEntry } from "@/types/card";
 
 export default function MainPage() {
   const router = useRouter();
-  const [dragging, setDragging] = useState(false);
-  const [contents, setContents] = useState([1, 2, 3, 4, 5]);
-  const [cardIndex, setCardIndex] = useState(contents.length - 1);
-  const { date, setDate, daysDifference, setDaysDifference } = useStore();
+  const { date, setDate } = useStore();
+  const { data } = useQuery({ queryKey: ["diary", "diaries"], queryFn: () => getInitialDiaries(convertDateFormat(date)) });
 
   useEffect(() => {
-    setDate(parseDateToKoreanFormatWithDay(daysDifference));
-  }, [daysDifference]);
+
+  }, [])
+
+  useEffect(() => {
+    setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+  }, [date])
+
+  console.log(data);
+
+  const [dragging, setDragging] = useState(false);
+  const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
 
   const dragX = useMotionValue(0);
 
@@ -35,12 +45,12 @@ export default function MainPage() {
 
     const x = dragX.get();
 
-    if (x <= -DRAG_BUFFER && cardIndex < contents.length - 1) {
-      setCardIndex((prev) => prev + 1);
-      setDaysDifference(daysDifference + 1);
+    if (x <= -DRAG_BUFFER && cardIndex < data?.diaries?.length - 1) {
+      setCardIndex((prev: number) => prev + 1);
+      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
-      setCardIndex((prev) => prev - 1);
-      setDaysDifference(daysDifference - 1);
+      setCardIndex((prev: number) => prev - 1);
+      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
     }
   };
   return (
@@ -60,6 +70,9 @@ export default function MainPage() {
       <div className={styles.carousel_container}>
         <motion.div
           drag="x"
+          initial={{
+            translateX: `-${cardIndex * 100}%`,
+          }}
           dragConstraints={{
             left: 0,
             right: 0,
@@ -74,7 +87,7 @@ export default function MainPage() {
           onDragEnd={onDragEnd}
           className={styles.carousel}
         >
-          {contents.map((_, idx) => {
+          {data?.diaries?.map((value: DiaryEntry, idx: number) => {
             return (
               <main key={idx} className={styles.diary}>
                 <div className={styles.diary_thumbnail}>

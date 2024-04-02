@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { parseDateToKoreanFormatWithDay } from '../utils/dateFormat';
+import { persist } from 'zustand/middleware';
 
 interface DateState {
     date: string | null;

@@ -12,12 +12,7 @@ import CalendarComponent from '../diaries/Calendar';
 import Image from 'next/image';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
 import calender from '../../../../public/Icons/calender_icon.svg';
-
-// TODO:
-// 1.서버 데이터 받아서 날짜 동적으로 수정
-// 2. 캐러셀 제대로 만들기
-// 3. 아이콘 클릭시 캘린더, 알림페이지로 이동하기
-// 4. 조건에 따라 알림 띄우기
+import Loading from '@/app/loading';
 
 export default function Home() {
   const { date } = useStore();
@@ -40,7 +35,7 @@ export default function Home() {
   }, [calendarRef, isClicked]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
       <>
         <header className={styles.header}>
           <div className={styles.header_icons}>
@@ -70,6 +65,5 @@ export default function Home() {
         {isSeen && <div className={styles.darken}></div>}
       </>
     </Suspense>
-
   );
 }

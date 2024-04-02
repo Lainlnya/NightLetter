@@ -27,17 +27,23 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
   const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
 
   const router = useRouter();
+
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
   const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
-  const { setDate } = useStore();
+  const { date, setDate } = useStore();
 
-  useLayoutEffect(() => {
+  console.log(data);
+
+  useEffect(() => {
     setDate(convertDateFormatToKorean(data?.diaries?.[data.diaries.length - 1]?.date));
+    if (date !== null) localStorage.setItem("date", date);
   }, [])
 
-  console.log(convertDateFormatToKorean(data?.diaries?.[data.diaries.length - 1]?.date))
-  console.log(TODAY)
+  useEffect(() => {
+    setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+    if (date !== null) localStorage.setItem("date", date);
+  }, [cardIndex])
 
   const dragX = useMotionValue(0);
 
@@ -82,7 +88,7 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
             onDragEnd={onDragEnd}
             className={styles.carousel}
           >
-            {data.diaries.map((cardData: DiaryEntry, idx: number) => {
+            {data?.diaries?.map((cardData: DiaryEntry, idx: number) => {
               const { pastCard, nowCard, futureCard } = cardData;
 
               return (

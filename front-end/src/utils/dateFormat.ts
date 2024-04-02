@@ -8,8 +8,8 @@ export function parseDateToKoreanFormatWithDay(day = 0) {
 }
 
 
-export function convertDateFormat(dateString: string) {
-  const parts = dateString.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
+export function convertDateFormat(dateString: string | null) {
+  const parts = dateString && dateString.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
 
   if (parts) {
     const year = parts[1];
@@ -21,8 +21,8 @@ export function convertDateFormat(dateString: string) {
   }
 }
 
-export function convertDateFormatToKorean(dateString: string) {
-  const parts = dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+export function convertDateFormatToKorean(dateString: string | null) {
+  const parts = dateString && dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
 
   if (parts) {
     const year = parts[1];
@@ -30,7 +30,7 @@ export function convertDateFormatToKorean(dateString: string) {
     const day = parts[3];
     return `${year}년 ${month}월 ${day}일`;
   } else {
-    return '입력 형식이 올바르지 않습니다.';
+    return null;
   }
 }
 
@@ -39,6 +39,7 @@ export function getTodayDate() {
   return d.getFullYear() + "-" + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "-" + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
 }
 
-export const TODAY = parseDateToKoreanFormatWithDay();
-
 export const isToday = (date1: string, data2: string) => date1.match(data2);
+
+export const TODAY = parseDateToKoreanFormatWithDay();
+export const TODAY_CONVERTED = convertDateFormat(TODAY);

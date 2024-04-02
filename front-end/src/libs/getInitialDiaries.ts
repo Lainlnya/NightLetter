@@ -1,20 +1,20 @@
-import { getTodayDate } from "@/utils/dateFormat";
+import { TODAY_CONVERTED } from "@/utils/dateFormat";
 
-export default async function getInitialCards() {
+export default async function getInitialDiaries(date: string | null = TODAY_CONVERTED) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries/self`, {
         method: "POST",
+        cache: "no-cache",
         headers: {
             'Content-Type': 'application/json',
         },
-        cache: 'no-store',
         credentials: 'include',
         next: {
-            tags: ["card", 'cards'],
+            tags: ["diary", 'diaries'],
         },
         body: JSON.stringify({
-            date: getTodayDate(),
-            direction: "BEFORE",
-            size: 10
+            date: `${date ? date : TODAY_CONVERTED}`,
+            direction: "BOTH",
+            size: 3
         }),
 
     });
