@@ -25,11 +25,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Value("${spring.security.provider.response-uri.kakao}")
 	private String tokenResponseUri;
 
-	@Value("${spring.security.cookie-domain}")
-	private static String tokenDomain;
-
-	@Value("${spring.security.cookie-domain}")
 	private static String cookieDomain;
+	@Value("${spring.security.cookie-domain}")
+	public void setCookieDomain(String value) {
+		cookieDomain = value;
+	}
 
 	private final JwtProvider jwtProvider;
 
