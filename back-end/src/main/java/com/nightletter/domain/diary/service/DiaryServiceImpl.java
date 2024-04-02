@@ -55,16 +55,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final WebClient webClient;
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
-
-	@Value("${chatgpt.api-key}")
-	private String api_key;
-	private double temperature = 0.5;
-	private double top_p = 1.0;
-	private String url = "https://api.openai.com/v1/completions";
-	private String model = "gpt-3.5-turbo-instruct";
-	private int max_token = 1000;
-
-	private static RestTemplate restTemplate = new RestTemplate();
+	private final GptServiceImpl gptServiceImpl;
 
 	@Override
 	@Transactional
@@ -87,7 +78,7 @@ public class DiaryServiceImpl implements DiaryService {
 			pastTarot.getName(),
 			nowTarot.getName(),
 			futureTarot.getName());
-		String gptComment = askQuestion(question);
+		String gptComment = gptServiceImpl.askQuestion(question);
 
 		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
 		userDiary.addDiaryComment(gptComment);
@@ -187,65 +178,5 @@ public class DiaryServiceImpl implements DiaryService {
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
-	}
-
-	public String askQuestion(String question) {
-		DiaryCommentResponse response = getResponse(
-			buildHttpEntity(
-				new DiaryCommentRequest(
-					model,
-					question,
-					max_token,
-					temperature,
-					top_p
-				)
-			)
-		);
-		return response.getChoices().get(0).getText();
-	}
-
-	private DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
-		return restTemplate.postForEntity(
-				url,
-				chatGptRequestDtoHttpEntity,
-				DiaryCommentResponse.class)
-			.getBody();
-	}
-
-	private HttpEntity<DiaryCommentRequest> buildHttpEntity(DiaryCommentRequest requestDto) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("Authorization", "Bearer " + api_key);
-		return new HttpEntity<>(requestDto, headers);
-	}
-
-	@Override
-	public Optional<GPTResponse> findGptComment() {
-
-		Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), getCurrentMember());
-
-		if (diary == null) {
-			return Optional.empty();
-		}
-
-		GPTResponse response = new GPTResponse();
-
-		for (DiaryTarot dt : diary.getDiaryTarots()) {
-			switch (dt.getType()) {
-				case PAST:
-					response.setPast_url(dt.getTarot().getImgUrl());
-					break;
-				case NOW:
-					response.setNow_url(dt.getTarot().getImgUrl());
-					break;
-				case FUTURE:
-					response.setFuture_url(dt.getTarot().getImgUrl());
-					break;
-			}
-		}
-
-		response.setGptComment(diary.getGptComment());
-
-		return Optional.of(response);
 	}
 }
