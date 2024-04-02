@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./back-end
+      context: .
       dockerfile: devbackDockerfile
     environment:
       - KAKAO_LOGIN_RESTAPI_KEY
@@ -16,6 +16,7 @@ services:
       - KAKAO_TOKEN_RESPONSE_URI
       - KAKAO_LOCAL_TOKEN_RESPONSE_URI
       - KAKAO_LOCAL_TOKEN
+      - COOKIE_DOMAIN
       - REDIS_HOSTNAME
       - REDIS_PORT
     networks:
@@ -23,7 +24,7 @@ services:
 
   frontend:
     build:
-      context: ./front-end
+      context: .
       dockerfile: devfrontDockerfile
     environment:
       - NEXT_PUBLIC_MODE
