@@ -72,4 +72,10 @@ public class DiaryController {
 		return diaryService.deleteDiary(diaryId).map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@GetMapping("/get_comment")
+	public ResponseEntity<?> findGptComment(){
+		Optional<GPTResponse> response = diaryService.findGptComment();
+		return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
 }

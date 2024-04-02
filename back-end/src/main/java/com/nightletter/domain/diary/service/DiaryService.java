@@ -21,4 +21,6 @@ public interface DiaryService {
 	Optional<DiaryResponse> findDiary(Long diaryId);
 
 	Optional<ResponseDto> deleteDiary(Long diaryId);
+
+	Optional<GPTResponse> findGptComment();
 }
