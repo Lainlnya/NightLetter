@@ -34,7 +34,7 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.from(diary)
 			.innerJoin(diary.diaryTarots, diaryTarot)
 			.on(diaryTarot.type.eq(DiaryTarotType.NOW))
-			.innerJoin(diaryTarot.tarot,tarot)
+			.innerJoin(diaryTarot.tarot, tarot)
 			.where(diary.diaryId.in(diariesId)
 				.and(diary.type.eq(DiaryOpenType.PUBLIC))
 				.and(diary.writer.ne(member)))
@@ -62,9 +62,9 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 		}
 
 		if (dir.equals(DiaryRequestDirection.BOTH) &&
-			! diaries.isEmpty() &&
-			diaries.get(diaries.size()-1).getDate().isEqual(queryDate)) {
-			diaries.remove(diaries.get(diaries.size()-1));
+			!diaries.isEmpty() &&
+			diaries.get(diaries.size() - 1).getDate().isEqual(queryDate)) {
+			diaries.remove(diaries.get(diaries.size() - 1));
 		}
 
 		if (dir.equals(DiaryRequestDirection.AFTER) || dir.equals(DiaryRequestDirection.BOTH)) {

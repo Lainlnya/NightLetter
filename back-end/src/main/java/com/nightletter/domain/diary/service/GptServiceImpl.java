@@ -28,13 +28,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GptServiceImpl {
 
-	@Value("${chatgpt.api-key}")
-	private String api_key;
-
+	private static final RestTemplate restTemplate = new RestTemplate();
 	private final DiaryRepository diaryRepository;
 	private final MemberRepository memberRepository;
-
-	private static final RestTemplate restTemplate = new RestTemplate();
+	@Value("${chatgpt.api-key}")
+	private String api_key;
 
 	public String askQuestion(String question) {
 		DiaryCommentResponse response = getResponse(
