@@ -5,13 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.nightletter.domain.diary.dto.*;
-import com.nightletter.domain.diary.entity.DiaryTarot;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,16 +17,20 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.nightletter.domain.diary.dto.DiaryCommentRequest;
+import com.nightletter.domain.diary.dto.DiaryCommentResponse;
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.GPTResponse;
 import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.dto.recommend.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.member.entity.Member;
@@ -55,14 +56,13 @@ public class DiaryServiceImpl implements DiaryService {
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
 
-
 	@Value("${chatgpt.api-key}")
 	private String api_key;
-	private double temperature=0.5;
-	private double top_p=1.0;
-	private String url="https://api.openai.com/v1/completions";
-	private String model="gpt-3.5-turbo-instruct";
-	private int max_token=1000;
+	private double temperature = 0.5;
+	private double top_p = 1.0;
+	private String url = "https://api.openai.com/v1/completions";
+	private String model = "gpt-3.5-turbo-instruct";
+	private int max_token = 1000;
 
 	private static RestTemplate restTemplate = new RestTemplate();
 
@@ -82,12 +82,11 @@ public class DiaryServiceImpl implements DiaryService {
 		Tarot pastTarot = tarotService.findPastTarot(getCurrentMember());
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
-		
-		String question=String.format("%s 라는 일기에 타로카드가 과거 : %s 와 현재 : %s 와 미래 : %s 카드를 바탕으로 존댓말로 공감해줘"
-				,diaryRequest.getContent(),
-				pastTarot.getName(),
-				nowTarot.getName(),
-				futureTarot.getName());
+		String question = String.format("%s 라는 일기에 타로카드가 과거 : %s 와 현재 : %s 와 미래 : %s 카드를 바탕으로 존댓말로 공감해줘"
+			, diaryRequest.getContent(),
+			pastTarot.getName(),
+			nowTarot.getName(),
+			futureTarot.getName());
 		String gptComment = askQuestion(question);
 
 		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
@@ -114,7 +113,7 @@ public class DiaryServiceImpl implements DiaryService {
 		return recDataResponse;
 	}
 
-	private List<RecommendDiaryResponse> getRecDiaries(List<Long> diariesId){
+	private List<RecommendDiaryResponse> getRecDiaries(List<Long> diariesId) {
 		List<RecommendDiaryResponse> recommendDiaries = diaryRepository
 			.findRecommendDiaries(diariesId, getCurrentMember());
 		if (recommendDiaries.isEmpty()) {
@@ -122,7 +121,6 @@ public class DiaryServiceImpl implements DiaryService {
 		}
 		return recommendDiaries;
 	}
-
 
 	@Override
 	public Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request) {
@@ -191,40 +189,38 @@ public class DiaryServiceImpl implements DiaryService {
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 	}
 
-	public HttpEntity<DiaryCommentRequest> buildHttpEntity(DiaryCommentRequest requestDto) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType("Authorization"));
-		headers.add("Authorization", "Bearer"+ api_key);
-		return new HttpEntity<>(requestDto, headers);
+	public String askQuestion(String question) {
+		DiaryCommentResponse response = getResponse(
+			buildHttpEntity(
+				new DiaryCommentRequest(
+					model,
+					question,
+					max_token,
+					temperature,
+					top_p
+				)
+			)
+		);
+		return response.getChoices().get(0).getText();
 	}
-	public DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
-		ResponseEntity<DiaryCommentResponse> responseEntity = restTemplate.postForEntity(
+
+	private DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
+		return restTemplate.postForEntity(
 				url,
 				chatGptRequestDtoHttpEntity,
-				DiaryCommentResponse.class);
-
-		return responseEntity.getBody();
+				DiaryCommentResponse.class)
+			.getBody();
 	}
 
-	public String askQuestion(String question) {
-		DiaryCommentResponse response = this.getResponse(
-				this.buildHttpEntity(
-						new DiaryCommentRequest(
-								model,
-								question,
-								max_token,
-								temperature,
-								top_p
-						)
-				)
-		);
-
-		String gptResponse = response.getChoices().get(0).getText();
-		return gptResponse;
+	private HttpEntity<DiaryCommentRequest> buildHttpEntity(DiaryCommentRequest requestDto) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("Authorization", "Bearer " + api_key);
+		return new HttpEntity<>(requestDto, headers);
 	}
 
 	@Override
-	public Optional<GPTResponse> findGptComment(){
+	public Optional<GPTResponse> findGptComment() {
 
 		Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), getCurrentMember());
 
@@ -234,17 +230,21 @@ public class DiaryServiceImpl implements DiaryService {
 
 		GPTResponse response = new GPTResponse();
 
-
-		for(DiaryTarot dt : diary.getDiaryTarots()){
-			switch (dt.getType()){
-				case PAST : response.setPast_url(dt.getTarot().getImgUrl()); break;
-				case NOW : response.setNow_url(dt.getTarot().getImgUrl()); break;
-				case FUTURE : response.setFuture_url(dt.getTarot().getImgUrl()); break;
+		for (DiaryTarot dt : diary.getDiaryTarots()) {
+			switch (dt.getType()) {
+				case PAST:
+					response.setPast_url(dt.getTarot().getImgUrl());
+					break;
+				case NOW:
+					response.setNow_url(dt.getTarot().getImgUrl());
+					break;
+				case FUTURE:
+					response.setFuture_url(dt.getTarot().getImgUrl());
+					break;
 			}
 		}
 
 		response.setGptComment(diary.getGptComment());
-
 
 		return Optional.of(response);
 	}
