@@ -8,8 +8,6 @@ export default async function Home() {
   await queryClient.prefetchQuery({
     queryKey: ['card', 'cards'],
     queryFn: getInitialCards,
-    staleTime: 300 * 1000,
-    gcTime: 300 * 1000,
   });
   const dehydrateState = dehydrate(queryClient);
   return (
