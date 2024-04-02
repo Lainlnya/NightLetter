@@ -21,7 +21,6 @@ import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryShareUrl;
 import com.nightletter.domain.diary.entity.DiaryShared;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRedisRepository;
@@ -174,13 +173,14 @@ public class DiaryServiceImpl implements DiaryService {
 
 		// 일기 id [] redis에 저장하기.
 
-		diaryRedisRepository.save(
-			DiaryShared.builder()
-				.diaries(sharedDiaries)
-				.memberId(memberId)
-				.build()
-		);
+		// diaryRedisRepository.save(
+		// 	DiaryShared.builder()
+		// 		.diaries(sharedDiaries)
+		// 		.memberId(memberId)
+		// 		.build()
+		// );
 
+		// URL 반환하기.
 		// String requestUrl = SHARING_BASE_URL +
 
 		return Optional.empty();
