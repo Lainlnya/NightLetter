@@ -3,6 +3,7 @@ server:
 
 spring:
   security:
+    cookie-domain: ${COOKIE_DOMAIN}
     dev-token: ${KAKAO_LOCAL_TOKEN}
     oauth2:
       client:
@@ -26,7 +27,6 @@ spring:
     provider:
       response-uri:
         kakao: ${KAKAO_TOKEN_RESPONSE_URI}
-        local-kakao: ${KAKAO_LOCAL_TOKEN_RESPONSE_URI}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
