@@ -21,6 +21,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryCustom
 
 	Diary findByDateAndWriter(LocalDate date, Member writer);
 
-	Optional<Diary> findByWriterMemberIdAndDate(Integer writer_memberId, LocalDate date);
+	Diary findByWriterMemberIdAndDate(Integer writer_memberId, LocalDate date);
+
+	List<Diary> findAllByWriterMemberIdAndDate(Integer writer_memberId, LocalDate date);
 
 }
