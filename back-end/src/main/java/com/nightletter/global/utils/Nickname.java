@@ -5,7 +5,6 @@ import java.util.Random;
 
 import lombok.Getter;
 
-
 @Getter
 public enum Nickname {
 	prefix(List.of("가냘픈", "가는", "가엾은", "가파른", "같은", "거센", "거친", "검은", "게으른", "고달픈", "고른", "고마운", "고운", "고픈", "곧은",
@@ -22,8 +21,8 @@ public enum Nickname {
 	suffix(List.of("광대", "마법사", "여사제", "여황제", "황제", "교황", "연인", "전차", "힘", "은둔자", "정의", "매달린 사람", "죽음", "절제", "악마",
 		"탑", "별", "달", "태양", "심판", "세계"));
 
-	private final List<String> names;
 	private final static Random random = new Random();
+	private final List<String> names;
 
 	Nickname(List<String> names) {
 		this.names = names;

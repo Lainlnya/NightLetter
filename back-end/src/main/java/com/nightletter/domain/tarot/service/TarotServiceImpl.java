@@ -86,7 +86,8 @@ public class TarotServiceImpl implements TarotService {
 				.findFirst()
 				.map(tarot -> tarot.setEmbedVector(tarotVector.getKeywords()).toDto()))
 			.onErrorResume(e -> {
-				return Mono.error(new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND")); // 에러 시 대체 동작
+				return Mono.error(
+					new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND")); // 에러 시 대체 동작
 			});
 	}
 
@@ -132,7 +133,8 @@ public class TarotServiceImpl implements TarotService {
 			.stream()
 			.filter(diaryTarot -> diaryTarot.getType() == DiaryTarotType.FUTURE)
 			.findFirst()
-			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "DIARY-TAROT NOT FOUND"));
+			.orElseThrow(
+				() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "DIARY-TAROT NOT FOUND"));
 
 		return futureDiaryTarot.getTarot().toResponse();
 	}
@@ -219,10 +221,12 @@ public class TarotServiceImpl implements TarotService {
 		return tarotRepository.findPastTarot(LocalDate.now(), currentMember.getMemberId())
 			.orElseGet(() -> {
 				PastTarot pastTarot = tarotRedisRepository.findById(getCurrentMemberId())
-					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"PAST TAROT IN REDIS NOT FOUND"));
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
+						"PAST TAROT IN REDIS NOT FOUND"));
 
 				return tarotRepository.findById(pastTarot.getTarotId())
-					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"TAROT NOT FOUND"));
+					.orElseThrow(
+						() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND"));
 			});
 	}
 }

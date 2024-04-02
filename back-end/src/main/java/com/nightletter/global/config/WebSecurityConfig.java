@@ -74,14 +74,14 @@ public class WebSecurityConfig {
 
 		corsConfiguration.setAllowedOrigins(
 			List.of("http://dev.letter-for.me",
-					"https://dev.letter-for.me",
-					"http://letter-for.me",
-					"https://letter-for.me",
-					"http://localhost:3000",
-					"http://localhost:3001",
-					"https://localhost:3000",
-					"https://localhost:3001")
-			);
+				"https://dev.letter-for.me",
+				"http://letter-for.me",
+				"https://letter-for.me",
+				"http://localhost:3000",
+				"http://localhost:3001",
+				"https://localhost:3000",
+				"https://localhost:3001")
+		);
 
 		corsConfiguration.addAllowedMethod("*");
 		corsConfiguration.addAllowedHeader("*");
