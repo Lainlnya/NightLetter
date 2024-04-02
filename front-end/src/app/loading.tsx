@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/app/_styles/Loading.module.scss";
+import styles from "./loading.module.scss";
 import { MoonLoader } from "react-spinners";
 
 interface LoadingProps {
@@ -12,7 +12,7 @@ const Loading: React.FC<LoadingProps> = ({ loadingMessage }) => {
       <MoonLoader
         className={styles.loader}
         color="#d5ccc1"
-        size={80}
+        size={70}
         speedMultiplier={0.5}
       />
       <div>{loadingMessage}</div>
