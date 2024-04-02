@@ -19,6 +19,7 @@ services:
       - COOKIE_DOMAIN
       - REDIS_HOSTNAME
       - REDIS_PORT
+      - OPENAI_SECRET_KEY
     networks:
       - tarot-network
 
