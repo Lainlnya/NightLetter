@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import styles from './stories.module.scss';
-import { motion, useMotionValue } from 'framer-motion';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import tarot_background from '../../../../public/images/tarot-background.png';
+import React, { useEffect } from "react";
+import styles from "./stories.module.scss";
+import { motion, useMotionValue } from "framer-motion";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import tarot_background from "../../../../public/images/tarot-background.png";
 
 const DRAG_BUFFER = 100;
 
@@ -13,10 +13,14 @@ export default function Diaries() {
   const router = useRouter();
   const [dragging, setDragging] = useState(false);
   const [contents, setContents] = useState([
-    { content: '조회중입니다', imgUrl: `url(${tarot_background})`, nickname: 'tarot' },
+    {
+      content: "조회중입니다",
+      imgUrl: `url(${tarot_background})`,
+      nickname: "tarot",
+    },
   ]);
   const [cardIndex, setCardIndex] = useState(0);
-  const [nickname, setNickname] = useState(contents[0]?.nickname || '익명');
+  const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
 
   const dragX = useMotionValue(0);
 
@@ -37,7 +41,7 @@ export default function Diaries() {
   };
 
   useEffect(() => {
-    const recommendList = sessionStorage.getItem('presentCardInfo');
+    const recommendList = sessionStorage.getItem("presentCardInfo");
     if (recommendList) {
       const { recommendDiaries } = JSON.parse(recommendList);
       setContents(recommendDiaries);
@@ -46,22 +50,22 @@ export default function Diaries() {
 
   useEffect(() => {
     if (contents[cardIndex]) {
-      const updatedNickname = contents[cardIndex]?.nickname || '익명';
+      const updatedNickname = contents[cardIndex]?.nickname || "익명";
       setNickname(updatedNickname);
     }
-    console.log('index' + cardIndex);
   }, [cardIndex, contents]);
 
   return (
     <div className={styles.root}>
       <header className={styles.header}>
         <p>
-          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이 도착했습니다.
+          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이
+          도착했습니다.
         </p>
       </header>
       <div className={styles.carousel_container}>
         <motion.div
-          drag='x'
+          drag="x"
           dragConstraints={{
             left: 0,
             right: 0,
@@ -79,20 +83,25 @@ export default function Diaries() {
           {contents &&
             contents.map((diary, idx) => {
               // 현재 선택된 카드만 내용을 보여주기 위한 조건
+              // style 추가
               const isSelected = idx === cardIndex;
+              const storyStyle = {
+                backgroundImage: `url(${
+                  isSelected ? diary.imgUrl : tarot_background
+                })`,
+              };
+
               return (
                 <main
                   key={idx}
-                  className={`${styles.story} ${!isSelected ? styles.inactive : ''}`}
-                  style={{
-                    backgroundImage: isSelected ? `url(${diary.imgUrl})` : `url(${tarot_background})`,
-                    backgroundSize: '100% 100%',
-                    width: `28.9rem`,
-                    height: `47.9rem`,
-                    borderRadius: `2rem`,
-                  }}
+                  className={`${styles.story} ${
+                    !isSelected ? styles.inactive : ""
+                  }`}
+                  style={storyStyle}
                 >
-                  {isSelected && <div className={styles.story_contents}>{diary.content}</div>}
+                  {isSelected && (
+                    <div className={styles.story_contents}>{diary.content}</div>
+                  )}
                 </main>
               );
             })}
