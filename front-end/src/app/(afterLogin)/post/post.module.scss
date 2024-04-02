@@ -1,0 +1,93 @@
+.post {
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  .hr_sect {
+    width: 100dvw;
+    display: flex;
+    align-items: center;
+    color: #fdfdfd;
+    font-size: 1.6rem;
+  }
+  .hr_sect::before,
+  .hr_sect::after {
+    content: "";
+    flex-grow: 2;
+    background: #fdfdfd;
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0 1rem;
+  }
+
+  .hr_sect::before {
+    flex-grow: 9;
+  }
+
+  textarea {
+    margin-top: -2rem;
+    padding: 0 2rem;
+    width: 100%;
+    resize: none;
+    border: none;
+    background-color: transparent;
+    height: 40rem;
+    font-size: 1.4rem;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
+
+  .temperary {
+    padding: 0 2rem;
+    display: flex;
+    width: 100%;
+    margin-bottom: -2rem;
+    font-size: 1.4rem;
+    justify-content: space-between;
+  }
+
+  hr {
+    width: 100%;
+    color: #fdfdfd;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+  }
+
+  .checkbox {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5rem;
+
+    label {
+      font-size: 1.6rem;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.5);
+      margin-right: 1rem;
+    }
+  }
+
+  .save {
+    width: 30rem;
+    height: 5rem;
+    background-color: #803886;
+    border-radius: 5rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-top: -2rem;
+  }
+}

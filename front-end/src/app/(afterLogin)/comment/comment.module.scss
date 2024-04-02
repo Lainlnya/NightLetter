@@ -1,0 +1,51 @@
+.commentMain {
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  h1 {
+    text-align: center;
+    font-size: 2.8rem;
+  }
+
+  .cardSec {
+    display: flex;
+    flex-direction: column;
+    height: 25rem;
+    justify-content: space-between;
+    section {
+      display: flex;
+      font-size: 2rem;
+      justify-content: space-evenly;
+
+      .past {
+        transform: rotate(-15deg) translateX(2rem) translateY(2rem);
+      }
+
+      .present {
+        position: relative;
+      }
+      .future {
+        transform: rotate(15deg) translateX(-2rem) translateY(2rem);
+      }
+    }
+  }
+
+  .commentSec {
+    border-radius: 1rem;
+    width: 32rem;
+    height: 28rem;
+    font-size: 1.8rem;
+    padding: 2rem;
+    line-height: 3rem;
+    overflow: scroll;
+    background-color: rgba(128, 128, 128, 0.7);
+    -ms-overflow-style: none;
+  }
+  .commentSec::-webkit-scrollbar {
+    display: none;
+  }
+}

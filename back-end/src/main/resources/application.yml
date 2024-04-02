@@ -1,0 +1,72 @@
+server:
+  port: 8081
+
+spring:
+  security:
+    cookie-domain: ${COOKIE_DOMAIN}
+    dev-token: ${KAKAO_LOCAL_TOKEN}
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_LOGIN_RESTAPI_KEY}
+            client-secret: ${KAKAO_LOGIN_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_LOGIN_REDIRECT_URI}
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+    provider:
+      response-uri:
+        kakao: ${KAKAO_TOKEN_RESPONSE_URI}
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Seoul
+        dialect=org:
+          hibernate:
+            dialect:
+              MySQL5Dialect:
+        transaction:
+          jta:
+            platform=org:
+              hibernate:
+                service:
+                  jta:
+                    platform:
+                      internal:
+                        JBossStandAloneJtaPlatform:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  data:
+    redis:
+      host: ${REDIS_HOSTNAME}
+      port: ${REDIS_PORT}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access:
+    expiration: 1800000 # 30 mins (180000L secs)
+    header: Authorization
+  refresh:
+    expiration: 604800000 # 1 weeks
+    header: Authorization-refresh
+
+chatgpt:
+  api-key: ${OPENAI_SECRET_KEY}

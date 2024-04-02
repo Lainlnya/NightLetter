@@ -1,0 +1,67 @@
+.root {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  position: relative;
+  width: 100%;
+}
+
+.darken {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: #191c2b, $alpha: 0.7);
+  z-index: 700;
+}
+
+.header_icons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  width: 100%;
+  height: 5rem;
+}
+
+.header_icon:first-child {
+  margin-right: 1.4rem;
+}
+
+.header_title h1 {
+  font-size: 2rem;
+  font-weight: 500;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section {
+  width: 100%;
+  height: 30rem;
+
+  position: absolute;
+  overflow: hidden;
+
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+
+  font-size: 1.4rem;
+  color: #b2b0b0;
+
+  margin-bottom: 1.5rem;
+}
