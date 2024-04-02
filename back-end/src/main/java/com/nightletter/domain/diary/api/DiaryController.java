@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
@@ -76,6 +77,11 @@ public class DiaryController {
 			.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	@PostMapping("/share")
+	public ResponseEntity<?> getDiaryShareUrl(@RequestParam Long diaryId) {
+
+		return ResponseEntity.ok().build();
+	}
 	@GetMapping("/get_comment")
 	public ResponseEntity<?> findGptComment(){
 		Optional<GPTResponse> response = gptService.findGptComment();
