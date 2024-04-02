@@ -121,9 +121,12 @@ public class TarotServiceImpl implements TarotService {
 
 	@Override
 	public TarotResponse findFutureTarot() {
-		Diary diary = diaryRepository.findByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now())
-			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
-					"DIARY NOT FOUND - MEMBER ID : " + getCurrentMemberId()));
+		// Diary diary = diaryRepository.findByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now())
+		// 	.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
+		// 			"DIARY NOT FOUND - MEMBER ID : " + getCurrentMemberId()));
+
+		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
+		Diary diary = diaries.get(0);
 
 		DiaryTarot futureDiaryTarot = diary.getDiaryTarots()
 			.stream()
