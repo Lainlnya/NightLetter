@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: devbackDockerfile
+    environment:
+      - KAKAO_LOGIN_RESTAPI_KEY
+      - KAKAO_LOGIN_CLIENT_SECRET
+      - MYSQL_USERNAME
+      - MYSQL_PASSWORD
+      - MYSQL_URL
+      - MYSQL_HOST
+      - MYSQL_DATABASE
+      - JWT_SECRET_KEY
+      - KAKAO_LOGIN_REDIRECT_URI
+      - KAKAO_TOKEN_RESPONSE_URI
+      - KAKAO_LOCAL_TOKEN_RESPONSE_URI
+      - KAKAO_LOCAL_TOKEN
+      - COOKIE_DOMAIN
+      - REDIS_HOSTNAME
+      - REDIS_PORT
+      - OPENAI_SECRET_KEY
+    networks:
+      - tarot-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: devfrontDockerfile
+    environment:
+      - NEXT_PUBLIC_MODE
+      - NEXT_URL
+      - NEXT_API_URL
+    networks:
+      - tarot-network
+
+networks:
+  tarot-network:
+    driver: bridge
+    external: true
