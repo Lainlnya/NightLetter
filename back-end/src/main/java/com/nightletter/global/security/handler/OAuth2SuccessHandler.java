@@ -28,11 +28,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Value("${spring.security.provider.response-uri.local-kakao}")
 	private String tokenResponseLocalUrl;
 
+	@Value("${spring.security.cookie-domain}")
+	private static String cookieDomain;
+
 	private final JwtProvider jwtProvider;
 
 	private static ResponseCookie accessCookie(String token) {
 		return ResponseCookie.from("access-token", token)
 			.maxAge(Duration.of(30, ChronoUnit.HOURS))
+			.domain(cookieDomain)
 			.httpOnly(true)
 			.path("/")
 			.sameSite("None")

@@ -4,6 +4,7 @@ server:
 spring:
   security:
     dev-token: ${KAKAO_LOCAL_TOKEN}
+    cookie-domain: ${COOKIE_DOMAIN}
     oauth2:
       client:
         registration:
@@ -58,7 +59,6 @@ spring:
     redis:
       host: ${REDIS_HOSTNAME}
       port: ${REDIS_PORT}
-
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

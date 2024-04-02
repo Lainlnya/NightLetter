@@ -1,6 +1,7 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,8 +31,10 @@ import com.nightletter.domain.diary.dto.recommend.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryShared;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
+import com.nightletter.domain.diary.repository.DiaryRedisRepository;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
@@ -42,6 +45,7 @@ import com.nightletter.global.exception.CommonErrorCode;
 import com.nightletter.global.exception.RecsysConnectionException;
 import com.nightletter.global.exception.ResourceNotFoundException;
 
+import io.swagger.v3.oas.models.links.Link;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -52,10 +56,13 @@ import reactor.core.publisher.Mono;
 public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
+	private final DiaryRedisRepository diaryRedisRepository;
 	private final WebClient webClient;
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
 	private final GptServiceImpl gptServiceImpl;
+
+	private final String SHARING_BASE_URL = "https://letter-for.me/api/v1/diaries/shared/";
 
 	@Override
 	@Transactional
@@ -173,6 +180,34 @@ public class DiaryServiceImpl implements DiaryService {
 				.code("SU")
 				.message("Diary Deleted Successfully.")
 				.build());
+	}
+
+	@Override
+	public Optional<String> createDiaryShareUrl(Long diaryId) {
+		// 해당 일기와 유사한 일기 두개 더 추천 받기
+		// 추천받은 일기 id 가져오기 []
+		List<Long> sharedDiaries = new LinkedList<>();
+
+		// 임시 코드.
+		sharedDiaries.add(diaryId);
+		sharedDiaries.add(1L);
+		sharedDiaries.add(2L);
+
+		Integer memberId = getCurrentMember().getMemberId();
+
+		// 일기 id [] redis에 저장하기.
+
+		// diaryRedisRepository.save(
+		// 	DiaryShared.builder()
+		// 		.diaries(sharedDiaries)
+		// 		.memberId(memberId)
+		// 		.build()
+		// );
+
+		// URL 반환하기.
+		// String requestUrl = SHARING_BASE_URL +
+
+		return Optional.empty();
 	}
 
 	private Member getCurrentMember() {
