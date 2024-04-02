@@ -48,35 +48,14 @@ public class DiaryServiceImpl implements DiaryService {
 	private final TarotRepository tarotRepository;
 	private final MemberRepository memberRepository;
 
-	@Value("${chatgpt.authorization}")
-	private String authorization;
-
-	@Value("${chatgpt.bearer}")
-	private String bearer;
 
 	@Value("${chatgpt.api-key}")
 	private String api_key;
-
-	@Value("${chatgpt.url}")
-	private String url;
-
-	@Value("${chatgpt.model}")
-	private String model;
-
-	@Value("${chatgpt.max_token}")
-	private int max_token;
-
-	@Value("${chatgpt.temperature}")
-	private double temperature;
-
-	@Value("${chatgpt.top_p}")
-	private double top_p;
-
-	@Value("${chatgpt.media_type}")
-	private String media_type;
-
-	@Value("${chatgpt.url}")
-	private String gpt_url;
+	private double temperature=0.5;
+	private double top_p=1.0;
+	private String url="https://api.openai.com/v1/completions";
+	private String model="gpt-3.5-turbo-instruct";
+	private int max_token=1000;
 
 	private static RestTemplate restTemplate = new RestTemplate();
 
@@ -204,13 +183,13 @@ public class DiaryServiceImpl implements DiaryService {
 
 	public HttpEntity<DiaryCommentRequest> buildHttpEntity(DiaryCommentRequest requestDto) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType(authorization));
-		headers.add(authorization, bearer+ api_key);
+		headers.setContentType(MediaType.parseMediaType("Authorization"));
+		headers.add("Authorization", "Bearer"+ api_key);
 		return new HttpEntity<>(requestDto, headers);
 	}
 	public DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
 		ResponseEntity<DiaryCommentResponse> responseEntity = restTemplate.postForEntity(
-				gpt_url,
+				url,
 				chatGptRequestDtoHttpEntity,
 				DiaryCommentResponse.class);
 
