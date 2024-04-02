@@ -1,6 +1,7 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -68,7 +69,9 @@ public class GptServiceImpl {
 	public Optional<GPTResponse> findGptComment() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Member member = memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
-		Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), member);
+		// Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), member);
+		List<Diary> diaries = diaryRepository.findAllByDateAndWriter(LocalDate.now(), member);
+		Diary diary = diaries.get(0);
 
 		if (diary == null) {
 			return Optional.empty();
