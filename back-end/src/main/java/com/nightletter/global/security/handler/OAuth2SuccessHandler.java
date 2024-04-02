@@ -55,8 +55,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 		String memberId = oAuth2User.getName();
 		String token = jwtProvider.create(memberId);
 
-		// response.addHeader("Authorization", "Bearer " + token);
-
 		response.addHeader("Set-Cookie", accessCookie(token).toString());
 
 		response.sendRedirect(tokenResponseUri);

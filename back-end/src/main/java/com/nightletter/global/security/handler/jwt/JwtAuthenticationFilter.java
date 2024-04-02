@@ -41,17 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 		try {
 			// 토큰 확인.
-			// String token = parseBearerToken(request);
-
-			// log.info("Token Info In JWT Filter : " + token);
-
-			// 로컬 개발 위한 임시토큰 사용
-			// if (token == null) {
-
-			System.out.println(devToken);
-			String token = devToken;
-
-			// }
+			String token = parseBearerToken(request);
 
 			if (token == null) {
 				filterChain.doFilter(request, response);
@@ -60,19 +50,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			String memberId = jwtProvider.validate(token);
 
-			log.info("MemberId Info In JWT Filter : " + memberId);
-
 			if (memberId == null) {
 				filterChain.doFilter(request, response);
 				return;
 			}
 
 			Member member = memberRepository.findByMemberId(Integer.parseInt(memberId));
-			//            Member member = memberRepository.findMemberByOAuth2Id(memberId);
 
 			List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
-
-			log.info("Called in Filter : Member info : " + member.toString());
 
 			SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 			AbstractAuthenticationToken authenticationToken =
@@ -82,8 +67,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			securityContext.setAuthentication(authenticationToken);
 			SecurityContextHolder.setContext(securityContext);
-
-			log.info("Authentication Info In JWT Filter : " + SecurityContextHolder.getContext());
 
 		} catch (Exception e) {
 			log.info("ERROR OCCURED IN PARSING TOKEN");
@@ -97,20 +80,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		Cookie[] cookies = request.getCookies();
 
-	   // boolean hasAuthorization = false;
-	   // String authorization = request.getHeader("Authorization");
-	   // // Authorization 보유하고 있나?
-	   // if (! hasAuthorization) return null;
-	   // // Bearer 방식인가?
-	   // boolean isBearer = authorization.startsWith("Bearer ");
-	   // if (! isBearer) return null;
-	   // String accessToken = authorization.substring(7);
-	   String accessToken = null;
+	   	String accessToken = null;
 
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().equals("access-token")) {
 				accessToken = cookie.getValue();
-				log.info("token type: ACCESS // token : " + accessToken);
 			}
 		}
 
