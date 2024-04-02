@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryRequestDirection;
-import com.nightletter.domain.diary.dto.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarotType;

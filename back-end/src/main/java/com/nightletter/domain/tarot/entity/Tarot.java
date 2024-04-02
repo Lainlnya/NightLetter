@@ -2,7 +2,7 @@ package com.nightletter.domain.tarot.entity;
 
 import java.util.List;
 
-import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.dto.TarotKeyword;
 import com.nightletter.domain.tarot.dto.TarotResponse;

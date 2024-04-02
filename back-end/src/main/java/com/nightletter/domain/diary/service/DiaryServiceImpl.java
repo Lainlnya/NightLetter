@@ -1,11 +1,9 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,17 +17,16 @@ import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.diary.dto.EmbedVector;
-import com.nightletter.domain.diary.dto.RecommendDataResponse;
-import com.nightletter.domain.diary.dto.RecommendDiaryResponse;
-import com.nightletter.domain.diary.dto.RecommendResponse;
+import com.nightletter.domain.diary.dto.recommend.EmbedVector;
+import com.nightletter.domain.diary.dto.recommend.RecommendDataResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.entity.Tarot;
-import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.domain.tarot.service.TarotServiceImpl;
 import com.nightletter.global.common.ResponseDto;
 import com.nightletter.global.exception.CommonErrorCode;
@@ -52,7 +49,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Override
 	@Transactional
-	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
+	public RecommendResponse createDiary(DiaryCreateRequest diaryRequest) {
 
 		RecommendDataResponse recDataResponse = fetchRecData(diaryRequest);
 		List<Long> recDiariesId = recDataResponse.getDiariesId();
@@ -71,7 +68,7 @@ public class DiaryServiceImpl implements DiaryService {
 		userDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
 		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
 		diaryRepository.save(userDiary);
-		return Optional.of(recResponse);
+		return recResponse;
 	}
 
 	private RecommendDataResponse fetchRecData(DiaryCreateRequest diaryRequest) {

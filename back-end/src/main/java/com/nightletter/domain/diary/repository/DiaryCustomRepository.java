@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.member.entity.Member;
 

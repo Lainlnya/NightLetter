@@ -2,18 +2,17 @@ package com.nightletter.domain.diary.service;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.diary.dto.RecommendResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.global.common.ResponseDto;
 
 public interface DiaryService {
 
-	Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryCreateRequest) throws JsonProcessingException;
+	RecommendResponse createDiary(DiaryCreateRequest diaryCreateRequest);
 
 	Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request);
 
