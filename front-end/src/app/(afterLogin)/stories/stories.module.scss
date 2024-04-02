@@ -64,8 +64,9 @@
 
   margin-right: 1.6rem;
 
-  background-image: url('../../../../public/images/tarot-background.png');
+  background-image: url("../../../../public/images/tarot-background.png");
   background-size: 100% 100%;
+  border-radius: 2rem;
 
   position: relative;
   isolation: isolate;
@@ -74,7 +75,7 @@
 }
 
 .story::after {
-  content: '';
+  content: "";
   position: absolute;
   background: black;
   z-index: -1;
