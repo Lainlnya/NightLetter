@@ -91,7 +91,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private List<RecommendDiaryResponse> getRecDiaries(List<Long> diariesId){
 		List<RecommendDiaryResponse> recommendDiaries = diaryRepository
-			.findRecommendDiaries(diariesId);
+			.findRecommendDiaries(diariesId, getCurrentMember());
 		if (recommendDiaries.isEmpty()) {
 			throw new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "RECOMMEND DIARIES NOT FOUND");
 		}
