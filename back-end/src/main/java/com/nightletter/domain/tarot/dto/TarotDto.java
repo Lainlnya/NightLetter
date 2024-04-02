@@ -2,7 +2,7 @@ package com.nightletter.domain.tarot.dto;
 
 import java.util.List;
 
-import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
 
@@ -10,7 +10,7 @@ import lombok.Builder;
 
 @Builder
 public record TarotDto(
-	Integer id,
+	int id,
 	String name,
 	String imgUrl,
 	String keyword,
@@ -29,16 +29,5 @@ public record TarotDto(
 			.description(tarot.getDescription())
 			.embedVector(tarot.getEmbedVector())
 			.build();
-	}
-
-	public Tarot toEntity() {
-		return Tarot.builder().id(id)
-			.name(name)
-			.imgUrl(imgUrl)
-			.keyword(keyword)
-			.description(description)
-			.dir(dir)
-			.embedVector(embedVector).
-			build();
 	}
 }

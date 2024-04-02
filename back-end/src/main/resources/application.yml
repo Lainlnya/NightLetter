@@ -68,3 +68,6 @@ jwt:
   refresh:
     expiration: 604800000 # 1 weeks
     header: Authorization-refresh
+
+chatgpt:
+  api-key: ${OPENAI_SECRET_KEY}

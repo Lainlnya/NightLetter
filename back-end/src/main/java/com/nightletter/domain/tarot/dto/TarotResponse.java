@@ -1,15 +1,31 @@
 package com.nightletter.domain.tarot.dto;
 
-import java.util.List;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
+import com.nightletter.domain.tarot.entity.Tarot;
+import com.nightletter.domain.tarot.entity.TarotDirection;
 
-import com.nightletter.domain.diary.dto.EmbedVector;
+import lombok.Builder;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@NoArgsConstructor
+@Data
+@Builder
 public class TarotResponse {
-	int id;
-	List<EmbedVector> keywords;
+	String name;
+	String imgUrl;
+	DiaryTarotType type;
+	TarotDirection dir;
+	String keyword;
+	String desc;
+
+	public static TarotResponse of(Tarot tarot, TarotDirection direction) {
+
+		return TarotResponse.builder()
+			.name(tarot.getName())
+			.imgUrl(tarot.getImgUrl())
+			.type(DiaryTarotType.PAST)
+			.dir(direction)
+			.keyword(tarot.getKeyword())
+			.desc(tarot.getDescription())
+			.build();
+	}
 }
