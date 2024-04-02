@@ -15,7 +15,6 @@ public enum CommonErrorCode implements ErrorCode {
 	REC_SYS_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "RECOMMEND SYS CONNECTION ERROR"),
 	REC_ANNOY_TREE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "RECOMMEND ANNOY TREE ERROR");
 
-
 	private final HttpStatus httpStatus;
 	private final String message;
 }

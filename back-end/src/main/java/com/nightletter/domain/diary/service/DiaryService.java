@@ -7,7 +7,6 @@ import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
 import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.diary.dto.GPTResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.global.common.ResponseDto;
 

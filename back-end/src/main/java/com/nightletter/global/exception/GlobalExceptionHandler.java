@@ -15,13 +15,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(RecsysConnectionException.class)
-	public ResponseEntity<?> recsysConnectionException(RecsysConnectionException e){
+	public ResponseEntity<?> recsysConnectionException(RecsysConnectionException e) {
 		ErrorCode errorCode = CommonErrorCode.REC_SYS_CONNECTION_ERROR;
 		return handleExceptionInternal(errorCode);
 	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e){
+	public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e) {
 		ErrorCode errorCode = CommonErrorCode.RESOURCE_NOT_FOUND;
 		return handleExceptionInternal(errorCode, e.getDetailMessage());
 	}
