@@ -31,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	@Value("${spring.security.dev-token}")
-	private String devToken;
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
 
