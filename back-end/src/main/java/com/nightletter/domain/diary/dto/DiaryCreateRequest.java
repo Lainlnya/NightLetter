@@ -3,6 +3,7 @@ package com.nightletter.domain.diary.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.member.entity.Member;

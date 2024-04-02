@@ -1,4 +1,4 @@
-package com.nightletter.domain.diary.dto;
+package com.nightletter.domain.diary.dto.recommend;
 
 import java.util.List;
 
