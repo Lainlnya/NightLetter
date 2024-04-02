@@ -71,11 +71,3 @@ jwt:
 
 chatgpt:
   api-key: ${OPENAI_SECRET_KEY}
-  authorization: ${AUTHORIZATION}
-  bearer: ${BEARER}
-  model: ${MODEL}
-  max_token: ${MAX_TOKEN}
-  temperature: ${TEMPERATURE}
-  top_p: ${TOP_P}
-  media_type: ${MEDIA-TYPE}
-  url: ${URL}
