@@ -17,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JpaAuditorConfig implements AuditorAware<Integer> {
 
-//	private final MemberRepository memberRepository;
-
 	@Override
 	public Optional<Integer> getCurrentAuditor() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -28,9 +26,6 @@ public class JpaAuditorConfig implements AuditorAware<Integer> {
 		}
 
 		System.out.println(authentication.getPrincipal());
-
-		// 자체 작성한 find 쿼리 말고 원래 있던 기능 쓰니까 됨.
-		// 아마 자체 작성하는 find 는 flush 되는 듯 ? 추후 알아봐야 함.
 
 		return Optional.of(Integer.parseInt((String) authentication.getPrincipal()));
 	}
