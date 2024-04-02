@@ -6,15 +6,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class EmbedVector {
-	private List<Double> embed;
+public record EmbedVector(List<Double> embed) {
 
-
-	public String convertString(){
+	public String convertString() {
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {

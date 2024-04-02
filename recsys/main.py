@@ -2,7 +2,7 @@ import os
 from annoy import AnnoyIndex
 from fastapi import FastAPI
 from sentence_transformers import SentenceTransformer
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from data import model
 from data import text_preprocessing
@@ -11,12 +11,21 @@ from data.model import DiaryTable
 
 app = FastAPI()
 
+origins = [
+    "http://letter-for.me:8081",
+    "http://dev.letter-for.me:8081",
+    "https://letter-for.me",
+    "https://dev.letter-for.me",
+    "http://localhost",
+    "http://localhost:8081",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["X-Custom-Header", "Content-Type"],
 )
 
 embedder = SentenceTransformer(os.getcwd() + '/kosbert-klue-bert-base')
@@ -76,7 +85,7 @@ def build_model():
     return {"message": "success tree building"}
 
 
-@app.post("/tarot/init", response_model=model.TarotVectors)
+@app.post("/tarots/init", response_model=model.TarotVectors)
 def get_deck(tarots: model.TarotInput):
     card_lst = []
     for tarot in tarots.tarots:

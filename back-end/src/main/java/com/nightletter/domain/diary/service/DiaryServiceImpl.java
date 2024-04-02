@@ -1,9 +1,11 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import com.nightletter.domain.diary.dto.*;
 import com.nightletter.domain.diary.entity.DiaryTarot;
@@ -20,17 +22,27 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.nightletter.domain.diary.dto.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.dto.RecommendDataResponse;
+import com.nightletter.domain.diary.dto.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.RecommendResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
-import com.nightletter.domain.diary.repository.DiaryTarotRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
-import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.domain.tarot.service.TarotServiceImpl;
 import com.nightletter.global.common.ResponseDto;
+import com.nightletter.global.exception.CommonErrorCode;
+import com.nightletter.global.exception.RecsysConnectionException;
+import com.nightletter.global.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,10 +54,8 @@ import reactor.core.publisher.Mono;
 public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
-	private final DiaryTarotRepository diaryTarotRepository;
 	private final WebClient webClient;
 	private final TarotServiceImpl tarotService;
-	private final TarotRepository tarotRepository;
 	private final MemberRepository memberRepository;
 
 
@@ -63,41 +73,19 @@ public class DiaryServiceImpl implements DiaryService {
 	@Transactional
 	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
 
-		Member olrlobt = memberRepository.findByMemberId(1);
+		RecommendDataResponse recDataResponse = fetchRecData(diaryRequest);
+		List<Long> recDiariesId = recDataResponse.getDiariesId();
+		EmbedVector embedVector = recDataResponse.getEmbedVector();
 
-		RecommendDataResponse recDataResponse = webClient.post()
-			.uri("/diaries/recommend")
-			.body(BodyInserters.fromValue(Map.of("content", diaryRequest.getContent())))
-			.retrieve()
-			.bodyToMono(RecommendDataResponse.class)
-			.doOnError(error -> log.error("Fast API CONNECT ERROR: {}", error.getMessage()))
-			.onErrorResume(error -> Mono.empty())
-			.block();
+		RecommendResponse recResponse = new RecommendResponse();
+		recResponse.setRecommendDiaries(getRecDiaries(recDiariesId));
 
-		log.info("======= vec : {},  diary ids : {}",
-			recDataResponse.getEmbedVector().getEmbed().size(),
-			recDataResponse.getDiariesId().size());
+		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
+		recResponse.setCard(nowTarot);
+		Tarot pastTarot = tarotService.findPastTarot(getCurrentMember());
+		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
-		RecommendResponse recResponse = new RecommendResponse(); // 응답
-
-		recResponse.setRecommendDiaries(diaryRepository
-			.findRecommendDiaries(recDataResponse.getDiariesId()));
-
-		TarotDto recommendTarot = tarotService.findSimilarTarot(recDataResponse.getEmbedVector());
-		recResponse.setCard(recommendTarot);
-
-		// Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(getCurrentMember(), recDataResponse.getEmbedVector()));
-		Diary saveDiary = diaryRepository.save(diaryRequest.toEntity(olrlobt, recDataResponse.getEmbedVector()));
-		//todo. 과거 카드 설정
-		// DiaryTarot pastTarot = diaryTarotRepository.findByDiary(saveDiary);
-		Tarot nowTarot = tarotRepository.findById(recommendTarot.id()).get();
-		Tarot pastTarot = tarotRepository.findById(155).get();
-
-		int randomTarotId = tarotService.getRandomTarotId(pastTarot.getId(), nowTarot.getId());
-		Tarot futureTarot = tarotRepository.findById(randomTarotId).get();
-
-
-
+		
 		String question=String.format("%s 라는 일기에 타로카드가 과거 : %s 와 현재 : %s 와 미래 : %s 카드를 바탕으로 존댓말로 공감해줘"
 				,diaryRequest.getContent(),
 				pastTarot.getName(),
@@ -105,12 +93,37 @@ public class DiaryServiceImpl implements DiaryService {
 				futureTarot.getName());
 		String gptComment = askQuestion(question);
 
-		saveDiary.addDiaryComment(gptComment);
-
-		saveDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
-		saveDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
-		saveDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
+		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
+		userDiary.addDiaryComment(gptComment);
+		userDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
+		userDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
+		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
+		diaryRepository.save(userDiary);
 		return Optional.of(recResponse);
+	}
+
+	private RecommendDataResponse fetchRecData(DiaryCreateRequest diaryRequest) {
+		RecommendDataResponse recDataResponse = webClient.post()
+			.uri("/diaries/recommend")
+			.body(BodyInserters.fromValue(Map.of("content", diaryRequest.getContent())))
+			.retrieve()
+			.bodyToMono(RecommendDataResponse.class)
+			.onErrorResume(error ->
+				Mono.error(new RecsysConnectionException(CommonErrorCode.REC_SYS_CONNECTION_ERROR)))
+			.block();
+
+		assert recDataResponse != null;
+		recDataResponse.validation();
+		return recDataResponse;
+	}
+
+	private List<RecommendDiaryResponse> getRecDiaries(List<Long> diariesId){
+		List<RecommendDiaryResponse> recommendDiaries = diaryRepository
+			.findRecommendDiaries(diariesId);
+		if (recommendDiaries.isEmpty()) {
+			throw new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "RECOMMEND DIARIES NOT FOUND");
+		}
+		return recommendDiaries;
 	}
 
 
