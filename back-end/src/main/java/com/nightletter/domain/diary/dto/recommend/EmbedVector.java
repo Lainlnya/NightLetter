@@ -5,8 +5,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.Getter;
-
 public record EmbedVector(List<Double> embed) {
 
 	public String convertString() {

@@ -1,8 +1,8 @@
 import os
 from annoy import AnnoyIndex
 from fastapi import FastAPI
-from sentence_transformers import SentenceTransformer
 from fastapi.middleware.cors import CORSMiddleware
+from sentence_transformers import SentenceTransformer
 
 from data import model
 from data import text_preprocessing

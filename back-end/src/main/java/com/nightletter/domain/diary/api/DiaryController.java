@@ -82,8 +82,9 @@ public class DiaryController {
 
 		return ResponseEntity.ok().build();
 	}
+
 	@GetMapping("/get_comment")
-	public ResponseEntity<?> findGptComment(){
+	public ResponseEntity<?> findGptComment() {
 		Optional<GPTResponse> response = gptService.findGptComment();
 		return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
