@@ -21,6 +21,7 @@ import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.GPTResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.service.DiaryService;
+import com.nightletter.domain.diary.service.GptServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DiaryController {
 
 	private final DiaryService diaryService;
+	private final GptServiceImpl gptService;
 
 	@PostMapping("")
 	public ResponseEntity<RecommendResponse> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
@@ -76,7 +78,7 @@ public class DiaryController {
 
 	@GetMapping("/get_comment")
 	public ResponseEntity<?> findGptComment(){
-		Optional<GPTResponse> response = diaryService.findGptComment();
+		Optional<GPTResponse> response = gptService.findGptComment();
 		return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }
