@@ -2,7 +2,7 @@ package com.nightletter.domain.diary.api;
 
 import java.util.Optional;
 
-import com.nightletter.domain.diary.dto.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nightletter.domain.diary.dto.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.DiaryListRequest;
+import com.nightletter.domain.diary.dto.DiaryListResponse;
+import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.GPTResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.service.DiaryService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,17 +34,13 @@ public class DiaryController {
 	private final DiaryService diaryService;
 
 	@PostMapping("")
-	public ResponseEntity<?> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) throws
-		JsonProcessingException {
-
-		Optional<RecommendResponse> diary = diaryService.createDiary(diaryCreateRequest);
-
-		return diary.map(ResponseEntity::ok)
-			.orElseGet(() -> ResponseEntity.badRequest().build());
+	public ResponseEntity<RecommendResponse> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
+		RecommendResponse diary = diaryService.createDiary(diaryCreateRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).body(diary);
 	}
 
 	@PatchMapping("")
-	public ResponseEntity<?> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
+	public ResponseEntity<DiaryResponse> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
 
 		Optional<DiaryResponse> diary =
 			diaryService.updateDiaryDisclosure(diaryDisclosureRequest);

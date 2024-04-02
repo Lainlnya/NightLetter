@@ -1,9 +1,8 @@
-package com.nightletter.domain.diary.dto;
+package com.nightletter.domain.diary.dto.recommend;
 
 import java.util.List;
 
 import com.nightletter.domain.diary.entity.DiaryTarotType;
-import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
 

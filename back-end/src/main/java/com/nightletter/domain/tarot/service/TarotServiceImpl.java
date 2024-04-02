@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.nightletter.domain.diary.dto.EmbedVector;
+import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
@@ -214,7 +214,12 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public Tarot findPastTarot(Member currentMember) {
 		return tarotRepository.findPastTarot(LocalDate.now(), currentMember.getMemberId())
-			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"PAST TAROT NOT FOUND"));
-		// todo. 예외가 아닌 REDIS에서 가져오기
+			.orElseGet(() -> {
+				PastTarot pastTarot = tarotRedisRepository.findById(getCurrentMemberId())
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"PAST TAROT IN REDIS NOT FOUND"));
+
+				return tarotRepository.findById(pastTarot.getTarotId())
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,"TAROT NOT FOUND"));
+			});
 	}
 }
