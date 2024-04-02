@@ -41,6 +41,5 @@ class TarotVector(BaseModel):
     keywords: List[VectorEmbed]
 
 
-
 class TarotVectors(BaseModel):
     tarots: List[TarotVector]

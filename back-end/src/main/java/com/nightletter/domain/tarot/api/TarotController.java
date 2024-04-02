@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.service.TarotService;
 
