@@ -7,10 +7,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import com.nightletter.domain.diary.dto.*;
+import com.nightletter.domain.diary.entity.DiaryTarot;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -50,6 +58,17 @@ public class DiaryServiceImpl implements DiaryService {
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
 
+
+	@Value("${chatgpt.api-key}")
+	private String api_key;
+	private double temperature=0.5;
+	private double top_p=1.0;
+	private String url="https://api.openai.com/v1/completions";
+	private String model="gpt-3.5-turbo-instruct";
+	private int max_token=1000;
+
+	private static RestTemplate restTemplate = new RestTemplate();
+
 	@Override
 	@Transactional
 	public Optional<RecommendResponse> createDiary(DiaryCreateRequest diaryRequest) {
@@ -66,7 +85,16 @@ public class DiaryServiceImpl implements DiaryService {
 		Tarot pastTarot = tarotService.findPastTarot(getCurrentMember());
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
+		
+		String question=String.format("%s 라는 일기에 타로카드가 과거 : %s 와 현재 : %s 와 미래 : %s 카드를 바탕으로 존댓말로 공감해줘"
+				,diaryRequest.getContent(),
+				pastTarot.getName(),
+				nowTarot.getName(),
+				futureTarot.getName());
+		String gptComment = askQuestion(question);
+
 		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
+		userDiary.addDiaryComment(gptComment);
 		userDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
 		userDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
 		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
@@ -97,6 +125,7 @@ public class DiaryServiceImpl implements DiaryService {
 		}
 		return recommendDiaries;
 	}
+
 
 	@Override
 	public Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request) {
@@ -163,5 +192,63 @@ public class DiaryServiceImpl implements DiaryService {
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+	}
+
+	public HttpEntity<DiaryCommentRequest> buildHttpEntity(DiaryCommentRequest requestDto) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType("Authorization"));
+		headers.add("Authorization", "Bearer"+ api_key);
+		return new HttpEntity<>(requestDto, headers);
+	}
+	public DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
+		ResponseEntity<DiaryCommentResponse> responseEntity = restTemplate.postForEntity(
+				url,
+				chatGptRequestDtoHttpEntity,
+				DiaryCommentResponse.class);
+
+		return responseEntity.getBody();
+	}
+
+	public String askQuestion(String question) {
+		DiaryCommentResponse response = this.getResponse(
+				this.buildHttpEntity(
+						new DiaryCommentRequest(
+								model,
+								question,
+								max_token,
+								temperature,
+								top_p
+						)
+				)
+		);
+
+		String gptResponse = response.getChoices().get(0).getText();
+		return gptResponse;
+	}
+
+	@Override
+	public Optional<GPTResponse> findGptComment(){
+
+		Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), getCurrentMember());
+
+		if (diary == null) {
+			return Optional.empty();
+		}
+
+		GPTResponse response = new GPTResponse();
+
+
+		for(DiaryTarot dt : diary.getDiaryTarots()){
+			switch (dt.getType()){
+				case PAST : response.setPast_url(dt.getTarot().getImgUrl()); break;
+				case NOW : response.setNow_url(dt.getTarot().getImgUrl()); break;
+				case FUTURE : response.setFuture_url(dt.getTarot().getImgUrl()); break;
+			}
+		}
+
+		response.setGptComment(diary.getGptComment());
+
+
+		return Optional.of(response);
 	}
 }

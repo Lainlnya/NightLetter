@@ -80,5 +80,41 @@ public class Diary extends BaseTimeEntity {
 		this.diaryTarots.add(diaryTarot);
 		diaryTarot.setDiary(this);
 	}
+
+	public void addDiaryComment(String gptComment){
+		this.gptComment = gptComment;
+	}
+
+	public DiaryResponse toDiaryResponse() {
+		TarotDto pastCard = null;
+		TarotDto nowCard = null;
+		TarotDto futureCard = null;
+
+		for (DiaryTarot tarot : this.diaryTarots) {
+			DiaryTarotType type = tarot.getType();
+
+			if (type.equals(DiaryTarotType.PAST)) {
+				pastCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
+			} else if (type.equals(DiaryTarotType.NOW)) {
+				nowCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
+			} else if (type.equals(DiaryTarotType.FUTURE)) {
+				futureCard = TarotDto.of(tarot.getTarot(), tarot.getTarot().getDir());
+			}
+		}
+
+		return DiaryResponse.builder()
+			.writerId(this.writer.getMemberId())
+			.diaryId(this.diaryId)
+			.type(this.type)
+			.content(this.content)
+			.gptComment(this.gptComment)
+			.pastCard(pastCard)
+			.nowCard(nowCard)
+			.futureCard(futureCard)
+			.date(this.date)
+			.build();
+	}
+
+
 }
 
