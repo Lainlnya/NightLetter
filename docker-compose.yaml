@@ -33,6 +33,7 @@ services:
       - NEXT_PUBLIC_MODE
       - NEXT_PUBLIC_URL
       - NEXT_PUBLIC_API_URL
+      - TZ=Asia/Seoul
     networks:
       - tarot-network
 
