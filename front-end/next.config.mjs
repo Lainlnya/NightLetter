@@ -10,7 +10,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://letter-for.me", // Set your origin
+            value: "https://letter-for.me",
           },
           {
             key: "Access-Control-Allow-Methods",

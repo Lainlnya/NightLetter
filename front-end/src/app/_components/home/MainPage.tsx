@@ -11,11 +11,12 @@ import CalendarComponent from '../diaries/Calendar';
 
 import Image from 'next/image';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
-import calender from '../../../../public/Icons/calender_icon.svg';
+
 import Loading from '@/app/loading';
 
 export default function Home() {
   const { date } = useStore();
+
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);

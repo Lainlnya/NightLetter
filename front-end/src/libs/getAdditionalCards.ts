@@ -15,7 +15,6 @@ export default async function getAdditionalCards({ date, direction, size }: Card
             direction: direction,
             size: size
         }),
-
     });
 
     if (!res.ok) {
