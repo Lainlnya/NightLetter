@@ -13,6 +13,7 @@ import ErrorFallback from "@/app/_components/error/ErrorFallback";
 import { DRAG_BUFFER } from "@/utils/animation";
 import { TODAY, convertDateFormatToKorean, isToday } from "@/utils/dateFormat";
 import getInitialCards from "@/libs/getInitialCards";
+import useStore from "@/store/date";
 
 import { CalendarProps } from "@/types/calender";
 import { DiaryEntry } from "@/types/card";
@@ -30,7 +31,7 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
   const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
-  const [date, setDate] = useState("");
+  const { setDate } = useStore();
 
   console.log(data);
 
@@ -42,26 +43,10 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
     }
   }, [])
 
-  useEffect(() => {
-    setDate(convertDateFormatToKorean(data?.diaries?.[data.diaries.length - 1]?.date));
-    // sessionStorage.setItem("date", data?.diaries?.[data.diaries.length - 1]?.date);
-
-    // const date = sessionStorage && sessionStorage.getItem("date");
-    // console.log(date)
-    // if (date !== null) {
-    //   setDate(convertDateFormatToKorean(date));
-    // }
-
-  }, [])
 
 
   useEffect(() => {
-    sessionStorage.setItem("date", data?.diaries?.[cardIndex]?.date);
-
-    const date = sessionStorage.getItem("date");
-    if (date !== null) {
-      setDate(convertDateFormatToKorean(date));
-    }
+    setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
   }, [cardIndex])
 
   const dragX = useMotionValue(0);
