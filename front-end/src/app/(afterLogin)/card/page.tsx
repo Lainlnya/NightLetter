@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import { Messages } from "@/utils/msg";
 import { useQuery } from "@tanstack/react-query";
+import tarot_background from "../../../../public/images/tarot-background.webp";
 
 interface CardInfo {
   name: string;
@@ -79,7 +80,7 @@ const ViewCard: React.FC = () => {
             <Image
               className={styles.back}
               onClick={() => setIsBack(!isBack)}
-              src={card.imgUrl}
+              src={card?.imgUrl || tarot_background}
               alt="tarot image"
               width={230}
               height={400}
