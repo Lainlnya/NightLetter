@@ -8,22 +8,21 @@ import Loading from '@/app/loading';
 
 import getPastCardInfo from "@/libs/getPastCardInfo";
 
+interface PastCardInfo {
+  name: String,
+  imgUrl: String,
+  type: String,
+  dir: null,
+  keyword: String,
+  desc: String
+}
+
 export default async function page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['card', 'cards'],
     queryFn: getInitialCards,
   });
-
-  interface PastCardInfo {
-    name: String,
-    imgUrl: String,
-    type: String,
-    dir: null,
-    keyword: String,
-    desc: String
-  }
-
 
   const dehydrateState = dehydrate(queryClient);
 

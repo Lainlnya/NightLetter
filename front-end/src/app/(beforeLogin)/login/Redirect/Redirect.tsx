@@ -18,7 +18,7 @@ interface PastCardInfo {
 
 
 
-export default function Redirect(pastCardInfo: PastCardInfo) {
+export default function Redirect(props: { pastCardInfo: PastCardInfo }) {
   const router = useRouter();
   const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
 
@@ -27,7 +27,7 @@ export default function Redirect(pastCardInfo: PastCardInfo) {
 
   const dateDiff = getDateDiff(date1, new Date());
 
-  console.log(pastCardInfo);
+  console.log(props);
 
   useEffect(() => {
     if (!data?.diaries?.length) {
