@@ -23,9 +23,19 @@
     font-size: 2.8rem;
   }
 
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
   .recommend {
     flex: 1;
     display: block;
+  }
+
+  .blink {
+    animation: blinker 1s linear infinite;
   }
 
   .cardSec {
@@ -66,24 +76,5 @@
   }
   .commentSec::-webkit-scrollbar {
     display: none;
-  }
-
-  @keyframes blinker {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  .blinking {
-    padding: 1rem;
-    text-align: center;
-    border-radius: 1rem;
-    font-weight: 900;
-    font-size: 0.6rem;
-    position: absolute;
-    top: 100%; /* 이미지의 바로 아래 위치 */
-    left: 50%;
-    transform: translateX(-50%); /* 중앙 정렬을 위해 */
-    animation: blinker 2s infinite none;
   }
 }
