@@ -53,7 +53,6 @@ const ViewCard: React.FC = () => {
 
     if (futureCard && searchParams.get("info") === "future") {
       setCard(futureCard);
-      console.log(futureCard);
     }
   }, [pastCard, futureCard]);
 
@@ -94,6 +93,11 @@ const ViewCard: React.FC = () => {
           </div>
         </div>
         <div className={styles.meaning}>{card.keyword}</div>
+        {searchParams.get("info") === "past" && (
+          <button className={styles.comment} onClick={() => router.push("/")}>
+            다이어리 쓰러가기
+          </button>
+        )}
         {searchParams.get("info") === "present" && (
           <button
             className={styles.comment}
