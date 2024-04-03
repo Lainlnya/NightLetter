@@ -11,15 +11,24 @@ import CalendarComponent from '../diaries/Calendar';
 
 import Image from 'next/image';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
+import { useQuery } from '@tanstack/react-query';
+import getInitialCards from '@/libs/getInitialCards';
+
+import { useRouter } from 'next/navigation';
 
 import Loading from '@/app/loading';
 
 export default function Home() {
+  const router = useRouter();
+
   const { date } = useStore();
+  const { data } = useQuery({ queryKey: ['card', 'cards'], queryFn: getInitialCards });
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+
+  const isNotedTodayDiaries = data?.diaries?.length && data?.diaries?.[data.diaries.length - 1].pastCard === null;
 
   useEffect(() => {
     function handleTouchOutside(e: TouchEvent) {
@@ -62,6 +71,16 @@ export default function Home() {
           <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
           <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
         </section>
+
+        {!isNotedTodayDiaries && (
+          <footer className={styles.footer}
+            onClick={() => {
+              router.push("/post");
+            }}
+          >
+            <p>오늘의 일기 작성하기</p>
+          </footer>
+        )}
         {isSeen && <div className={styles.darken}></div>}
       </>
     </Suspense>

@@ -2,7 +2,7 @@ import { convertDateFormatToKorean, getTodayDate } from '@/utils/dateFormat';
 import { create } from 'zustand';
 
 interface DateState {
-    date: string | null;
+    date: string;
     daysDifference: number;
     setDate: (date: string) => void;
     setDaysDifference: (daysDifference: number) => void;

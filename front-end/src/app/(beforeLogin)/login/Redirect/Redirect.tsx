@@ -5,9 +5,20 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getDateDiff } from "@/utils/dateFormat";
 import getInitialCards from "@/libs/getInitialCards";
+import getPastCardInfo from "@/libs/getPastCardInfo";
+
+interface PastCardInfo {
+  name: String,
+  imgUrl: String,
+  type: String,
+  dir: null,
+  keyword: String,
+  desc: String
+}
 
 
-export default function Redirect() {
+
+export default function Redirect(pastCardInfo: PastCardInfo) {
   const router = useRouter();
   const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
 
@@ -16,10 +27,23 @@ export default function Redirect() {
 
   const dateDiff = getDateDiff(date1, new Date());
 
+  console.log(pastCardInfo);
+
   useEffect(() => {
-    // 마지막으로 뽑은지 4주 이상 지났거나, 오늘 뽑은 카드가 없을 경우 타로페이지로 이동
-    if (dateDiff > 28 || lastPastCard === null) router.push('/tarot');
-    else router.push('/');
+    if (!data?.diaries?.length) {
+      if (lastPastCard === null) router.push("/tarot?info=past");
+      if (lastPastCard !== null) router.push("/");
+    }
+
+    if (dateDiff > 28) {
+      if (lastPastCard === null) router.push("/tarot?info=past");
+      if (lastPastCard !== null) router.push("/");
+    }
+    if (dateDiff < 28) {
+      router.push("/");
+    }
+
   }, []);
+
   return null;
 }

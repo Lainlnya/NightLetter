@@ -6,19 +6,35 @@ import { Suspense } from "react";
 
 import Loading from '@/app/loading';
 
-export default async function page() {
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery({
-      queryKey: ['card', 'cards'],
-      queryFn: getInitialCards,
-    });
+import getPastCardInfo from "@/libs/getPastCardInfo";
 
-    const dehydrateState = dehydrate(queryClient);
+export default async function page() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['card', 'cards'],
+    queryFn: getInitialCards,
+  });
+
+  interface PastCardInfo {
+    name: String,
+    imgUrl: String,
+    type: String,
+    dir: null,
+    keyword: String,
+    desc: String
+  }
+
+
+  const dehydrateState = dehydrate(queryClient);
+
+  const pastCardInfo: PastCardInfo = await getPastCardInfo();
+  console.log(pastCardInfo);
+
   return (
     <HydrationBoundary state={dehydrateState}>
-        <Suspense   fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
-        <Redirect/>
-        </Suspense>
+      <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
+        <Redirect pastCardInfo={pastCardInfo} />
+      </Suspense>
     </HydrationBoundary>
   )
 }

@@ -13,7 +13,6 @@ import ErrorFallback from "@/app/_components/error/ErrorFallback";
 import { DRAG_BUFFER } from "@/utils/animation";
 import { TODAY, convertDateFormatToKorean, isToday } from "@/utils/dateFormat";
 import getInitialCards from "@/libs/getInitialCards";
-import useStore from "@/store/date";
 
 import { CalendarProps } from "@/types/calender";
 import { DiaryEntry } from "@/types/card";
@@ -31,14 +30,38 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
   const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
-  const { setDate } = useStore();
+  const [date, setDate] = useState("");
+
+  console.log(data);
 
   useEffect(() => {
-    setDate(convertDateFormatToKorean(data?.diaries?.[data.diaries.length - 1]?.date));
+    if (!data?.diaries?.length || !isNotedTodayDiaries) {
+      if (data?.diaries?.[data.diaries.length - 1].pastCard === null) {
+        router.push("/tarot?info=past")
+      }
+    }
   }, [])
 
   useEffect(() => {
-    setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+    setDate(convertDateFormatToKorean(data?.diaries?.[data.diaries.length - 1]?.date));
+    // sessionStorage.setItem("date", data?.diaries?.[data.diaries.length - 1]?.date);
+
+    // const date = sessionStorage && sessionStorage.getItem("date");
+    // console.log(date)
+    // if (date !== null) {
+    //   setDate(convertDateFormatToKorean(date));
+    // }
+
+  }, [])
+
+
+  useEffect(() => {
+    sessionStorage.setItem("date", data?.diaries?.[cardIndex]?.date);
+
+    const date = sessionStorage.getItem("date");
+    if (date !== null) {
+      setDate(convertDateFormatToKorean(date));
+    }
   }, [cardIndex])
 
   const dragX = useMotionValue(0);
@@ -54,8 +77,13 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
 
     if (x <= -DRAG_BUFFER && cardIndex < data?.diaries?.length - 1) {
       setCardIndex((prev: number) => prev + 1);
+
+      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev: number) => prev - 1);
+
+      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
     }
   };
 
