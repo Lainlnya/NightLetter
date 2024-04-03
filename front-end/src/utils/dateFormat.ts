@@ -52,3 +52,11 @@ export const isToday = (date1: string, data2: string) => date1.match(data2);
 
 export const TODAY = parseDateToKoreanFormatWithDay();
 export const TODAY_CONVERTED = convertDateFormat(TODAY);
+
+export function getNextDate() {
+  const tomorrow = new Date();
+  tomorrow.setDate(new Date().getDate() + 1);
+  tomorrow.setHours(4, 0, 0, 0); // 내일 오전 4시
+  return tomorrow;
+}
+export const TOMORROW = getNextDate();
