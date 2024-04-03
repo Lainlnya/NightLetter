@@ -8,31 +8,34 @@ import { getGPTData } from "@/_apis/DiaryApis";
 import Loading from "@/app/loading";
 import { Messages } from "@/utils/msg";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import closeIcon from "../../../../public/Icons/xmark-solid.svg";
 import letterIcon from "../../../../public/Icons/envelope-regular.svg";
 import tarot_background from "../../../../public/images/tarot-background.webp";
 
 const Comment: React.FC = () => {
   const router = useRouter();
-  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [showImage, setShowImage] = useState<boolean>(false);
 
   const { isLoading, data: gptComment } = useQuery({
     queryKey: ["GPTComments"],
     queryFn: () => getGPTData(),
   });
 
-  useEffect(() => {
-    const showMessageTimer = setTimeout(() => {
-      setShowMessage(true);
-    }, 5000);
+  const blinkElement = useRef(null);
 
-    const clearTimer = setTimeout(() => {
-      setShowMessage(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowImage(true);
+    }, 5000); // 5초 후에 깜빡이기 시작
+
+    const stopBlinker = setTimeout(() => {
+      setShowImage(false);
     }, 15000);
+
     return () => {
-      clearTimeout(showMessageTimer);
-      clearTimeout(clearTimer);
+      clearTimeout(timer);
+      clearTimeout(stopBlinker);
     };
   }, []);
 
@@ -57,16 +60,14 @@ const Comment: React.FC = () => {
               <div>하루의 코멘트</div>
             </h1>
             <Image
-              className={styles.recommend}
+              className={`${styles.recommend} ${showImage ? styles.blink : ""}`}
               src={letterIcon}
+              ref={blinkElement}
               alt="사연"
               width={30}
               height={30}
               onClick={() => router.push("/stories")}
             />
-            {showMessage && (
-              <section className={styles.blinking}>사연이 도착했어요!</section>
-            )}
           </section>
           <section className={styles.cardSec}>
             <section>
