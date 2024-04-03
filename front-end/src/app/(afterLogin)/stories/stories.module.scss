@@ -10,9 +10,8 @@
 }
 
 .back {
-  position: absolute;
-  top: 5rem;
-  left: 1rem;
+  align-self: flex-start;
+  margin-bottom: 1rem;
 }
 
 .nickname {
