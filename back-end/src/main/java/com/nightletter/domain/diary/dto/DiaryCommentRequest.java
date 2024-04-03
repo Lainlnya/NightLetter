@@ -1,33 +1,22 @@
 package com.nightletter.domain.diary.dto;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@NoArgsConstructor
-public class DiaryCommentRequest implements Serializable {
+@Data
+public class DiaryCommentRequest  {
 
 	private String model;
-	private String prompt;
-	@JsonProperty("max_tokens")
-	private Integer maxTokens;
-	private Double temperature;
-	@JsonProperty("top_p")
-	private Double topP;
+	private List<GPTRequest> messages;
 
-	@Builder
-	public DiaryCommentRequest(String model, String prompt,
-		Integer maxTokens, Double temperature,
-		Double topP) {
+	public DiaryCommentRequest(String model, String prompt) {
 		this.model = model;
-		this.prompt = prompt;
-		this.maxTokens = maxTokens;
-		this.temperature = temperature;
-		this.topP = topP;
+		this.messages = new ArrayList<>();
+		this.messages.add(new GPTRequest("system", "너는 '해요체'로 대답하는 챗봇이야. 사용자가 타로카드 1장과 일기를 주면, 타로카드의 간략한 의미를 설명하고, 일기에 공감해 주면서 미래를 점 봐줘야해. 200자 이내로." ));
+		this.messages.add(new GPTRequest("user", prompt));
+
 	}
 }
