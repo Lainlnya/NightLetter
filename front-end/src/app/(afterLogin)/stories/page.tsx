@@ -3,9 +3,10 @@
 import React, { useEffect } from "react";
 import styles from "./stories.module.scss";
 import { motion, useMotionValue } from "framer-motion";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import tarot_background from "../../../../public/images/tarot-background.png";
+import tarot_background from "../../../../public/images/tarot-background.webp";
 
 const DRAG_BUFFER = 100;
 
@@ -57,6 +58,14 @@ export default function Diaries() {
 
   return (
     <div className={styles.root}>
+      <Image
+        className={styles.back}
+        src="icons/xmark-solid.svg"
+        alt="뒤로가기"
+        width={30}
+        height={30}
+        onClick={() => router.replace("/")}
+      />
       <header className={styles.header}>
         <p>
           <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이

@@ -17,7 +17,8 @@ const Login = () => {
           height={50}
           alt="카카오 로그인 버튼"
           onClick={handleClick}
-          src="/images/kakao-login-large-narrow.png"
+          src="/images/kakao-login-large-narrow.webp"
+          priority
         />
       </main>
     </>

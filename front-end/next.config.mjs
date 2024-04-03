@@ -9,20 +9,20 @@ const nextConfig = {
         source: `/:path*`,
         headers: [
           {
-            key: 'Access-Control-Allow-Origin',
-            value: 'https://letter-for.me', // Set your origin
+            key: "Access-Control-Allow-Origin",
+            value: "https://letter-for.me", // Set your origin
           },
           {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
           },
           {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization',
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
           },
           {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true',
+            key: "Access-Control-Allow-Credentials",
+            value: "true",
           },
         ],
       },
@@ -31,7 +31,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
       },
     ];
@@ -40,7 +40,7 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/auth/oauth-response',
+        source: "/auth/oauth-response",
         permanent: true,
         destination: `${process.env.NEXT_PUBLIC_URL}`,
       },
@@ -48,7 +48,9 @@ const nextConfig = {
   },
 
   images: {
-    domains: ['ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com'],
+    domains: ["ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com"],
+    minimumCacheTTL: 315360000,
+    formats: ["image/webp"],
   },
 };
 
