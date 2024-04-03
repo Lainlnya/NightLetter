@@ -6,9 +6,9 @@ import { motion, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import tarot_background from "../../../../public/images/tarot-background.webp";
-
-const DRAG_BUFFER = 100;
+import closeIcon from "../../../../public/Icons/xmark-solid.svg";
+import tarotImg from "../../../../public/images/tarot-background.webp";
+import { DRAG_BUFFER } from "@/utils/animation";
 
 export default function Diaries() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function Diaries() {
   const [contents, setContents] = useState([
     {
       content: "조회중입니다",
-      imgUrl: `url(${tarot_background})`,
+      imgUrl: `url(${tarotImg})`,
       nickname: "tarot",
     },
   ]);
@@ -60,7 +60,7 @@ export default function Diaries() {
     <div className={styles.root}>
       <Image
         className={styles.back}
-        src="icons/xmark-solid.svg"
+        src={closeIcon}
         alt="뒤로가기"
         width={30}
         height={30}
@@ -95,11 +95,8 @@ export default function Diaries() {
               // style 추가
               const isSelected = idx === cardIndex;
               const storyStyle = {
-                backgroundImage: `url(${
-                  isSelected ? diary.imgUrl : tarot_background
-                })`,
+                backgroundImage: `url(${isSelected ? diary.imgUrl : tarotImg})`,
               };
-
               return (
                 <main
                   key={idx}
