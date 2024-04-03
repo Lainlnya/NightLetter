@@ -20,6 +20,7 @@ services:
       - REDIS_HOSTNAME
       - REDIS_PORT
       - OPENAI_SECRET_KEY
+      - TZ=Asia/Seoul
     networks:
       - tarot-network
 
