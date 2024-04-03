@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 public class DiaryListResponse {
-
+	Integer requestDiaryIdx;
 	private List<DiaryResponse> diaries;
 }

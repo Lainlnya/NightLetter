@@ -129,15 +129,14 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Override
 	public Optional<DiaryListResponse> findDiaries(DiaryListRequest request) {
-		// User Id 가져오는 부분. 이후 수정 필요.
-
-		LocalDate queryDate = request.getDate();
 
 		List<Diary> diaries = diaryRepository.findDiariesByMemberInDir(getCurrentMember(), request);
 
 		DiaryListResponse diaryListResponse = new DiaryListResponse();
 
 		diaryListResponse.setDiaries(diaries.stream().map(DiaryResponse::of).toList());
+
+		diaryListResponse.setRequestDiaryIdx(findRequestDiaryIdx(diaries, request.getDate()));
 
 		return Optional.of(diaryListResponse);
 	}
@@ -202,5 +201,27 @@ public class DiaryServiceImpl implements DiaryService {
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+	}
+
+	public Integer findRequestDiaryIdx(List<Diary> diaries, LocalDate requestedDate) {
+		int stt = 0;
+		int end = diaries.size()-1;
+
+		while (stt <= end) {
+			int mid = (stt + end) / 2;
+
+			if (diaries.get(mid).getDate().isEqual(requestedDate)) {
+				return mid;
+			}
+
+			if (diaries.get(mid).getDate().isAfter(requestedDate)) {
+				end = mid - 1;
+			}
+			else {
+				stt = mid + 1;
+			}
+		}
+
+		return null;
 	}
 }
