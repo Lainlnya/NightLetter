@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.TimeZone;
 
 public class DateTimeUtils {
 
@@ -12,6 +13,6 @@ public class DateTimeUtils {
 	}
 
 	public static Instant newFromZone() {
-		return Instant.now().atZone(ZoneId.of("Asia/Seoul")).toInstant();
+		return DateTimeUtils.nowFromZone().atZone(ZoneId.of("Asia/Seoul")).toInstant();
 	}
 }
