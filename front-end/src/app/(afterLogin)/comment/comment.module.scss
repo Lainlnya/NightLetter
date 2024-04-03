@@ -55,8 +55,9 @@
     border-radius: 1rem;
     width: 32rem;
     height: 28rem;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     padding: 2rem;
+    margin-top: 1rem;
     line-height: 3rem;
     overflow: scroll;
     background-color: rgba(128, 128, 128, 0.7);
@@ -78,8 +79,9 @@
     border-radius: 1rem;
     position: absolute;
     font-weight: 900;
+    font-size: 0.8rem;
     top: 8rem;
-    left: 30rem;
+    left: 31rem;
     animation: blinker 2s infinite none;
   }
 }

@@ -9,6 +9,8 @@ import Loading from "@/app/loading";
 import { Messages } from "@/utils/msg";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import closeIcon from "../../../../public/Icons/xmark-solid.svg";
+import letterIcon from "../../../../public/Icons/envelope-regular.svg";
 import tarot_background from "../../../../public/images/tarot-background.webp";
 
 const Comment: React.FC = () => {
@@ -44,7 +46,7 @@ const Comment: React.FC = () => {
         <main className={styles.commentMain}>
           <section className={styles.titleSec}>
             <Image
-              src="icons/xmark-solid.svg"
+              src={closeIcon}
               alt="뒤로가기"
               width={30}
               height={30}
@@ -56,7 +58,7 @@ const Comment: React.FC = () => {
             </h1>
             <Image
               className={styles.recommend}
-              src="icons/envelope-regular.svg"
+              src={letterIcon}
               alt="사연"
               width={30}
               height={30}
