@@ -5,7 +5,7 @@ import styles from "./diaries.module.scss";
 import Image from "next/image";
 import back_button from "../../../../public/Icons/back_button.svg";
 import alarm from "../../../../public/Icons/calender_icon.svg";
-import tarot_background from "../../../../public/images/tarot-background.png";
+import tarot_background from "../../../../public/images/tarot-background.webp";
 import { motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

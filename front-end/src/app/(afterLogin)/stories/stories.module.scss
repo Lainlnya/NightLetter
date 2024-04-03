@@ -4,8 +4,15 @@
   align-items: center;
   justify-content: center;
   height: 100dvh;
+  position: relative;
 
   padding: 0;
+}
+
+.back {
+  position: absolute;
+  top: 5rem;
+  left: 1rem;
 }
 
 .nickname {
@@ -64,7 +71,7 @@
 
   margin-right: 1.6rem;
 
-  background-image: url("../../../../public/images/tarot-background.png");
+  background-image: url("../../../../public/images/tarot-background.webp");
   background-size: 100% 100%;
   border-radius: 2rem;
 
@@ -102,6 +109,10 @@
 
   opacity: 1;
   transition: opacity 1s ease;
+}
+
+.story_contents::-webkit-scrollbar {
+  display: none;
 }
 
 .inactive::after {
