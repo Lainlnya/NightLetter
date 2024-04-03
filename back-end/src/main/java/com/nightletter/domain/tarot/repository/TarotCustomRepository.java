@@ -1,10 +1,12 @@
 package com.nightletter.domain.tarot.repository;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Optional;
 
-import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.entity.Tarot;
 
 public interface TarotCustomRepository {
 
-	List<TarotDto> getAllTarots();
+	Optional<Tarot> findPastTarot(LocalDate today, int memberId);
+
 }

@@ -3,18 +3,24 @@ package com.nightletter.domain.diary.service;
 import java.util.Optional;
 
 import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryCreateResponse;
+import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.entity.Diary;
-import com.nightletter.domain.diary.entity.DiaryOpenType;
+import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
+import com.nightletter.global.common.ResponseDto;
 
 public interface DiaryService {
 
-	Optional<DiaryCreateResponse> createDiary(DiaryCreateRequest diaryCreateRequest);
+	RecommendResponse createDiary(DiaryCreateRequest diaryCreateRequest);
 
-	Optional<Diary> updateDiaryDisclosure(Integer diaryId, DiaryOpenType diaryOpenType);
+	Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request);
 
 	Optional<DiaryListResponse> findDiaries(DiaryListRequest diaryListRequest);
 
+	Optional<DiaryResponse> findDiary(Long diaryId);
+
+	Optional<ResponseDto> deleteDiary(Long diaryId);
+
+	Optional<String> createDiaryShareUrl(Long diaryId);
 }

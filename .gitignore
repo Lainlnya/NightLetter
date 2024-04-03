@@ -1,3 +1,6 @@
 node_modules
 /.idea
-back-end/src/main/generated/
+back-end/src/main/generated
+
+recsys/env.py
+/recsys/.idea

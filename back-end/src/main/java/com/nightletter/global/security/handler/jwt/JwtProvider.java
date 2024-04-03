@@ -2,12 +2,16 @@ package com.nightletter.global.security.handler.jwt;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.nightletter.global.utils.times.DateTimeUtils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +24,7 @@ public class JwtProvider {
 
 	public String create(String memberId) {
 
-		Date expiredDate = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
+		Date expiredDate = Date.from(DateTimeUtils.tokenExpireTime());
 		Key key = Keys.hmacShaKeyFor(secretKey.getBytes((StandardCharsets.UTF_8)));
 
 		return Jwts.builder()
