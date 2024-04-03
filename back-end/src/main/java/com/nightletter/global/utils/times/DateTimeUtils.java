@@ -15,6 +15,6 @@ public class DateTimeUtils {
 	}
 
 	public static Instant tokenExpireTime() {
-		return LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.of("Asia/Seoul"));
+		return LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.of("+09:00"));
 	}
 }
