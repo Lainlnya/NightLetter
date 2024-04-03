@@ -16,10 +16,12 @@ export function convertDateFormat(dateString: string | null) {
   const parts =
     dateString && dateString.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
 
+  console.log("convertDateFormat parts: " + parts);
   if (parts) {
     const year = parts[1];
     const month = parts[2].padStart(2, "0");
     const day = parts[3].padStart(2, "0");
+    console.log(`convertDateFormat: parts in ${year}-${month}-${day}-`);
     return `${year}-${month}-${day}`;
   } else {
     return "입력 형식이 올바르지 않습니다.";
@@ -32,11 +34,15 @@ export function convertDateFormatToKorean(dateString: string) {
   }
 
   const parts = dateString && dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  console.log("convertDateFormatToKorean parts: " + parts);
 
   if (parts) {
     const year = parts[1];
     const month = parts[2];
     const day = parts[3];
+    console.log(
+      `convertDateFormatToKorean: parts in ${year}년 ${month}월 ${day}일`
+    );
     return `${year}년 ${month}월 ${day}일`;
   } else {
     return "입력 형식이 올바르지 않습니다.";
