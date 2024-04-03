@@ -6,7 +6,7 @@ export default async function getInitialCards() {
         headers: {
             'Content-Type': 'application/json',
         },
-        cache: 'no-store',
+        cache: 'no-cache',
         credentials: 'include',
         next: {
             tags: ["card", 'cards'],

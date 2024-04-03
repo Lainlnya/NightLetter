@@ -9,6 +9,7 @@ export default async function Home() {
     queryKey: ['card', 'cards'],
     queryFn: getInitialCards,
   });
+
   const dehydrateState = dehydrate(queryClient);
   return (
     <main className={styles.main}>

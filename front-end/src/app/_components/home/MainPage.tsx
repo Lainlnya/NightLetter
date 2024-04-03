@@ -47,7 +47,6 @@ export default function Home() {
               className={styles.header_icon}
               onClick={() => setIsSeen(true)}
             />
-            <Image src={calender} alt='calender' width={24} height={24} className={styles.header_icon} />
             {isSeen && (
               <div ref={calendarRef}>
                 <CalendarComponent />

@@ -1,6 +1,4 @@
 import { create } from 'zustand';
-import { parseDateToKoreanFormatWithDay } from '../utils/dateFormat';
-import { persist } from 'zustand/middleware';
 
 interface DateState {
     date: string | null;
@@ -10,7 +8,7 @@ interface DateState {
 }
 
 const useStore = create<DateState>(set => ({
-    date: null,
+    date: "",
     daysDifference: 0,
     setDate: (date: string) => set({ date }),
     setDaysDifference: (daysDifference: number) => set({ daysDifference })

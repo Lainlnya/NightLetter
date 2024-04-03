@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect} from "react";
-import {useRouter} from "next/navigation";
-import {useQuery} from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getDateDiff } from "@/utils/dateFormat";
 import getInitialCards from "@/libs/getInitialCards";
 
 
@@ -12,16 +13,12 @@ export default function Redirect() {
 
   const date1 = new Date(data?.diaries?.[data.diaries.length - 1]?.date)
   const lastPastCard = data?.diaries?.[data.diaries.length - 1]?.nowCard;
-  
-  const diffTime = Math.abs(date1 - new Date());
-  
-  // 밀리초를 일 단위로 변환
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-  
-  console.log(diffDays);
+
+  const dateDiff = getDateDiff(date1, new Date());
 
   useEffect(() => {
-    if(diffDays > 28 || lastPastCard === null) router.push('/tarot');
+    // 마지막으로 뽑은지 4주 이상 지났거나, 오늘 뽑은 카드가 없을 경우 타로페이지로 이동
+    if (dateDiff > 28 || lastPastCard === null) router.push('/tarot');
     else router.push('/');
   }, []);
   return null;

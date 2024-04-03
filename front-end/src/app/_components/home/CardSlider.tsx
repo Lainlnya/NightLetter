@@ -31,18 +31,14 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
   const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
-  const { date, setDate } = useStore();
-
-  console.log(data);
+  const { setDate } = useStore();
 
   useEffect(() => {
     setDate(convertDateFormatToKorean(data?.diaries?.[data.diaries.length - 1]?.date));
-    if (date !== null) localStorage.setItem("date", date);
   }, [])
 
   useEffect(() => {
     setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
-    if (date !== null) localStorage.setItem("date", date);
   }, [cardIndex])
 
   const dragX = useMotionValue(0);
