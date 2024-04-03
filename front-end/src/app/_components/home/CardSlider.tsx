@@ -21,7 +21,7 @@ import { DiaryEntry } from "@/types/card";
 import styles from "./cardSlider.module.scss";
 
 import Image from "next/image";
-import tarot_background from "../../../../public/images/tarot-background.png";
+import tarot_background from "../../../../public/images/tarot-background.webp";
 
 export default function CardSlider({ isSeen, isClicked, setIsClicked }: CalendarProps) {
   const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
