@@ -1,3 +1,4 @@
+import { convertDateFormatToKorean, getTodayDate } from '@/utils/dateFormat';
 import { create } from 'zustand';
 
 interface DateState {
@@ -8,7 +9,7 @@ interface DateState {
 }
 
 const useStore = create<DateState>(set => ({
-    date: "",
+    date: convertDateFormatToKorean(getTodayDate()),
     daysDifference: 0,
     setDate: (date: string) => set({ date }),
     setDaysDifference: (daysDifference: number) => set({ daysDifference })

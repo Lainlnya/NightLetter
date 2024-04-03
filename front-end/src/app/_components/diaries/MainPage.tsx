@@ -50,12 +50,10 @@ export default function MainPage() {
 
     if (x <= -DRAG_BUFFER && cardIndex < data?.diaries?.length - 1) {
       setCardIndex((prev: number) => prev + 1);
-      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
 
 
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev: number) => prev - 1);
-      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
     }
   };
   return (
