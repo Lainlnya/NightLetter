@@ -6,9 +6,25 @@
   align-items: center;
   justify-content: space-around;
 
-  h1 {
+  .titleSec {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .titleSec > * {
+    flex: 1;
+  }
+
+  .titleSec h1 {
+    flex: 6;
     text-align: center;
     font-size: 2.8rem;
+  }
+
+  .recommend {
+    flex: 1;
+    position: relative;
   }
 
   .cardSec {
@@ -16,6 +32,7 @@
     flex-direction: column;
     height: 25rem;
     justify-content: space-between;
+
     section {
       display: flex;
       font-size: 2rem;
@@ -47,5 +64,22 @@
   }
   .commentSec::-webkit-scrollbar {
     display: none;
+  }
+
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .blinking {
+    padding: 1rem;
+    text-align: center;
+    border-radius: 1rem;
+    position: absolute;
+    font-weight: 900;
+    top: 8rem;
+    left: 30rem;
+    animation: blinker 2s infinite none;
   }
 }
