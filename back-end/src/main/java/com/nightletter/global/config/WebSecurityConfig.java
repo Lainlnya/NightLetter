@@ -74,7 +74,8 @@ public class WebSecurityConfig {
 
 		corsConfiguration.setAllowedOrigins(
 			List.of("http://letter-for.me",
-					"https://letter-for.me")
+					"https://letter-for.me"
+				)
 			);
 
 		corsConfiguration.addAllowedMethod("*");

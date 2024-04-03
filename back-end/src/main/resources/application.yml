@@ -3,6 +3,7 @@ server:
 
 spring:
   security:
+    dev-token: ${KAKAO_LOCAL_TOKEN}
     cookie-domain: ${COOKIE_DOMAIN}
     oauth2:
       client:
@@ -69,3 +70,4 @@ jwt:
 
 chatgpt:
   api-key: ${OPENAI_SECRET_KEY}
+  model: ${OPENAI_MODEL}

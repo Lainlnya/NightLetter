@@ -33,25 +33,23 @@ public class GptServiceImpl {
 	private final MemberRepository memberRepository;
 	@Value("${chatgpt.api-key}")
 	private String api_key;
+	@Value("${chatgpt.model}")
+	private String model;
 
 	public String askQuestion(String question) {
-		DiaryCommentResponse response = getResponse(
+		return this.getResponse(
 			buildHttpEntity(
 				new DiaryCommentRequest(
-					"gpt-3.5-turbo-instruct",
-					question,
-					1000,
-					0.5,
-					1.0
+					model,
+					question
 				)
 			)
-		);
-		return response.getChoices().get(0).getText();
+		).getChoices().get(0).getMessage().getContent().toString();
 	}
 
 	private DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
 		return restTemplate.postForEntity(
-				"https://api.openai.com/v1/completions",
+				"https://api.openai.com/v1/chat/completions",
 				chatGptRequestDtoHttpEntity,
 				DiaryCommentResponse.class)
 			.getBody();
@@ -59,8 +57,8 @@ public class GptServiceImpl {
 
 	private HttpEntity<DiaryCommentRequest> buildHttpEntity(DiaryCommentRequest requestDto) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("Authorization", "Bearer " + api_key);
+		headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
+		headers.add("Authorization", "Bearer " + api_key);
 		return new HttpEntity<>(requestDto, headers);
 	}
 
