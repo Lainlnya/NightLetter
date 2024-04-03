@@ -19,7 +19,9 @@ services:
       - COOKIE_DOMAIN
       - REDIS_HOSTNAME
       - REDIS_PORT
+      - OPENAI_MODEL
       - OPENAI_SECRET_KEY
+      - TZ=Asia/Seoul
     networks:
       - tarot-network
 
