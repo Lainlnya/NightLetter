@@ -14,5 +14,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if (accessToken && nextUrl.pathname == "/login") {
+    return NextResponse.redirect(new URL("/"));
+  }
+
   return NextResponse.next();
 }
