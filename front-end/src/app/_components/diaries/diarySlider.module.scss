@@ -1,92 +1,91 @@
-.carousel_container{
-    position: relative;
-    overflow: hidden;
+.carousel_container {
+  position: relative;
+  overflow: hidden;
 
-    width:100%;
+  width: 100%;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100dvh;
 }
 
-.carousel{
-    display: flex;
-    align-items: center;
+.carousel {
+  display: flex;
+  align-items: center;
 }
 
 .diary {
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    width: 100%;
-    height: 58.4rem;
+  width: 100%;
+  height: 58.4rem;
 
-    background-image: url('../../../../public/images/diary_background.svg');
-    background-size: 100% 58.4rem;
+  background-image: url("../../../../public/images/diary_background.webp");
+  background-size: 100% 58.4rem;
 }
 
 .diary_thumbnail {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
-    margin-top: 7.5rem;
+  margin-top: 7.5rem;
 
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .diary_text {
-    width: 70%;
-    height: 40%;
-    color : #0D0D0D;
+  width: 70%;
+  height: 40%;
+  color: #0d0d0d;
 
-    margin-top: 2rem;
+  margin-top: 2rem;
 
-    overflow-x: hidden;
-    overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .diary_text h2 {
-    font-size: 1.8rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 
-    color: #0D0D0D;
+  color: #0d0d0d;
 }
 
 .diary_text p {
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #0D0D0D;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #0d0d0d;
 }
 
-.card{
-    width: 8.3rem;
-    height: 14.1rem;
+.card {
+  width: 8.3rem;
+  height: 14.1rem;
 
-    &.past {
-        margin-right: -2rem;
-        z-index: 1;
-        opacity: 0.7;
-    }
-    &.current {
-        margin-right: -2rem;
-        z-index: 2;
-        scale: 1.2;
-    }
-    &.future {
-        z-index: 1;
-        opacity: 0.7;
-    }
+  &.past {
+    margin-right: -2rem;
+    z-index: 1;
+    opacity: 0.7;
+  }
+  &.current {
+    margin-right: -2rem;
+    z-index: 2;
+    scale: 1.2;
+  }
+  &.future {
+    z-index: 1;
+    opacity: 0.7;
+  }
 }

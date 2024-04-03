@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import styles from "./cardSlider.module.scss";
-import tarot_background from "../../../../public/images/tarot-background.png";
+import tarot_background from "../../../../public/images/tarot-background.webp";
 import { parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
 import { motion, useMotionValue } from "framer-motion";
 import React, { useEffect, useState, useRef } from "react";
