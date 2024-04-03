@@ -70,3 +70,4 @@ jwt:
 
 chatgpt:
   api-key: ${OPENAI_SECRET_KEY}
+  model: ${OPENAI_MODEL}

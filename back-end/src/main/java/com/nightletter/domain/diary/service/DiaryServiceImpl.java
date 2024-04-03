@@ -69,11 +69,7 @@ public class DiaryServiceImpl implements DiaryService {
 		Tarot pastTarot = tarotService.findPastTarot(getCurrentMember());
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
-		String question = String.format("%s 라는 일기에 타로카드가 과거 : %s 와 현재 : %s 와 미래 : %s 카드를 바탕으로 존댓말로 공감해줘"
-			, diaryRequest.getContent(),
-			pastTarot.getName(),
-			nowTarot.getName(),
-			futureTarot.getName());
+		String question = String.format("%s, %s, %s", futureTarot.getName(), futureTarot.getDir().toString(), diaryRequest.getContent());
 		String gptComment = gptServiceImpl.askQuestion(question);
 
 		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
