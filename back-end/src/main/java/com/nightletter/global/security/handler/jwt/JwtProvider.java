@@ -24,7 +24,7 @@ public class JwtProvider {
 
 	public String create(String memberId) {
 
-		Date expiredDate = Date.from(DateTimeUtils.newFromZone().plus(30, ChronoUnit.MINUTES));
+		Date expiredDate = Date.from(DateTimeUtils.tokenExpireTime());
 		Key key = Keys.hmacShaKeyFor(secretKey.getBytes((StandardCharsets.UTF_8)));
 
 		return Jwts.builder()
