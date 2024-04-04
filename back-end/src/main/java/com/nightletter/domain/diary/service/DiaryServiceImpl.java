@@ -102,6 +102,7 @@ public class DiaryServiceImpl implements DiaryService {
 		if (recommendDiaries.isEmpty()) {
 			throw new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "RECOMMEND DIARIES NOT FOUND");
 		}
+		log.info("================== ㅋㅋㅋㅋㅋㅋㅋㅋㅋ =========== {} ", recommendDiaries.toString());
 		return recommendDiaries;
 	}
 

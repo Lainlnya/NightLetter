@@ -7,6 +7,7 @@ import static com.nightletter.domain.tarot.entity.QTarot.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.nightletter.domain.diary.dto.DiaryListRequest;
 import com.nightletter.domain.diary.dto.DiaryRequestDirection;
@@ -27,18 +28,22 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 
 	@Override
 	public List<RecommendDiaryResponse> findRecommendDiaries(List<Long> diariesId, Member member) {
-		return queryFactory.select(Projections.constructor(RecommendDiaryResponse.class,
+		List<RecommendDiaryResponse> responses = queryFactory.select(Projections.constructor(RecommendDiaryResponse.class,
 				diary.content,
 				tarot.imgUrl
 			))
 			.from(diary)
 			.innerJoin(diary.diaryTarots, diaryTarot)
-			.on(diaryTarot.type.eq(DiaryTarotType.NOW))
+			.where(diaryTarot.type.eq(DiaryTarotType.NOW))
 			.innerJoin(diaryTarot.tarot, tarot)
 			.where(diary.diaryId.in(diariesId)
 				.and(diary.type.eq(DiaryOpenType.PUBLIC))
 				.and(diary.writer.ne(member)))
 			.fetch();
+
+		return responses.stream()
+			.distinct()
+			.collect(Collectors.toList());
 	}
 
 	// 수정 예정
