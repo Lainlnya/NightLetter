@@ -11,7 +11,7 @@ import Loading from "@/app/loading";
 import ErrorFallback from "@/app/_components/error/ErrorFallback";
 
 import { DRAG_BUFFER } from "@/utils/animation";
-import { TODAY, convertDateFormatToKorean, isToday, getDateDiff } from "@/utils/dateFormat";
+import { TODAY, convertDateFormatToKorean, isToday, getDateDiff, convertDateFormat } from "@/utils/dateFormat";
 import getInitialCards from "@/libs/getInitialCards";
 import getPastCardInfo from "@/libs/getPastCardInfo";
 
@@ -38,15 +38,12 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
   useEffect(() => {
     async function fetchPastCard() {
       const res = await getPastCardInfo();
-      console.log(res)
+
       return res;
     }
-
-    const dateDiff = getDateDiff(TODAY, data?.diaries?.[data.diaries.length - 1]?.date);
-
-    if (!isNotedTodayDiaries && !dateDiff) {
-      if (!fetchPastCard() && dateDiff > 28) router.push("/tarot?info=past")
-    }
+    const dateDiff = getDateDiff(convertDateFormat(TODAY), data?.diaries?.[data.diaries.length - 1]?.date);
+    if (!data?.diaries?.length && !fetchPastCard()) router.push("/tarot?info=past")
+    if (dateDiff > 28 && !fetchPastCard()) router.push("/tarot?info=past")
   }, [])
 
   useEffect(() => {
