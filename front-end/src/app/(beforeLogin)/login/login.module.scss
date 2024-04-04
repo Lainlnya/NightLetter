@@ -1,0 +1,22 @@
+.main {
+  background-image: url("/images/login-background.webp");
+  height: 100dvh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin: 0 -3.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    font-size: 3rem;
+    font-weight: 900;
+  }
+  div {
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 5rem;
+  }
+}
