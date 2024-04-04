@@ -37,9 +37,13 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
 
   useEffect(() => {
     async function fetchPastCard() {
-      const res = await getPastCardInfo();
+      try {
+        const res = await getPastCardInfo();
+        return res;
 
-      return res;
+      } catch {
+        return null;
+      }
     }
     const dateDiff = getDateDiff(convertDateFormat(TODAY), data?.diaries?.[data.diaries.length - 1]?.date);
     if (!data?.diaries?.length && !fetchPastCard()) router.push("/tarot?info=past")
