@@ -7,16 +7,16 @@ export const config = {
 };
 
 export function middleware(request: NextRequest) {
-  const { nextUrl, cookies } = request;
-  const accessToken = cookies.get("access-token");
+  // const { nextUrl, cookies } = request;
+  // const accessToken = cookies.get("access-token");
 
-  if (!accessToken && nextUrl.pathname !== "/login") {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // if (!accessToken && nextUrl.pathname !== "/login") {
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
-  if (accessToken && nextUrl.pathname == "/login") {
-    return NextResponse.redirect(new URL("/"));
-  }
+  // if (accessToken && nextUrl.pathname == "/login") {
+  //   return NextResponse.redirect(new URL("/"));
+  // }
 
   return NextResponse.next();
 }

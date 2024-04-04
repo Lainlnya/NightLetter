@@ -128,11 +128,9 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
                   key={idx}
                   className={styles.card_wrapper}
                   onClick={() => {
-                    1
                     if (!isSeen && isClicked) {
                       setIsClicked(false);
                     }
-
                     if (isClicked === false) router.push("/diaries");
                   }}
                 >
