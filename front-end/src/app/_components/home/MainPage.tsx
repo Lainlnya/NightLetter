@@ -11,7 +11,7 @@ import CalendarComponent from '../diaries/Calendar';
 
 import Image from 'next/image';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
-import { isToday, TODAY } from '@/utils/dateFormat';
+import { isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
 import getInitialCards from '@/libs/getInitialCards';
 
@@ -33,7 +33,10 @@ export default function Home() {
 
 
   useEffect(() => {
-    SetIsNotedTodayDiaries(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false)
+    if (data) {
+      SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.diaries?.[data.diaries.length - 1]?.date)
+
+    }
   }, [data])
 
   useEffect(() => {
