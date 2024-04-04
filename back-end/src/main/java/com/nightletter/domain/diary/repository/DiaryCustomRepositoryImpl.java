@@ -33,7 +33,7 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			))
 			.from(diary)
 			.innerJoin(diary.diaryTarots, diaryTarot)
-			.on(diaryTarot.type.eq(DiaryTarotType.NOW))
+			.where(diaryTarot.type.eq(DiaryTarotType.NOW))
 			.innerJoin(diaryTarot.tarot, tarot)
 			.where(diary.diaryId.in(diariesId)
 				.and(diary.type.eq(DiaryOpenType.PUBLIC))
