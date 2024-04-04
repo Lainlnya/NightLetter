@@ -23,22 +23,22 @@ export default function Redirect(props: { pastCardInfo: PastCardInfo }) {
   const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
 
   const date1 = new Date(data?.diaries?.[data.diaries.length - 1]?.date)
-  const lastPastCard = data?.diaries?.[data.diaries.length - 1]?.nowCard;
+  const lastPastCard = props.pastCardInfo;
 
   const dateDiff = getDateDiff(date1, new Date());
 
-  console.log(props);
-
   useEffect(() => {
     if (!data?.diaries?.length) {
+
       if (lastPastCard === null) router.push("/tarot?info=past");
       if (lastPastCard !== null) router.push("/");
     }
 
-    if (dateDiff > 28) {
+    if (dateDiff >= 28) {
       if (lastPastCard === null) router.push("/tarot?info=past");
       if (lastPastCard !== null) router.push("/");
     }
+
     if (dateDiff < 28) {
       router.push("/");
     }

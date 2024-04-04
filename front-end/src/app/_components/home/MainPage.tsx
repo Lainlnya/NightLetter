@@ -49,14 +49,14 @@ export default function Home() {
       <>
         <header className={styles.header}>
           <div className={styles.header_icons}>
-            <Image
+            {/* <Image
               src={alarm}
               alt='alarm'
               width={24}
               height={24}
               className={styles.header_icon}
               onClick={() => setIsSeen(true)}
-            />
+            /> */}
             {isSeen && (
               <div ref={calendarRef}>
                 <CalendarComponent />

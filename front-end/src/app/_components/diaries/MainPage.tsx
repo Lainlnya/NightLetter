@@ -32,12 +32,16 @@ export default function MainPage() {
       setCardIndex(data.requestDiaryIdx);
       setDate(convertDateFormatToKorean(data.diaries?.[data.requestDiaryIdx]?.date));
     }
+
+    console.log(data);
+
   }, [data]);
 
   useEffect(() => {
     if (data) {
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
     }
+
   }, [data, cardIndex]);
 
 
