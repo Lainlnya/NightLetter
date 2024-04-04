@@ -11,10 +11,11 @@ import CalendarComponent from '../diaries/Calendar';
 
 import Image from 'next/image';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
+import { isToday, TODAY } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
 import getInitialCards from '@/libs/getInitialCards';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, } from 'next/navigation';
 
 import Loading from '@/app/loading';
 
@@ -28,7 +29,12 @@ export default function Home() {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const isNotedTodayDiaries = data?.diaries?.length && data?.diaries?.[data.diaries.length - 1].pastCard === null;
+  const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
+
+
+  useEffect(() => {
+    SetIsNotedTodayDiaries(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false)
+  }, [data])
 
   useEffect(() => {
     function handleTouchOutside(e: TouchEvent) {
