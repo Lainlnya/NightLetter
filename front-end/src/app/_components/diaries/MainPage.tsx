@@ -10,7 +10,10 @@ import { motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DRAG_BUFFER } from "@/utils/animation";
-import { convertDateFormat, convertDateFormatToKorean } from "@/utils/dateFormat";
+import {
+  convertDateFormat,
+  convertDateFormatToKorean,
+} from "@/utils/dateFormat";
 import { useQuery } from "@tanstack/react-query";
 import getInitialDiaries from "@/libs/getInitialDiaries";
 import { DiaryEntry } from "@/types/card";
@@ -19,18 +22,22 @@ import useStore from "@/store/date";
 export default function MainPage() {
   const router = useRouter();
   const { date, setDate } = useStore();
-  const { data } = useQuery({ queryKey: ["diary", "diaries"], queryFn: () => getInitialDiaries(convertDateFormat(date)) });
+  const { data } = useQuery({
+    queryKey: ["diary", "diaries"],
+    queryFn: () => getInitialDiaries(convertDateFormat(date)),
+  });
 
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.requestDiaryIdx);
-
 
   const dragX = useMotionValue(0);
 
   useEffect(() => {
     if (data) {
       setCardIndex(data.requestDiaryIdx);
-      setDate(convertDateFormatToKorean(data.diaries?.[data.requestDiaryIdx]?.date));
+      setDate(
+        convertDateFormatToKorean(data.diaries?.[data.requestDiaryIdx]?.date)
+      );
     }
   }, [data]);
 
@@ -39,7 +46,6 @@ export default function MainPage() {
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
     }
   }, [data, cardIndex]);
-
 
   const onDragStart = () => {
     setDragging(true);
@@ -52,8 +58,6 @@ export default function MainPage() {
 
     if (x <= -DRAG_BUFFER && cardIndex < data?.diaries?.length - 1) {
       setCardIndex((prev: number) => prev + 1);
-
-
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev: number) => prev - 1);
     }
@@ -121,9 +125,7 @@ export default function MainPage() {
                 </div>
                 <div className={styles.diary_text}>
                   <h2>오늘의 일기</h2>
-                  <p>
-                    {diary.content}
-                  </p>
+                  <p>{diary.content}</p>
                 </div>
               </main>
             );
