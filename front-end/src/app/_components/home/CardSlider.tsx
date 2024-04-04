@@ -37,26 +37,24 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
 
   useEffect(() => {
     async function fetchPastCard() {
-      try {
-        const res = await getPastCardInfo();
-
-        if (!res.ok) {
-          return null
-        }
-        return res.json();
-      } catch {
-        return null;
-      }
+      const res = await getPastCardInfo();
+      console.log(res);
+      return res;
     }
     const dateDiff = getDateDiff(convertDateFormat(TODAY), data?.diaries?.[data.diaries.length - 1]?.date);
-    if (!data?.diaries?.length && !fetchPastCard()) router.push("/tarot?info=past")
-    if (dateDiff > 28 && !fetchPastCard()) router.push("/tarot?info=past")
+
+    fetchPastCard().then((res) => {
+      if (!data?.diaries?.length && !res) router.push("/tarot?info=past")
+      if (dateDiff > 28 && !res) router.push("/tarot?info=past")
+    })
+
   }, [])
 
   useEffect(() => {
     if (data) {
       setCardIndex(data?.diaries?.length - 1);
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
+      setIsNotedTodayDiaries(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false)
     }
     setDate(convertDateFormatToKorean(data?.diaries?.[data?.requestDiaryIdx]?.date + 1));
   }, [data])
