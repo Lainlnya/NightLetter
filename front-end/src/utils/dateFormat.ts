@@ -3,25 +3,18 @@ export function parseDateToKoreanFormatWithDay(day = 0) {
 
   if (day !== 0) today.setDate(today.getDate() + day);
 
-  return `${today.getFullYear()}년 ${
-    today.getMonth() + 1
-  }월 ${today.getDate()}일`;
+  return `${today.getFullYear()}년 ${today.getMonth() + 1
+    }월 ${today.getDate()}일`;
 }
 
 export function convertDateFormat(dateString: string | null) {
-  if (dateString) {
-    console.log("convertDateFormat: " + dateString);
-  }
-
   const parts =
     dateString && dateString.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
 
-  console.log("convertDateFormat parts: " + parts);
   if (parts) {
     const year = parts[1];
     const month = parts[2].padStart(2, "0");
     const day = parts[3].padStart(2, "0");
-    console.log(`convertDateFormat: parts in ${year}-${month}-${day}-`);
     return `${year}-${month}-${day}`;
   } else {
     return '';
@@ -29,27 +22,17 @@ export function convertDateFormat(dateString: string | null) {
 }
 
 export function convertDateFormatToKorean(dateString: string) {
-  if (dateString) {
-    console.log("convertDateFormatToKorean: " + dateString);
-  }
 
   const parts = dateString && dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
-  console.log("convertDateFormatToKorean parts: " + parts);
 
   if (parts) {
     const year = parts[1];
     const month = parts[2];
     const day = parts[3];
-    console.log(
-      `convertDateFormatToKorean: parts in ${year}년 ${month}월 ${day}일`
-    );
+
     return `${year}년 ${month}월 ${day}일`;
   } else {
-<<<<<<< HEAD
     return '';
-=======
-    return "입력 형식이 올바르지 않습니다.";
->>>>>>> aa1a306195e6ed80e867bc645c355007613876c6
   }
 }
 
