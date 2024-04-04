@@ -5,6 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  position: relative;
 
   .titleSec {
     width: 100%;
@@ -22,9 +23,19 @@
     font-size: 2.8rem;
   }
 
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
   .recommend {
     flex: 1;
-    position: relative;
+    display: block;
+  }
+
+  .blink {
+    animation: blinker 1s linear infinite;
   }
 
   .cardSec {
@@ -65,23 +76,5 @@
   }
   .commentSec::-webkit-scrollbar {
     display: none;
-  }
-
-  @keyframes blinker {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  .blinking {
-    padding: 1rem;
-    text-align: center;
-    border-radius: 1rem;
-    position: absolute;
-    font-weight: 900;
-    font-size: 0.6rem;
-    top: 6rem;
-    left: 31rem;
-    animation: blinker 2s infinite none;
   }
 }
