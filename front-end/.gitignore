@@ -115,3 +115,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,react,nextjs
 
 
+middleware.ts
+next.config.mjs

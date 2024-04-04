@@ -14,7 +14,7 @@ export default async function getInitialDiaries(date: string | null = TODAY_CONV
         body: JSON.stringify({
             date: `${date ? date : TODAY_CONVERTED}`,
             direction: "BOTH",
-            size: 3
+            size: 5
         }),
 
     });
