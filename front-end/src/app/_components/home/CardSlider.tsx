@@ -43,11 +43,14 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
     }
   }, [])
 
+  useEffect(() => {
+    setDate(convertDateFormatToKorean(data?.diaries?.[data?.requestDiaryIdx]?.date + 1));
+  }, [data])
 
 
   useEffect(() => {
     setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
-  }, [cardIndex])
+  }, [cardIndex, data])
 
   const dragX = useMotionValue(0);
 

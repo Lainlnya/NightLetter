@@ -17,7 +17,7 @@ export function convertDateFormat(dateString: string | null) {
     const day = parts[3].padStart(2, '0');
     return `${year}-${month}-${day}`;
   } else {
-    return '입력 형식이 올바르지 않습니다.';
+    return '';
   }
 }
 
@@ -30,7 +30,7 @@ export function convertDateFormatToKorean(dateString: string) {
     const day = parts[3];
     return `${year}년 ${month}월 ${day}일`;
   } else {
-    return '입력 형식이 올바르지 않습니다.';
+    return '';
   }
 }
 

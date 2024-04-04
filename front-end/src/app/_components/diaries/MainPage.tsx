@@ -28,15 +28,17 @@ export default function MainPage() {
   const dragX = useMotionValue(0);
 
   useEffect(() => {
-    setDate(convertDateFormatToKorean(data?.diaries?.[data?.requestDiaryIdx]?.date + 1));
-  }, [])
+    if (data) {
+      setCardIndex(data.requestDiaryIdx);
+      setDate(convertDateFormatToKorean(data.diaries?.[data.requestDiaryIdx]?.date));
+    }
+  }, [data]);
 
   useEffect(() => {
-    setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
-  }, [cardIndex])
-
-
-  console.log(data);
+    if (data) {
+      setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
+    }
+  }, [data, cardIndex]);
 
 
   const onDragStart = () => {
@@ -56,6 +58,7 @@ export default function MainPage() {
       setCardIndex((prev: number) => prev - 1);
     }
   };
+
   return (
     <div className={styles.root}>
       <header className={styles.header}>
