@@ -24,7 +24,7 @@ export function convertDateFormat(dateString: string | null) {
     console.log(`convertDateFormat: parts in ${year}-${month}-${day}-`);
     return `${year}-${month}-${day}`;
   } else {
-    return '';
+    return "";
   }
 }
 
@@ -45,11 +45,7 @@ export function convertDateFormatToKorean(dateString: string) {
     );
     return `${year}년 ${month}월 ${day}일`;
   } else {
-<<<<<<< HEAD
-    return '';
-=======
-    return "입력 형식이 올바르지 않습니다.";
->>>>>>> aa1a306195e6ed80e867bc645c355007613876c6
+    return "";
   }
 }
 
@@ -69,7 +65,6 @@ export function getTodayDate() {
 export const getDateDiff = (d1: string | Date, d2: string | Date) => {
   const date1 = new Date(d1);
   const date2 = new Date(d2);
-
 
   const diffDate = date1.getTime() - date2.getTime();
   return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리초 * 초 * 분 * 시 = 일
