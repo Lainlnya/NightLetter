@@ -10,7 +10,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://localhost:3001",
+            value: "https://letter-for.me",
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -28,14 +28,14 @@ const nextConfig = {
       },
     ];
   },
-  async rewrites() {
-    return [
-      {
-        source: "/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/:path*",
+  //       destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
+  //     },
+  //   ];
+  // },
 
   async redirects() {
     return [
