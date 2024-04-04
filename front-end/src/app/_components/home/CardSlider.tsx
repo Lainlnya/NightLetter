@@ -39,9 +39,11 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
     async function fetchPastCard() {
       try {
         const res = await getPastCardInfo();
+        console.log(res)
         return res;
 
       } catch {
+        console.log('catch')
         return null;
       }
     }
