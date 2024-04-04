@@ -1,0 +1,80 @@
+.commentMain {
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+
+  .titleSec {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .titleSec > * {
+    flex: 1;
+  }
+
+  .titleSec h1 {
+    flex: 6;
+    text-align: center;
+    font-size: 2.8rem;
+  }
+
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .recommend {
+    flex: 1;
+    display: block;
+  }
+
+  .blink {
+    animation: blinker 1s linear infinite;
+  }
+
+  .cardSec {
+    display: flex;
+    flex-direction: column;
+    height: 25rem;
+    justify-content: space-between;
+
+    section {
+      display: flex;
+      font-size: 2rem;
+      justify-content: space-evenly;
+
+      .past {
+        transform: rotate(-15deg) translateX(2rem) translateY(2rem);
+      }
+
+      .present {
+        position: relative;
+      }
+      .future {
+        transform: rotate(15deg) translateX(-2rem) translateY(2rem);
+      }
+    }
+  }
+
+  .commentSec {
+    border-radius: 1rem;
+    width: 32rem;
+    height: 28rem;
+    font-size: 1.6rem;
+    padding: 2rem;
+    margin-top: 1rem;
+    line-height: 3rem;
+    overflow: scroll;
+    background-color: rgba(128, 128, 128, 0.7);
+    -ms-overflow-style: none;
+  }
+  .commentSec::-webkit-scrollbar {
+    display: none;
+  }
+}

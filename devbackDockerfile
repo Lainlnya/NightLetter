@@ -1,0 +1,15 @@
+FROM gradle:8.7-jdk17-alpine AS BUILD
+
+WORKDIR /home/gradle/src/
+
+COPY --chown=gradle:gradle ./back-end .
+
+RUN chmod +x ./gradlew
+
+RUN ./gradlew clean build --no-daemon
+
+FROM eclipse-temurin:17-jdk-alpine
+
+COPY --from=BUILD /home/gradle/src//build/libs/*.jar  /app.jar
+
+ENTRYPOINT ["java","-jar","/app.jar"]
