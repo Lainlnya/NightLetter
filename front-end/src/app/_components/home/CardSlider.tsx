@@ -44,7 +44,14 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
     const dateDiff = getDateDiff(convertDateFormat(TODAY), data?.diaries?.[data.diaries.length - 1]?.date);
 
     fetchPastCard().then((res) => {
-      if (!data?.diaries?.length && !res) router.push("/tarot?info=past")
+      if (!data?.diaries?.length) {
+        if (res) {
+          router.push("/post")
+        }
+        if (!res) {
+          router.push("/tarot?info=past")
+        }
+      }
       if (dateDiff > 28 && !res) router.push("/tarot?info=past")
     })
 
