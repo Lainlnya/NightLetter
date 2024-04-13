@@ -33,44 +33,45 @@
 
 ```json
   "dependencies": {
-    "@tanstack/react-query": "^5.28.2",
-    "axios": "^1.6.7",
-    "framer-motion": "^11.0.13",
-    "moment": "^2.30.1",
-    "next": "14.1.3",
-    "next-compose-plugins": "^2.2.1",
-    "react": "^18",
-    "react-calendar": "^4.8.0",
-    "react-dom": "^18",
-    "react-error-boundary": "^4.0.13",
-    "react-spinners": "^0.13.8",
-    "sharp": "^0.33.3",
-    "zustand": "^4.5.2"
-  },
-  "devDependencies": {
-    "@mswjs/http-middleware": "^0.9.2",
-    "@tanstack/react-query-devtools": "^5.28.6",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "cors": "^2.8.5",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.3",
-    "express": "^4.19.2",
-    "msw": "^2.2.13",
-    "sass": "^1.72.0",
-    "typescript": "^5",
-    "typescript-plugin-css-modules": "^5.1.0",
-    "webpack": "^5.90.3"
-  }
+"@tanstack/react-query": "^5.28.2",
+"axios": "^1.6.7",
+"framer-motion": "^11.0.13",
+"moment": "^2.30.1",
+"next": "14.1.3",
+"next-compose-plugins": "^2.2.1",
+"react": "^18",
+"react-calendar": "^4.8.0",
+"react-dom": "^18",
+"react-error-boundary": "^4.0.13",
+"react-spinners": "^0.13.8",
+"sharp": "^0.33.3",
+"zustand": "^4.5.2"
+},
+"devDependencies": {
+"@mswjs/http-middleware": "^0.9.2",
+"@tanstack/react-query-devtools": "^5.28.6",
+"@types/cors": "^2.8.17",
+"@types/express": "^4.17.21",
+"@types/node": "^20",
+"@types/react": "^18",
+"@types/react-dom": "^18",
+"cors": "^2.8.5",
+"eslint": "^8",
+"eslint-config-next": "14.1.3",
+"express": "^4.19.2",
+"msw": "^2.2.13",
+"sass": "^1.72.0",
+"typescript": "^5",
+"typescript-plugin-css-modules": "^5.1.0",
+"webpack": "^5.90.3"
+}
+
 ```
 
 ### 2.2 Backend
 
-| 프로그램          | 버전                                  |
-| ----------------- | ------------------------------------- |
+| 프로그램              | 버전                                    |
+|-------------------|---------------------------------------|
 | jvm               | openjdk version "17.0.8.1" 2023-08-24 |
 | gradle            | 8.6                                   |
 | spring boot       | 3.2.3                                 |
@@ -86,23 +87,109 @@
 | spring cloud aws  | 2.2.6.RELEASE                         |
 | nurigo sdk        | 4.2.7                                 |
 
-### 2.3 Server
+### 2.3 Recommend System
 
-| 프로그램         | 버전                                  |
-| ---------------- | ------------------------------------- |
+```text
+absl-py==2.1.0
+annotated-types==0.6.0
+annoy==1.17.3
+anyio==4.3.0
+astunparse==1.6.3
+cachetools==5.3.3
+certifi==2024.2.2
+charset-normalizer==3.3.2
+click==8.1.7
+colorama==0.4.6
+exceptiongroup==1.2.0
+fastapi==0.110.0
+filelock==3.13.3
+flatbuffers==24.3.25
+fsspec==2024.3.1
+gast==0.4.0
+google-auth==2.29.0
+google-auth-oauthlib==0.4.6
+google-pasta==0.2.0
+greenlet==3.0.3
+grpcio==1.62.1
+h11==0.14.0
+h5py==3.10.0
+httptools==0.6.1
+huggingface-hub==0.22.1
+idna==3.6
+importlib_metadata==7.1.0
+install==1.3.5
+Jinja2==3.1.3
+joblib==1.3.2
+keras==2.11.0
+libclang==18.1.1
+Markdown==3.6
+MarkupSafe==2.1.5
+mpmath==1.3.0
+mysql==0.0.3
+mysqlclient==2.2.4
+networkx==3.2.1
+numpy==1.26.4
+oauthlib==3.2.2
+opt-einsum==3.3.0
+packaging==24.0
+pillow==10.2.0
+protobuf==3.19.6
+pyasn1==0.6.0
+pyasn1_modules==0.4.0
+pydantic==2.6.4
+pydantic_core==2.16.3
+pykospacing @ git+https://github.com/haven-jeon/PyKoSpacing.git@04aeebcbe26b109486a642e57dc58665c4818cf3
+python-dotenv==1.0.1
+PyYAML==6.0.1
+regex==2023.12.25
+requests==2.31.0
+requests-oauthlib==2.0.0
+rsa==4.9
+safetensors==0.4.2
+scikit-learn==1.4.1.post1
+scipy==1.12.0
+sentence-transformers==2.6.1
+six==1.16.0
+sniffio==1.3.1
+SQLAlchemy==2.0.29
+starlette==0.36.3
+sympy==1.12
+tensorboard==2.11.2
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.8.1
+termcolor==2.4.0
+threadpoolctl==3.4.0
+tokenizers==0.15.2
+torch==2.2.2
+tqdm==4.66.2
+transformers==4.39.1
+typing_extensions==4.10.0
+urllib3==2.2.1
+uvicorn==0.29.0
+watchfiles==0.21.0
+websockets==12.0
+Werkzeug==3.0.1
+wrapt==1.16.0
+zipp==3.18.1
+```
+
+### 2.4 Server
+
+| 프로그램             | 버전                                    |
+|------------------|---------------------------------------|
 | Amazon Lightsail | CPU : 4vCPUs, RAM : 16GB, OS : Ubuntu |
 | AWS S3           | S3 Standard                           |
 
-### 2.4 Service
+### 2.5 Service
 
-| 프로그램 | 버전                  |
-| -------- | --------------------- |
-| Ubuntu   | Ubuntu 20.04.6 LTS    |
-| Docker   | 23.0.4                |
-| Jenkins  | 2.440.1               |
-| MySQL    | MySQL Community 8.3.0 |
-| Redis    | Redis 7.2.4           |
-| Nginx    | nginx/1.25.4          |
+| 프로그램    | 버전                    |
+|---------|-----------------------|
+| Ubuntu  | Ubuntu 20.04.6 LTS    |
+| Docker  | 23.0.4                |
+| Jenkins | 2.440.1               |
+| MySQL   | MySQL Community 8.3.0 |
+| Redis   | Redis 7.2.4           |
+| Nginx   | nginx/1.25.4          |
 
 ---
 
@@ -363,10 +450,10 @@ $ docker logs jenkins-container
 
 - 좌측 버튼(추천 플러그인 설치)과 우측 버튼(선택해서 설치) 중 좌측 버튼(계정명 / 암호 / 이름 / 이메일 입력)
 - 추가 플러그인 설치
-  - GitLab, Generic Webhook Trigger, Post build task, Docker, Docker Commons, Docker Pipeline, Docker API, SSH Agent
+    - GitLab, Generic Webhook Trigger, Post build task, Docker, Docker Commons, Docker Pipeline, Docker API, SSH Agent
 
 4. jenkins 컨테이너 내 docker 설치
-   - 컨테이너를 생성할 때 도커 소켓을 마운트했기 때문에 내부에서 생성된 컨테이너가 서버 로컬에서 생성 및 실행됨
+    - 컨테이너를 생성할 때 도커 소켓을 마운트했기 때문에 내부에서 생성된 컨테이너가 서버 로컬에서 생성 및 실행됨
 
 ```bash
 $ docker exec -it jenkins-container bash
@@ -384,18 +471,18 @@ $ docker exec -it jenkins-container bash
 
 - jenkins credentials 생성
 
-  - credentials > global > add credentials
-  - credentials 설정
-    - Kind: GitLab API token
-    - Scope: Global
-    - API token: ${위 gitlab에서 생성한 access token}
-    - ID: gitlabAccessToken
+    - credentials > global > add credentials
+    - credentials 설정
+        - Kind: GitLab API token
+        - Scope: Global
+        - API token: ${위 gitlab에서 생성한 access token}
+        - ID: gitlabAccessToken
 
 - 연결
-  - jenkins > system 설정
-  - Connection name : gitlab
-  - GitLab host URL : https://lab.ssafy.com/
-  - Credentials : gitlabAccessToken
+    - jenkins > system 설정
+    - Connection name : gitlab
+    - GitLab host URL : https://lab.ssafy.com/
+    - Credentials : gitlabAccessToken
 
 6. pipeline 생성
 
@@ -418,21 +505,21 @@ $ docker exec -it jenkins-container bash
 
 - url : https://letter-for.me/jenkins/project/letterforme
 
-  - pipeline 시크릿키 입력
-  - push event ✅
-  - Regular expression - release
+    - pipeline 시크릿키 입력
+    - push event ✅
+    - Regular expression - release
 
 - url : https://letter-for.me/jenkins/project/letterforme-frontdev
 
-  - pipeline 시크릿키 입력
-  - push event ✅
-  - Regular expression - dev-front
+    - pipeline 시크릿키 입력
+    - push event ✅
+    - Regular expression - dev-front
 
 - url : https://letter-for.me/jenkins/project/letterforme-backdev
 
-  - pipeline 시크릿키 입력
-  - push event ✅
-  - Regular expression - develop
+    - pipeline 시크릿키 입력
+    - push event ✅
+    - Regular expression - develop
 
 - test의 push test
 
@@ -440,8 +527,8 @@ $ docker exec -it jenkins-container bash
 
 - backend
 
-  - develop branch에 push 시 실행
-  - Dockerfile(devbackDockerfile 경로 최상단에 위치)
+    - develop branch에 push 시 실행
+    - Dockerfile(devbackDockerfile 경로 최상단에 위치)
 
   ```docker
   # 첫 번째 스테이지: Gradle을 사용하여 Java 애플리케이션을 빌드
@@ -467,7 +554,7 @@ $ docker exec -it jenkins-container bash
   ENTRYPOINT ["java","-jar","/app.jar"]
   ```
 
-  - letterforme-backdev pipeline
+    - letterforme-backdev pipeline
 
   ```
   pipeline{
@@ -567,8 +654,8 @@ $ docker exec -it jenkins-container bash
 
 - frontend
 
-  - dev-front branch에 push 시 실행
-  - Dockerfile(devfrontDockerfile 경로 최상단에 위치)
+    - dev-front branch에 push 시 실행
+    - Dockerfile(devfrontDockerfile 경로 최상단에 위치)
 
   ```docker
   FROM node:latest
@@ -586,7 +673,7 @@ $ docker exec -it jenkins-container bash
   CMD ["npm", "start"]
   ```
 
-  - letterforme-frontdev pipeline
+    - letterforme-frontdev pipeline
 
   ```
   pipeline{
@@ -652,40 +739,40 @@ $ docker exec -it jenkins-container bash
   }
   ```
 
-  - docker-compose.yaml에서 사용할 환경변수 .env
+    - docker-compose.yaml에서 사용할 환경변수 .env
 
-    - sudo vi /home/ubuntu/jenkins/env/.env
+        - sudo vi /home/ubuntu/jenkins/env/.env
 
-    ```
-    KAKAO_LOGIN_RESTAPI_KEY=''
-    KAKAO_LOGIN_CLIENT_SECRET=''
-    MYSQL_USERNAME='root'
-    MYSQL_PASSWORD='dltmdgjs'
-    MYSQL_URL='jdbc:mysql://mysql-container:3306/letterforme'
-    MYSQL_HOST ='j10a108.p.ssafy.io'
-    MYSQL_DATABASE ='letterforme'
-
-    JWT_SECRET_KEY=''
-    KAKAO_LOGIN_REDIRECT_URI='{baseUrl}/oauth2/callback/{registrationId}'
-    KAKAO_TOKEN_RESPONSE_URI='https://localhost:3001/auth/oauth-response'
-    KAKAO_LOCAL_TOKEN_RESPONSE_URI='https://localhost:3001/auth/oauth-response'
-    KAKAO_LOCAL_TOKEN=''
-
-    COOKIE_DOMAIN='localhost'
-    OPENAI_MODEL= 'ft:gpt-3.5-turbo-0125:personal::99mAOVqt'
-    OPENAI_SECRET_KEY=''
-    REDIS_HOSTNAME='redis-container'
-    REDIS_PORT='6379'
-
-    NEXT_PUBLIC_MODE='local'
-    NEXT_PUBLIC_URL='https://letter-for.me'
-    NEXT_PUBLIC_API_URL='https://letter-for.me/api/v1'
-    ```
+      ```
+      KAKAO_LOGIN_RESTAPI_KEY=''
+      KAKAO_LOGIN_CLIENT_SECRET=''
+      MYSQL_USERNAME='root'
+      MYSQL_PASSWORD='dltmdgjs'
+      MYSQL_URL='jdbc:mysql://mysql-container:3306/letterforme'
+      MYSQL_HOST ='j10a108.p.ssafy.io'
+      MYSQL_DATABASE ='letterforme'
+  
+      JWT_SECRET_KEY=''
+      KAKAO_LOGIN_REDIRECT_URI='{baseUrl}/oauth2/callback/{registrationId}'
+      KAKAO_TOKEN_RESPONSE_URI='https://localhost:3001/auth/oauth-response'
+      KAKAO_LOCAL_TOKEN_RESPONSE_URI='https://localhost:3001/auth/oauth-response'
+      KAKAO_LOCAL_TOKEN=''
+  
+      COOKIE_DOMAIN='localhost'
+      OPENAI_MODEL= 'ft:gpt-3.5-turbo-0125:personal::99mAOVqt'
+      OPENAI_SECRET_KEY=''
+      REDIS_HOSTNAME='redis-container'
+      REDIS_PORT='6379'
+  
+      NEXT_PUBLIC_MODE='local'
+      NEXT_PUBLIC_URL='https://letter-for.me'
+      NEXT_PUBLIC_API_URL='https://letter-for.me/api/v1'
+      ```
 
 - release
 
-  - release branch에 push 시 실행
-  - Docker-compose.yaml(경로 최상단에 위치)
+    - release branch에 push 시 실행
+    - Docker-compose.yaml(경로 최상단에 위치)
 
   ```docker
   services:
@@ -733,7 +820,7 @@ $ docker exec -it jenkins-container bash
       external: true
   ```
 
-  - letterforme pipeline
+    - letterforme pipeline
 
   ```
   pipeline{
@@ -803,11 +890,11 @@ $ docker exec -it jenkins-container bash
 
 1) 가비아 설정
 
-   - public ip 확인 -> `$ curl ip.ojj.kr` -> 43.202.56.72
-   - letter-for.me / dev.letter-for.me 설정
-     > letter-for.me -> 배포용 | dev.letter-for.me -> 개발용
-     - 타입 : A | 호스트 : @ | 값/위치 : 43.202.56.72 | TTL : 3306
-     - 타입 : A | 호스트 : dev | 값/위치 : 43.202.56.72 | TTL : 3306
+    - public ip 확인 -> `$ curl ip.ojj.kr` -> 43.202.56.72
+    - letter-for.me / dev.letter-for.me 설정
+      > letter-for.me -> 배포용 | dev.letter-for.me -> 개발용
+        - 타입 : A | 호스트 : @ | 값/위치 : 43.202.56.72 | TTL : 3306
+        - 타입 : A | 호스트 : dev | 값/위치 : 43.202.56.72 | TTL : 3306
 
 2) Nginx 컨테이너 생성
 
@@ -976,14 +1063,3 @@ server {
     }
 }
 ```
-
----
-
-## 5 외부 서비스 연동
-
-### 5.1 fastapi
-
-### 5.2 gpt server
-
-1. OpenAI 젒속 후 APIKeys 발급
-2. application.yml의 OPENAI_SECRET_KEY에 알맞게 정보 입력

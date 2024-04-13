@@ -141,25 +141,32 @@
 
 # 💌기술 스택
 
-## 1. <빅데이터 관련 하나 넣기>
+## 1. 타로카드 추천
 
-### 000이란?
 
-![webSocket]()
+![타로카드추천](./assets/image/타로카드추천.JPG)
 
-<aside>
 
-<!-- 예시 -->
 
-> 웹 소켓은 사용자의 브라우저와 서버 사이의 메세지를 교환하기 위한 통신 기술입니다.
+사용자가 입력한 일기를 KoSBERT 모델을 통하여 768차원의 임베딩 벡터 값으로 나타냅니다.
+타로카드를 나타내는 5개의 키워드 역시 같은 방법으로 각각 768차원의 임베딩 벡터 값으로 나타냅니다.
+일기와 타로카드의 키워드를 코사인 유사도를 통해 유사한 정도를 수치화 합니다.
+5개의 유사도를 평균+최대값이 가장 높은 카드를 선정하여 일기를 대표하는 타로카드로 추천합니다.
 
-Socket Connection을 유지한 채, 실시간으로 양방향 통신 혹은 데이터 전송이 가능하고, 상태 프로토콜, 클라이언트와 서버가 한 번 연결되면 같은 연결을 이용해 통신하기 대문에 TCP 커넥션 비용을 아낄 수 있습니다.
 
-### 적용
 
-<!-- 예시 -->
+## 2. 비슷한 일기 추천
 
-`나랑` 에서는 실시간 상태 공유를 위해 모집글 별 채팅방 기능에 webSocket을 사용합니다.
+
+![일기추천](./assets/image/일기추천.JPG)
+
+
+
+사용자가 입력한 일기를 KoSBERT 모델을 통하여 768차원의 임베딩 벡터 값으로 나타냅니다.
+타로카드를 나타내는 5개의 키워드 역시 같은 방법으로 각각 768차원의 임베딩 벡터 값으로 나타냅니다.
+일기와 타로카드의 키워드를 코사인 유사도를 통해 유사한 정도를 수치화 합니다.
+5개의 유사도를 평균+최대값이 가장 높은 카드를 선정하여 일기를 대표하는 타로카드로 추천합니다.
+
 
 ## 3. 개발 환경
 
@@ -169,6 +176,8 @@ Socket Connection을 유지한 채, 실시간으로 양방향 통신 혹은 데�
 <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
 <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/zustand-764ABC?style=for-the-badge&logo=react&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Node.js-339939?style=for-the-badge&logo=Node.js&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Scss-cc6699?style=for-the-badge&logo=sass&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/react query-F73F51?style=for-the-badge&logo=react query&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><br>
 <img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=Jira&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/GitLab-FCA121?style=for-the-badge&logo=GitLab&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <br/>
+
+
 
 # 💌프로젝트 산출물
 
@@ -204,12 +213,12 @@ Socket Connection을 유지한 채, 실시간으로 양방향 통신 혹은 데�
 
 ### 2. ERD
 
-![erd]()
+![erd](./assets/image/ERD.png)
 <br>
 
 ### 3. Architecture
 
-![ERD](./assets/image/architecture.png)
+![architecture](./assets/image/architecture.png)
 
 ### 3. API 문서
 
@@ -222,8 +231,8 @@ Socket Connection을 유지한 채, 실시간으로 양방향 통신 혹은 데�
 # 💌회고
 
 - [이승헌(팀장)](https://github.com/heon118) :
-- [김효진](https://github.com/hyojin030) :
-- [이승헌](https://github.com/olrlobt) :
+- [김효진](https://github.com/hyojin030) : 관심 있던 추천 시스템에 대해 배우고 구현해 볼 수 있어서 좋은 경험이었습니다. 일기를 추천한다는 주제가 흔치 않아 고민하는 시간이 길었지만, 그만큼 평범하지 않아 즐거운 과정이었습니다. 기회가 된다면 사용자의 데이터를 받아 더 맞춤화된 추천으로 만족도 높은 서비스를 개발해 보고 싶습니다.
+- [이승헌](https://github.com/olrlobt) : 새로운 기술들에 많이 도전하면서 배움이 많았던 프로젝트였습니다. Fast API, ANNOY 알고리즘, KoSBERT, GPT 파인튜닝 등 다양한 기술에 많이 도전하며 부딪히면서 성장했던 기간이었습니다. 이 프로젝트에서 많은 도전을 한 덕분에, 앞으로 새로운 기술을 만나게 되어도 두려워하지 않을 자신이 생겼습니다. 한 가지 아쉬운 점은 JIRA 사용을 적극적으로 하지 않았다는 점입니다. 일정이 하나 둘 밀리기 시작하면서 처음 기획가 달라진 부분이 많이 보여서 아쉽습니다. 다음에는 일정 관리에 더욱 몰두하겠습니다.
 - [김영섭](https://github.com/youngkimi) : 아직 엉성한 부분이 많아 차근차근 개선해나가야할 것 같습니다. 초기 기획했던 것보다는 프로젝트 사이즈가 많이 줄어들어 아쉽습니다. 기획적으로 보다 완성도 있는 프로젝트를 위한 몇 가지 기능을 추가하고, 단위 테스트 작성과 안정적 서비스 제공, 성능 개선을 위한 리팩토링 작업이 필요하겠다는 생각이 듭니다.
 - [김예림](https://github.com/lainlnya) : 마지막에 시간에 쫓겨 최적화를 하지 못한 점이 아쉬웠습니다. 또한 타로카드가 뽑혀질 때 로딩 시간 없이 카드가 갑작스럽게 뽑히는 느낌이 들어 사용자 경험 향상을 위해 개선해보고 싶다는 생각이 들었습니다.
   프론트엔드 팀원과 코드리뷰를 하며 진행하면 서로의 부분을 디버깅하거나, 구조를 일관성있게 유지하는 것에 도움이 되지 않았을까 하는 아쉬움이 남았습니다. 다음 번에는 코드리뷰를 도입하여 서로의 코드에 대해 피드백을 갖는 시간이 있었으면 좋을 것 같습니다.
