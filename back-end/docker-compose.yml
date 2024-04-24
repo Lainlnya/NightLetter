@@ -1,7 +1,7 @@
-version: '3'
+version: "3"
 services:
-   backend:
-    images: nightletter-server 
+  backend:
+    image: nightletter-server
     environment:
       # - KAKAO_LOGIN_RESTAPI_KEY
       # - KAKAO_LOGIN_CLIENT_SECRET
@@ -23,6 +23,6 @@ services:
       - TZ=Asia/Seoul
     networks:
       - night-letter
- networks:
-   night-letter:
-     external: true
+networks:
+  night-letter:
+    external: true
