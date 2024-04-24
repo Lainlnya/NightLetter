@@ -27,7 +27,7 @@ pipeline {
                 // 이미지 생성 중 . . .
                 echo 'No ${service} running . . . About to Build a image . . .'
 
-                sh 'cp /var/jenkins_home/.env .'
+                sh 'cp /var/jenkins_home/.env ./back-end'
 
                 sh 'docker build -t ${service} -f back-end/Dockerfile .'
                 sh 'docker-compose -f ./back-end/docker-compose.yml up -d'
