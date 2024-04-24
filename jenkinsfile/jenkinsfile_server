@@ -6,7 +6,7 @@ pipeline {
     }
     
     tools {
-        docker 'Docker'
+        dockerTool 'Docker'
         gradle 'Gradle'
     }
     stages {
