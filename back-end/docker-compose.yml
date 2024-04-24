@@ -1,7 +1,6 @@
 services:
    backend:
-    images:
-      
+    images: nightletter-server 
     environment:
       - KAKAO_LOGIN_RESTAPI_KEY
       - KAKAO_LOGIN_CLIENT_SECRET
