@@ -1,8 +1,7 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: devbackDockerfile
+    image: nightletter-server
+    name: backend
     environment:
       - KAKAO_LOGIN_RESTAPI_KEY
       - KAKAO_LOGIN_CLIENT_SECRET

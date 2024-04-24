@@ -30,7 +30,7 @@ pipeline {
                 sh 'cp /var/jenkins_home/.env .'
 
                 sh 'docker build -t ${service} -f back-end/Dockerfile .'
-                sh 'docker-compose up -d'
+                sh 'docker-compose -f backend/docker-compose.yml up -d'
                 sh 'docker restart nginx | true'
             }
         }
