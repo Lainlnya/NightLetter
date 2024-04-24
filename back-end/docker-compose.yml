@@ -1,8 +1,8 @@
 version: "3"
 services:
   backend:
-    container-name: backend-main
     image: nightletter-server
+    container_name: backend_main
     environment:
       # - KAKAO_LOGIN_RESTAPI_KEY
       # - KAKAO_LOGIN_CLIENT_SECRET
