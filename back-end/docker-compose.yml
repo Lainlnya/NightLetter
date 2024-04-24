@@ -1,28 +1,28 @@
+version: '3'
 services:
    backend:
     images: nightletter-server 
     environment:
-      - KAKAO_LOGIN_RESTAPI_KEY
-      - KAKAO_LOGIN_CLIENT_SECRET
-      - MYSQL_USERNAME
-      - MYSQL_PASSWORD
-      - MYSQL_URL
-      - MYSQL_HOST
-      - MYSQL_DATABASE
-      - JWT_SECRET_KEY
-      - KAKAO_LOGIN_REDIRECT_URI
-      - KAKAO_TOKEN_RESPONSE_URI
-      - KAKAO_LOCAL_TOKEN_RESPONSE_URI
-      - KAKAO_LOCAL_TOKEN
-      - COOKIE_DOMAIN
-      - REDIS_HOSTNAME
-      - REDIS_PORT
-      - OPENAI_MODEL
-      - OPENAI_SECRET_KEY
+      # - KAKAO_LOGIN_RESTAPI_KEY
+      # - KAKAO_LOGIN_CLIENT_SECRET
+      # - MYSQL_USERNAME
+      # - MYSQL_PASSWORD
+      # - MYSQL_URL
+      # - MYSQL_HOST
+      # - MYSQL_DATABASE
+      # - JWT_SECRET_KEY
+      # - KAKAO_LOGIN_REDIRECT_URI
+      # - KAKAO_TOKEN_RESPONSE_URI
+      # - KAKAO_LOCAL_TOKEN_RESPONSE_URI
+      # - KAKAO_LOCAL_TOKEN
+      # - COOKIE_DOMAIN
+      # - REDIS_HOSTNAME
+      # - REDIS_PORT
+      # - OPENAI_MODEL
+      # - OPENAI_SECRET_KEY
       - TZ=Asia/Seoul
     networks:
       - night-letter
- 
  networks:
    night-letter:
      external: true
