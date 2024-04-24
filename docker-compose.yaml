@@ -23,7 +23,7 @@ services:
       - OPENAI_SECRET_KEY
       - TZ=Asia/Seoul
     networks:
-      - tarot-network
+      - night-letter
 
   frontend:
     build:
@@ -35,9 +35,9 @@ services:
       - NEXT_PUBLIC_API_URL
       - TZ=Asia/Seoul
     networks:
-      - tarot-network
+      - night-letter
 
 networks:
-  tarot-network:
+  night-letter:
     driver: bridge
     external: true
