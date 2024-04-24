@@ -1,6 +1,6 @@
 FROM openjdk:17-alpine
 
-ARG JAR_FILE=./build/libs/nightletter-1.0.1.jar
+ARG JAR_FILE=./build/libs/NightLetter.jar
 
 COPY ${JAR_FILE} ./nightletter-server.jar
 
