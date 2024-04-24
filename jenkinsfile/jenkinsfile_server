@@ -19,7 +19,6 @@ pipeline {
             steps {
                 // Gradle을 사용하여 ${service} 프로젝트 빌드
                 sh 'cd back-end && chmod +x gradlew && ./gradlew clean build -x test'
-                sh 'cd back-end/build/libs && ls'
             }
         }
         stage('Docker Image Build') {
