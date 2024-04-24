@@ -18,7 +18,6 @@ pipeline {
         stage('Jar Build') {
             steps {
                 // Gradle을 사용하여 ${service} 프로젝트 빌드
-                sh 'pwd'
                 sh 'cd back-end && chmod +x gradlew && ./gradlew clean build -x test'
             }
         }
@@ -27,6 +26,7 @@ pipeline {
                 // 이미지 생성 중 . . .
                 echo 'No ${service} running . . . About to Build a image . . .'
 
+                sh 'pwd'
                 sh 'cp /docker-compose/.env .'
                 sh 'docker build -t ${service} -f ./back-end/Dockerfile .'
                 sh 'docker-compose up -d'
