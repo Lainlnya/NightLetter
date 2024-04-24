@@ -6,7 +6,6 @@ pipeline {
     }
     
     tools {
-        org.jenkinsci.plugins.docker.commons.tools.DockerTool 'Docker'
         gradle 'Gradle'
     }
     stages {
