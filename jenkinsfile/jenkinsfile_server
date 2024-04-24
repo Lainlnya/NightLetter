@@ -27,7 +27,7 @@ pipeline {
                 echo 'No ${service} running . . . About to Build a image . . .'
 
                 sh 'cp /var/jenkins_home/.env .'
-                sh 'docker build -t ${service} -f ./back-end/Dockerfile .'
+                sh 'docker build -t ${service} .'
                 sh 'docker-compose up -d'
                 sh 'docker restart nginx | true'
             }
