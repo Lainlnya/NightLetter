@@ -31,19 +31,19 @@ app.add_middleware(
 embedder = SentenceTransformer(os.getcwd() + '/kosbert-klue-bert-base')
 
 
-@app.get("/health-check")
+@app.get("/rec/v1/health-check")
 async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/diaries/init")
+@app.post("/rec/v1/diaries/init")
 async def init(diaryRequest: model.DiaryRequest):
     content = text_preprocessing.preprocessing(diaryRequest.content)
     vector = embedder.encode(content)
     return {"embed": vector.tolist()}
 
 
-@app.post("/diaries/recommend")
+@app.post("/rec/v1/diaries/recommend")
 def get_rec(diaryRequest: model.DiaryRequest):
     # 자연어 전처리
     content = text_preprocessing.preprocessing(diaryRequest.content)
@@ -60,7 +60,7 @@ def get_rec(diaryRequest: model.DiaryRequest):
             "diariesId": tree.get_nns_by_vector(vector.tolist(), 10)}
 
 
-@app.post("/diaries/tree")
+@app.post("/rec/v1/diaries/tree")
 def build_model():
     public_lst = []
 
@@ -85,7 +85,7 @@ def build_model():
     return {"message": "success tree building"}
 
 
-@app.post("/tarots/init", response_model=model.TarotVectors)
+@app.post("/rec/v1/tarots/init", response_model=model.TarotVectors)
 def get_deck(tarots: model.TarotInput):
     card_lst = []
     for tarot in tarots.tarots:
