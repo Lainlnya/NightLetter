@@ -27,13 +27,11 @@ pipeline {
 
         stage('Docker Image Build recsys : Fast API'){
             steps{
-                    # dir('recsys/') {
-                    sh '''
-                    docker run -p 8000:8000 -d --name backend_recsys \
-                    -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-                    -e MYSQL_HOST=${MYSQL_HOST} -e MYSQL_DATABASE=${MYSQL_DATABASE} recsys
-                    '''
-                # }
+                sh '''
+                docker run -p 8000:8000 -d --name backend_recsys \
+                -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                -e MYSQL_HOST=${MYSQL_HOST} -e MYSQL_DATABASE=${MYSQL_DATABASE} recsys
+                '''
             }
             post{
                 failure{
