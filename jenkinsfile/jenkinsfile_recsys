@@ -27,16 +27,12 @@ pipeline {
 
         stage('Docker Container Build recsys : Fast API'){
             steps{
-                dir('recsys/') {
-                    sh 'pwd'
-                    sh 'ls'
-                    sh 'docker rm backend_recsys | true'
-                    sh '''
-                    docker run -p 8000:8000 -d --name backend_recsys \
-                    -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-                    -e MYSQL_HOST=${MYSQL_HOST} -e MYSQL_DATABASE=${MYSQL_DATABASE} recsys
-                    '''
-                }
+                sh 'docker rm backend_recsys | true'
+                sh '''
+                docker run -p 8000:8000 -d --name backend_recsys \
+                -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                -e MYSQL_HOST=${MYSQL_HOST} -e MYSQL_DATABASE=${MYSQL_DATABASE} recsys
+                '''
             }
             post{
                 failure{
