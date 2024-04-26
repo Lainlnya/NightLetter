@@ -14,7 +14,7 @@ pipeline {
 
         stage('Docker Image Build recsys'){
             steps{
-                    dir('../recsys/') {
+                    dir('recsys/') {
                     sh 'docker build -t recsys .'
                 }
             }
@@ -27,7 +27,7 @@ pipeline {
 
         stage('Docker Image Build recsys : Fast API'){
             steps{
-                    dir('../recsys/') {
+                    dir('recsys/') {
                     sh '''
                     docker run -p 8000:8000 -d --name backend_recsys \
                     -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
