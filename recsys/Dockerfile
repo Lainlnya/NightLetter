@@ -11,6 +11,5 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-COPY kosbert-klue-bert-base /app/kosbert-klue-bert-base
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
