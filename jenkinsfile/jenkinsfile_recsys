@@ -27,7 +27,8 @@ pipeline {
 
         stage('Docker Container Build recsys : Fast API'){
             steps{
-                sh 'docker stop backend_recsys && docker rm backend_recsys | true'
+                sh 'docker stop backend_recsys | true'
+                sh 'docker rm backend_recsys | true'
                 sh '''
                 docker run -p 8000:8000 -d --name backend_recsys \
                 -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
