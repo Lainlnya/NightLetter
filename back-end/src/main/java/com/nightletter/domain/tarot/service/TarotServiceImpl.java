@@ -66,6 +66,7 @@ public class TarotServiceImpl implements TarotService {
 			.thenMany(Flux.fromIterable(deck.values()))
 			.collectList()
 			.doOnSuccess(tarotDtos -> log.info("======== COMPLETE MAKING DECK : {} ==========", tarotDtos.size()))
+			.onErrorComplete()
 			.subscribe();
 	}
 
