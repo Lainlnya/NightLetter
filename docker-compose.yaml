@@ -1,8 +1,7 @@
 services:
   backend:
-    build:
-      context: .
-      dockerfile: devbackDockerfile
+    image: nightletter-server
+    name: backend
     environment:
       - KAKAO_LOGIN_RESTAPI_KEY
       - KAKAO_LOGIN_CLIENT_SECRET
@@ -23,7 +22,7 @@ services:
       - OPENAI_SECRET_KEY
       - TZ=Asia/Seoul
     networks:
-      - tarot-network
+      - night-letter
 
   frontend:
     build:
@@ -35,9 +34,9 @@ services:
       - NEXT_PUBLIC_API_URL
       - TZ=Asia/Seoul
     networks:
-      - tarot-network
+      - night-letter
 
 networks:
-  tarot-network:
+  night-letter:
     driver: bridge
     external: true

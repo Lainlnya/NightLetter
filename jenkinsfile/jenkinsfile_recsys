@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        service = "nightletter-recsys"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Docker Image Build recsys'){
+            steps{
+                    dir('recsys/') {
+                    sh 'docker build -t recsys .'
+                }
+            }
+            post{
+                failure{
+                    error 'Fail Docker Image Build'
+                }
+            }
+        }
+
+        stage('Docker Container Build recsys : Fast API'){
+            steps{
+                sh 'docker stop backend_recsys | true'
+                sh 'docker rm backend_recsys | true'
+                sh '''
+                docker run -p 8000:8000 -d --name backend_recsys \
+                -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                -e MYSQL_HOST=${MYSQL_HOST} -e MYSQL_DATABASE=${MYSQL_DATABASE} recsys
+                '''
+            }
+            post{
+                failure{
+                    error 'Fail Docker Run'
+                }
+            }
+        }
+    }   
+}

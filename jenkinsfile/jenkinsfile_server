@@ -19,6 +19,7 @@ pipeline {
             steps {
                 // Gradle을 사용하여 ${service} 프로젝트 빌드
                 sh 'cd back-end && chmod +x gradlew && ./gradlew clean build -x test'
+                sh 'cd back-end/build/libs && ls'
             }
         }
         stage('Docker Image Build') {
@@ -26,11 +27,11 @@ pipeline {
                 // 이미지 생성 중 . . .
                 echo 'No ${service} running . . . About to Build a image . . .'
 
-                sh 'cp /docker-compose/.env .'
-                sh 'docker build -t ${service} -f ./back-end/Dockerfile .'
-                sh 'docker-compose up -d'
-                sh 'docker restart nginx | true'
+                sh 'cp /var/jenkins_home/.env ./back-end'
 
+                sh 'docker build -t ${service} -f back-end/Dockerfile .'
+                sh 'docker-compose -f ./back-end/docker-compose.yml up -d'
+                sh 'docker restart nginx | true'
             }
         }
     }
