@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir tensorflow_cpu-2.15.0-cp39-cp39-manylinux_2_17_x8
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY . .
 COPY kosbert-klue-bert-base /app/kosbert-klue-bert-base
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
