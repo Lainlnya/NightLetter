@@ -30,7 +30,7 @@ pipeline {
                 sh 'docker stop backend_recsys | true'
                 sh 'docker rm backend_recsys | true'
                 sh '''
-                docker run -p 8000:8000 -d --name backend_recsys \
+                docker run -p 8000:8000 -d --name backend_recsys --network night-letter \
                 -e MYSQL_USERNAME=${MYSQL_USERNAME} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
                 -e MYSQL_HOST=${MYSQL_HOST} -e MYSQL_DATABASE=${MYSQL_DATABASE} recsys
                 '''
