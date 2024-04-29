@@ -1,0 +1,53 @@
+pipeline{
+	    agent any
+
+	    environment {
+	        NEXT_PUBLIC_MODE='local'
+	        NEXT_URL='https://dev.letter-for.me'
+	        NEXT_API_URL='https://dev.letter-for.me/api/v1'
+	    }
+
+	    stages{
+            stage('Checkout') {
+            steps {
+                checkout scm
+                }
+            }   
+	        // stage('Cleaning up'){
+	        //     agent any
+	        //     steps{
+			//         sh 'docker stop frontend-dev || true'
+			//         sh 'docker rm frontend-dev || true'
+	        //     }
+	        //     post{
+	        //         failure{
+	        //             error 'Fail Cleaning up'
+	        //         }
+	        //     }
+	        // }
+        
+	        stage('Docker image build'){
+	            steps {
+                    sh 'cd front-end && docker build -t nightletter-front .'
+	            }
+	            post{
+	                failure{
+	                    error 'Fail Docker Build'
+	                }
+	            }
+	        }
+        
+	        stage('Docker Run'){
+	            agent any
+	            steps{
+	                sh 'docker run -d --name frontend-dev -e NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE} \
+                    -e NEXT_URL=${NEXT_URL} -e NEXT_API_URL=${NEXT_API_URL} --network night-letter nightletter-front'
+	            }
+	            post{
+	                failure{
+	                    error 'Fail Docker Run'
+	                }
+	            }
+	        }
+	    }
+	}
