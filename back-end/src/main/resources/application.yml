@@ -38,10 +38,7 @@ spring:
       hibernate:
         jdbc:
           time_zone: Asia/Seoul
-        dialect=org:
-          hibernate:
-            dialect:
-              MySQL5Dialect:
+        dialect: org.hibernate.dialect.MySQLDialect
         transaction:
           jta:
             platform=org:
