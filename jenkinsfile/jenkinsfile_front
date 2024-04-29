@@ -13,18 +13,6 @@ pipeline{
                 checkout scm
                 }
             }   
-	        // stage('Cleaning up'){
-	        //     agent any
-	        //     steps{
-			//         sh 'docker stop frontend-dev || true'
-			//         sh 'docker rm frontend-dev || true'
-	        //     }
-	        //     post{
-	        //         failure{
-	        //             error 'Fail Cleaning up'
-	        //         }
-	        //     }
-	        // }
         
 	        stage('Docker image build'){
 	            steps {
@@ -40,6 +28,8 @@ pipeline{
 	        stage('Docker Run'){
 	            agent any
 	            steps{
+                    sh 'docker stop frontend-dev || true'
+			        sh 'docker rm frontend-dev || true'
 	                sh 'docker run -d --name frontend-dev -e NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE} \
                     -e NEXT_URL=${NEXT_URL} -e NEXT_API_URL=${NEXT_API_URL} --network night-letter nightletter-front'
 	            }
