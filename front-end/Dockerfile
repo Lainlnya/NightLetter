@@ -2,7 +2,7 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY ./front-end .
+COPY . .
 
 RUN npm install
 
