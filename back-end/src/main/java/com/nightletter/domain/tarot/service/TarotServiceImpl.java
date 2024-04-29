@@ -127,7 +127,9 @@ public class TarotServiceImpl implements TarotService {
 		// 	.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
 		// 			"DIARY NOT FOUND - MEMBER ID : " + getCurrentMemberId()));
 
+		// TODO 오늘 날짜 수정 (오전 4시 기준)
 		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
+		// TODO INDEX ERROR 수정
 		Diary diary = diaries.get(0);
 
 		DiaryTarot futureDiaryTarot = diary.getDiaryTarots()
