@@ -26,7 +26,7 @@ spring:
             user-name-attribute: id
     provider:
       response-uri:
-        kakao: ${KAKAO_TOKEN_RESPONSE_URI}
+        kakao: ${KAKAO_LOCAL_TOKEN_RESPONSE_URI}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

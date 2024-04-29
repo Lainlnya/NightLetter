@@ -75,20 +75,19 @@ public class WebSecurityConfig {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 
 		corsConfiguration.setAllowedOrigins(
-			List.of("http://letter-for.me",
-					"https://letter-for.me",
-					"http://dev.letter-for.me",
-					"https://dev.letter-for.me",
-					"http://localhost:3001",
-					"https://localhost:3001"
-				)
-			);
+			List.of(
+				"http://letter-for.me",
+				"https://letter-for.me",
+				"http://dev.letter-for.me",
+				"https://dev.letter-for.me",
+				"http://localhost:3000",
+				"https://localhost:3001"
+			)
+		);
 
-		corsConfiguration.addAllowedMethod(HttpMethod.GET);
-		corsConfiguration.addAllowedMethod(HttpMethod.PUT);
-		corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
-		corsConfiguration.addAllowedMethod(HttpMethod.POST);
-		corsConfiguration.addAllowedMethod(HttpMethod.PATCH);
+		corsConfiguration.setAllowedMethods(
+			List.of("GET", "DELETE", "PUT", "PATCH", "POST", "OPTIONS")
+		);
 
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.setAllowCredentials(true);
