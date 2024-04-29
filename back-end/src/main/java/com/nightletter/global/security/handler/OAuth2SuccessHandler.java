@@ -35,12 +35,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 	private static ResponseCookie accessCookie(String token) {
 		return ResponseCookie.from("access-token", token)
-			.maxAge(Duration.of(30, ChronoUnit.MINUTES))
+			.maxAge(Duration.of(30, ChronoUnit.DAYS))
 			.domain(cookieDomain)
 			.httpOnly(true)
-			.path("/")
+			// TODO Oauth2 성공 시 옵션. 개발용으로 변경.
+			// .path("/")
 			.sameSite("None")
-			.secure(true)
+			// .secure(true)
 			.build();
 	}
 

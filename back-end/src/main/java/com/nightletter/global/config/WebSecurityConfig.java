@@ -52,12 +52,13 @@ public class WebSecurityConfig {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeHttpRequests(request -> request
+				// TODO 수정 필요.
 				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2 -> oauth2
 				.authorizationEndpoint(endPoint -> endPoint.baseUri("/api/v1/auth/oauth2"))
-				.redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+				.redirectionEndpoint(endPoint -> endPoint.baseUri("/oauth2/callback/**"))
 				.userInfoEndpoint(endPoint -> endPoint.userService(oAuth2UserService))
 				.successHandler(oAuth2SuccessHandler)
 			)
