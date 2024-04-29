@@ -4,3 +4,7 @@ back-end/src/main/generated
 
 recsys/env.py
 /recsys/.idea
+
+front-end/src/middleware.ts
+
+front-end/next.config.mjs
