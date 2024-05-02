@@ -29,8 +29,8 @@ public enum Nickname {
 	}
 
 	public static String createRandom() {
-		int prefixIdx = random.nextInt(0, prefix.names.size());
-		int suffixIdx = random.nextInt(0, suffix.names.size());
+		int prefixIdx = random.nextInt(prefix.names.size());
+		int suffixIdx = random.nextInt(suffix.names.size());
 		return prefix.getNames().get(prefixIdx) + " " + suffix.getNames().get(suffixIdx);
 	}
 }
