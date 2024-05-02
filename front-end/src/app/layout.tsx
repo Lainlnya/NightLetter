@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import RQProvider from "./_components/RQProvider";
+import GNB from "./_components/common/GNB";
+import { ReactNode } from "react";
+
+interface LayoutProps {
+  children: ReactNode;
+  showGNB: boolean;
+}
 
 export const metadata: Metadata = {
   title: "밤편지",
@@ -12,12 +19,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  showGNB = true,
+}: LayoutProps) {
   return (
     <html lang="ko">
       <body>
+        {showGNB && <GNB />}
         <RQProvider>{children}</RQProvider>
       </body>
     </html>
