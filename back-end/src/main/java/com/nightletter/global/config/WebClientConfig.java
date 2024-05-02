@@ -11,7 +11,7 @@ public class WebClientConfig {
 	@Bean
 	public WebClient webClient() {
 		return WebClient.builder()
-			.baseUrl("http://recsys/rec/v1")
+			.baseUrl("http://backend_recsys/rec/v1")
 			.exchangeStrategies(ExchangeStrategies.builder()
 				.codecs(configurer -> configurer
 					.defaultCodecs()
