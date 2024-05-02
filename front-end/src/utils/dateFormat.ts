@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export function parseDateToKoreanFormatWithDay(day = 0) {
   const today = new Date();
 
@@ -69,3 +71,5 @@ export function getNextDate() {
   return tomorrow;
 }
 export const TOMORROW = getNextDate();
+
+console.log(dayjs().subtract(3, 'day').format('YYYY-MM-DD'));
