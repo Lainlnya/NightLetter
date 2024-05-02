@@ -51,7 +51,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final MemberRepository memberRepository;
 	private final GptServiceImpl gptServiceImpl;
 
-	private final String SHARING_BASE_URL = "https://letter-for.me/api/v1/diaries/shared/";
+	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
 
 	@Override
 	@Transactional
