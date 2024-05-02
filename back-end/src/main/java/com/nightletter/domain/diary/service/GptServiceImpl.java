@@ -49,7 +49,7 @@ public class GptServiceImpl {
 
 	private DiaryCommentResponse getResponse(HttpEntity<DiaryCommentRequest> chatGptRequestDtoHttpEntity) {
 		return restTemplate.postForEntity(
-				"https://api.openai.com/v1/chat/completions",
+				"https://api.openai.com/v1/completions",
 				chatGptRequestDtoHttpEntity,
 				DiaryCommentResponse.class)
 			.getBody();
