@@ -23,6 +23,8 @@ export default function Home() {
   const router = useRouter();
 
   const { date } = useStore();
+  //TODO : useQuery로 변경, 닉네임 받아오기
+
   const { data } = useQuery({ queryKey: ['card', 'cards'], queryFn: getInitialCards });
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
@@ -73,6 +75,10 @@ export default function Home() {
             )}
           </div>
           <div className={styles.header_title}>
+            <h1>반가워요 김남준님.</h1>
+            <br />
+            <br />
+            <br />
             <h1>{date}</h1>
           </div>
         </header>
