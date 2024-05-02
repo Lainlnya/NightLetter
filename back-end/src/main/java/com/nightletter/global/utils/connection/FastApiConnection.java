@@ -13,7 +13,7 @@ public class FastApiConnection {
 	private final WebClient webClient;
 
 	public Mono<Boolean> isServerAvailable() {
-		return webClient.get().uri("/rec/v1/health-check")
+		return webClient.get().uri("/health-check")
 			.retrieve()
 			.bodyToMono(String.class)
 			.map(response -> true)
