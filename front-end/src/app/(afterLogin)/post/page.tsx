@@ -3,7 +3,7 @@ import Toast from "@/app/_components/post/Toast";
 import styles from "./post.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { setData } from "@/_apis/DiaryApis";
+import { setData } from "@/libs/DiaryApis";
 import { Messages } from "@/utils/msg";
 import { useRouter } from "next/navigation";
 import { TODAY, TOMORROW } from "@/utils/dateFormat";
@@ -82,14 +82,14 @@ const Post: React.FC = () => {
   };
 
   return (
-    <main className={styles.post}>
+    <section className={styles.post}>
       <h1>오늘의 일기를 작성해주세요</h1>
       <div className={styles.hr_sect}>{TODAY}</div>
       <textarea
         onChange={handleChange}
         ref={diaryRef}
         value={diaryText}
-        placeholder="일기를 작성해주세요"
+        placeholder='일기를 작성해주세요'
         maxLength={600}
       ></textarea>
       <div className={styles.temperary}>
@@ -108,18 +108,18 @@ const Post: React.FC = () => {
       <hr />
       <div className={styles.checkbox}>
         <input
-          type="checkbox"
-          name="public"
-          id="public"
+          type='checkbox'
+          name='public'
+          id='public'
           checked={checked}
           onChange={handleCheckboxChange}
         />
-        <label htmlFor="public">사연으로 공개할래요</label>
+        <label htmlFor='public'>사연으로 공개할래요</label>
       </div>
       <button className={styles.save} onClick={handleSave}>
         저장하기
       </button>
-    </main>
+    </section>
   );
 };
 

@@ -1,9 +1,4 @@
-interface CardInfo {
-  name: string;
-  imgUrl: string;
-  keyword: string;
-  desc: string;
-}
+import { CardInfo } from "@/types/card";
 
 export async function getTarotCard(info: string, method: string) {
   const response = await fetch(

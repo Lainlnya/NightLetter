@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./card.module.scss";
-import { getTarotCard } from "@/_apis/TarotApis";
+import { getTarotCard } from "@/libs/TarotApis";
 import Loading from "@/app/loading";
 import { useEffect, useState } from "react";
 import {
@@ -12,14 +12,8 @@ import {
 import Image from "next/image";
 import { Messages } from "@/utils/msg";
 import { useQuery } from "@tanstack/react-query";
-import tarot_background from "../../../../public/images/tarot-background.webp";
-
-interface CardInfo {
-  name: string;
-  imgUrl: string;
-  keyword: string;
-  desc: string;
-}
+import tarot_background from "../../../../public/images/tarot-background.png";
+import { CardInfo } from "@/types/card";
 
 const ViewCard: React.FC = () => {
   const [card, setCard] = useState<CardInfo>();
@@ -62,7 +56,7 @@ const ViewCard: React.FC = () => {
 
   return (
     card && (
-      <main className={styles.main}>
+      <section className={styles.main}>
         {searchParams.get("info") === "present" && (
           <div className={styles.today}>오늘의 감정을 나타내는 카드는...</div>
         )}
@@ -70,8 +64,8 @@ const ViewCard: React.FC = () => {
         <div className={`${styles.card} ${isBack ? styles.isRight : ""}`}>
           <Image
             className={styles.front}
-            src={card.imgUrl}
-            alt="tarot image"
+            src={card?.imgUrl || tarot_background}
+            alt='tarot image'
             width={230}
             height={400}
           />
@@ -80,7 +74,7 @@ const ViewCard: React.FC = () => {
               className={styles.back}
               onClick={() => setIsBack(!isBack)}
               src={card?.imgUrl || tarot_background}
-              alt="tarot image"
+              alt='tarot image'
               width={230}
               height={400}
             />
@@ -114,7 +108,7 @@ const ViewCard: React.FC = () => {
             코멘트 보러가기
           </button>
         )}
-      </main>
+      </section>
     )
   );
 };
