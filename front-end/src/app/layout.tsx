@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import RQProvider from "./_components/RQProvider";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 
 export const metadata: Metadata = {
   title: "밤편지",
@@ -16,7 +19,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang='ko'>
       <body>
         <RQProvider>{children}</RQProvider>
       </body>

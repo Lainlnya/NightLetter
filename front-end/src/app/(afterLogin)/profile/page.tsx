@@ -24,6 +24,7 @@ const Profile: React.FC = () => {
           width={150}
           height={150}
           alt='프로필'
+          priority
         />
         <input readOnly type='text' id='nickname' value='어이없는 어피치+' />
         <label htmlFor='nickname'>
