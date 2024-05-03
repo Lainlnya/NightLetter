@@ -4,14 +4,14 @@ import styles from "./comment.module.scss";
 import Image from "next/image";
 import { TODAY } from "@/utils/dateFormat";
 import { useQuery } from "@tanstack/react-query";
-import { getGPTData } from "@/_apis/DiaryApis";
+import { getGPTData } from "@/libs/DiaryApis";
 import Loading from "@/app/loading";
 import { Messages } from "@/utils/msg";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import closeIcon from "../../../../public/Icons/xmark-solid.svg";
 import letterIcon from "../../../../public/Icons/envelope-regular.svg";
-import tarot_background from "../../../../public/images/tarot-background.webp";
+import tarot_background from "../../../../public/images/tarot-background.png";
 
 const Comment: React.FC = () => {
   const router = useRouter();
@@ -46,11 +46,11 @@ const Comment: React.FC = () => {
   return (
     <>
       {gptComment && (
-        <main className={styles.commentMain}>
+        <section className={styles.commentMain}>
           <section className={styles.titleSec}>
             <Image
               src={closeIcon}
-              alt="뒤로가기"
+              alt='뒤로가기'
               width={30}
               height={30}
               onClick={() => router.replace("/")}
@@ -63,7 +63,7 @@ const Comment: React.FC = () => {
               className={`${styles.recommend} ${showImage ? styles.blink : ""}`}
               src={letterIcon}
               ref={blinkElement}
-              alt="사연"
+              alt='사연'
               width={30}
               height={30}
               onClick={() => router.push("/stories")}
@@ -81,11 +81,11 @@ const Comment: React.FC = () => {
                 src={gptComment?.past_url || tarot_background}
                 width={110}
                 height={190}
-                alt="과거 카드"
+                alt='과거 카드'
               />
               <Image
                 className={styles.present}
-                alt="현재 카드"
+                alt='현재 카드'
                 src={gptComment?.now_url || tarot_background}
                 width={110}
                 height={190}
@@ -93,7 +93,7 @@ const Comment: React.FC = () => {
               <Image
                 width={110}
                 height={190}
-                alt="미래 카드"
+                alt='미래 카드'
                 className={styles.future}
                 src={gptComment?.future_url || tarot_background}
               />
@@ -102,7 +102,7 @@ const Comment: React.FC = () => {
           <section className={styles.commentSec}>
             {gptComment?.gptComment || "현재 코멘트가 지원되지 않습니다."}
           </section>
-        </main>
+        </section>
       )}
     </>
   );

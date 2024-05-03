@@ -27,7 +27,7 @@ const SelectTarot: React.FC = () => {
   };
 
   return (
-    <main className={styles.main}>
+    <section className={styles.main}>
       <h1 className={styles.h1}>
         <p>
           {searchParams.get("info") === "future" ? "미래" : "어제"}를 생각하며
@@ -40,7 +40,7 @@ const SelectTarot: React.FC = () => {
       <button className={styles.shuffleBtn} onClick={handleShuffle}>
         셔플
       </button>
-    </main>
+    </section>
   );
 };
 

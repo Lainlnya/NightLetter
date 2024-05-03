@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import closeIcon from "../../../../public/Icons/xmark-solid.svg";
-import tarotImg from "../../../../public/images/tarot-background.webp";
+import tarotImg from "../../../../public/images/tarot-background.png";
 import { DRAG_BUFFER } from "@/utils/animation";
 
 export default function Diaries() {
@@ -57,11 +57,11 @@ export default function Diaries() {
   }, [cardIndex, contents]);
 
   return (
-    <div className={styles.root}>
+    <section className={styles.root}>
       <Image
         className={styles.back}
         src={closeIcon}
-        alt="뒤로가기"
+        alt='뒤로가기'
         width={30}
         height={30}
         onClick={() => router.replace("/")}
@@ -74,7 +74,7 @@ export default function Diaries() {
       </header>
       <div className={styles.carousel_container}>
         <motion.div
-          drag="x"
+          drag='x'
           dragConstraints={{
             left: 0,
             right: 0,
@@ -117,6 +117,6 @@ export default function Diaries() {
       <footer className={styles.footer}>
         <p>슬라이드하여 다른 일기를 조회할 수 있어요.</p>
       </footer>
-    </div>
+    </section>
   );
 }
