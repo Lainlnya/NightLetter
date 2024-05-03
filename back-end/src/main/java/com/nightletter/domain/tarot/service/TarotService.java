@@ -10,7 +10,7 @@ import com.nightletter.domain.tarot.entity.Tarot;
 public interface TarotService {
 	Optional<TarotResponse> createRandomPastTarot();
 
-	Optional<TarotResponse> getRandomPastTarot();
+	Optional<TarotResponse> getPastTarot();
 
 	Tarot findSimilarTarot(EmbedVector diaryEmbedVector);
 
@@ -18,6 +18,6 @@ public interface TarotService {
 
 	Tarot makeRandomTarot(int... ignoreTarotsId);
 
-	Tarot findPastTarot(Member currentMember);
+	Optional<Tarot> findPastTarot();
 }
 

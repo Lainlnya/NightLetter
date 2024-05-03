@@ -30,4 +30,5 @@ public record TarotDto(
 			.embedVector(tarot.getEmbedVector())
 			.build();
 	}
+
 }

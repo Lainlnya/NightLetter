@@ -20,7 +20,7 @@ public class TarotCustomRepositoryImpl implements TarotCustomRepository {
 
 	@Override
 	public Optional<Tarot> findPastTarot(LocalDate today, int memberId) {
-		LocalDate pastLimitDate = today.minusDays(21);
+		LocalDate pastLimitDate = today.minusDays(28);
 
 		return Optional.ofNullable(queryFactory.select(tarot)
 			.from(diary)

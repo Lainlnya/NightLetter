@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 public class TarotResponse {
+	Integer id;
 	String name;
 	String imgUrl;
 	DiaryTarotType type;
@@ -20,6 +21,7 @@ public class TarotResponse {
 	public static TarotResponse of(Tarot tarot, TarotDirection direction) {
 
 		return TarotResponse.builder()
+			.id(tarot.getId())
 			.name(tarot.getName())
 			.imgUrl(tarot.getImgUrl())
 			.type(DiaryTarotType.PAST)

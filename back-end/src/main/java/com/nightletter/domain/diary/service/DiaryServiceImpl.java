@@ -65,9 +65,10 @@ public class DiaryServiceImpl implements DiaryService {
 		RecommendResponse recResponse = new RecommendResponse();
 		recResponse.setRecommendDiaries(getRecDiaries(recDiariesId));
 
+		// TODO: WRAP WITH OPTIONAL
 		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
 		recResponse.setCard(nowTarot);
-		Tarot pastTarot = tarotService.findPastTarot(getCurrentMember());
+		Tarot pastTarot = tarotService.findPastTarot().get();
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
 		String question = String.format("%s, %s, %s", futureTarot.getName(), futureTarot.getDir().toString(), diaryRequest.getContent());
@@ -128,11 +129,11 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public List<DiaryResponse> findDiaries(DiaryListRequest request) {
 
+		// TODO 에러 핸들링
 		// if (request.getEndDate().isBefore(request.getSttDate())) {
 		// 	throw new BadRequestException();
 		// }
 
-		// 해당 일자 만큼의 데이터 받아옴.
 		// TODO 오늘 날짜 처리.
 
 		Map<LocalDate, DiaryResponse> diaryMap = diaryRepository
@@ -143,7 +144,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 		return Stream.iterate(request.getSttDate(),
 				date -> date.isBefore(request.getEndDate().plusDays(1)), date -> date.plusDays(1))
-			.map(date -> diaryMap.getOrDefault(date, null))
+			.map(date -> diaryMap.getOrDefault(date, DiaryResponse.builder().date(date).build()))
 			.toList();
 	}
 
@@ -209,25 +210,4 @@ public class DiaryServiceImpl implements DiaryService {
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 	}
 
-	public Integer findRequestDiaryIdx(List<Diary> diaries, LocalDate requestedDate) {
-		int stt = 0;
-		int end = diaries.size()-1;
-
-		while (stt <= end) {
-			int mid = (stt + end) / 2;
-
-			if (diaries.get(mid).getDate().isEqual(requestedDate)) {
-				return mid;
-			}
-
-			if (diaries.get(mid).getDate().isAfter(requestedDate)) {
-				end = mid - 1;
-			}
-			else {
-				stt = mid + 1;
-			}
-		}
-
-		return null;
-	}
 }

@@ -30,9 +30,12 @@ import com.nightletter.domain.tarot.dto.TarotKeyword;
 import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
+import com.nightletter.domain.tarot.entity.TarotDirection;
+import com.nightletter.domain.tarot.entity.TodayTarot;
 import com.nightletter.domain.tarot.repository.TarotRedisRepository;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.global.exception.CommonErrorCode;
+import com.nightletter.global.exception.DupRequestException;
 import com.nightletter.global.exception.RecsysConnectionException;
 import com.nightletter.global.exception.ResourceNotFoundException;
 
@@ -123,23 +126,11 @@ public class TarotServiceImpl implements TarotService {
 
 	@Override
 	public TarotResponse findFutureTarot() {
-		// Diary diary = diaryRepository.findByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now())
-		// 	.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
-		// 			"DIARY NOT FOUND - MEMBER ID : " + getCurrentMemberId()));
 
-		// TODO 오늘 날짜 수정 (오전 4시 기준)
-		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
-		// TODO INDEX ERROR 수정
-		Diary diary = diaries.get(0);
-
-		DiaryTarot futureDiaryTarot = diary.getDiaryTarots()
-			.stream()
-			.filter(diaryTarot -> diaryTarot.getType() == DiaryTarotType.FUTURE)
-			.findFirst()
+		return tarotRedisRepository.findById(getCurrentMemberId())
+			.map(TodayTarot::getFutureCard)
 			.orElseThrow(
-				() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "DIARY-TAROT NOT FOUND"));
-
-		return futureDiaryTarot.getTarot().toResponse();
+				() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TODAY TAROT NOT FOUND"));
 	}
 
 	private double calculateCosineSimilarity(EmbedVector embedVectorA, EmbedVector embedVectorB) {
@@ -158,46 +149,51 @@ public class TarotServiceImpl implements TarotService {
 
 	@Override
 	public Optional<TarotResponse> createRandomPastTarot() {
-		// 과거 카드 redis 저장.
-		// redisTemplate.
+
+		if (getPastTarot().isPresent()) {
+			throw new DupRequestException(CommonErrorCode.DUPLICATED_REQUEST_ERROR, "ALREADY POPPED");
+		}
+
 		int tarotId = new Random().nextInt(1, 157);
+		TarotDirection direction = new Random().nextBoolean() ? TarotDirection.FORWARD : TarotDirection.REVERSE;
 
 		Optional<Tarot> tarotResponse = tarotRepository.findById(tarotId);
 
-		if (tarotResponse.isEmpty())
-			return Optional.empty();
+		LocalDateTime expiredTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
 
-		LocalDateTime expiredTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(4, 0));
-
-		if (LocalTime.now().isAfter(LocalTime.of(4, 0))) {
-			expiredTime = expiredTime.plusDays(1);
-		}
-
-		PastTarot pastTarot = tarotRedisRepository.save(PastTarot.builder()
-			.memberId(getCurrentMemberId())
-			.tarotId(tarotId)
-			.expiredTime(expiredTime.toEpochSecond(ZoneOffset.UTC)
-				- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-			)
-			.direction(tarotResponse.get().getDir())
-			.build()
+		tarotRedisRepository.save(
+			TodayTarot.builder()
+				.pastCard(tarotRepository.findById(tarotId)
+					.map(tarot -> TarotResponse.of(tarot, direction))
+					.orElseThrow(() ->
+						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND")))
+				.nowCard(null)
+				.futureCard(null)
+				.expiredTime(expiredTime.toEpochSecond(ZoneOffset.UTC)
+					- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+				.build()
 		);
 
 		return tarotResponse.map(tarot -> TarotResponse.of(tarot, tarot.getDir()));
 	}
 
 	@Override
-	public Optional<TarotResponse> getRandomPastTarot() {
-		Optional<PastTarot> pastTarot = tarotRedisRepository.findById(getCurrentMemberId());
+	public Optional<TarotResponse> getPastTarot() {
 
-		return pastTarot.flatMap(
-			value -> tarotRepository.findById(value.getTarotId())
-				.map(tarot -> TarotResponse.of(tarot, tarot.getDir())));
-	}
+		Integer memberId = getCurrentMemberId();
 
-	private Integer getCurrentMemberId() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return Integer.parseInt((String)authentication.getPrincipal());
+		// 캐시 조회.
+		// 없으면 RDB 조회
+		return Optional.ofNullable(
+			tarotRedisRepository.findById(memberId)
+			.map(TodayTarot::getPastCard)
+			.orElse(
+				tarotRepository.findPastTarot(getToday(), memberId)
+					.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
+					.orElseThrow(() ->
+						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND")))
+		);
+
 	}
 
 	@Override
@@ -220,16 +216,34 @@ public class TarotServiceImpl implements TarotService {
 	}
 
 	@Override
-	public Tarot findPastTarot(Member currentMember) {
-		return tarotRepository.findPastTarot(LocalDate.now(), currentMember.getMemberId())
-			.orElseGet(() -> {
-				PastTarot pastTarot = tarotRedisRepository.findById(getCurrentMemberId())
-					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND,
-						"PAST TAROT IN REDIS NOT FOUND"));
+	public Optional<Tarot> findPastTarot() {
+		/**
+		 * RDB 이전에 Redis (오늘의 과거카드) 우선적으로 검색해야 함.
+		 */
+		Integer memberId = getCurrentMemberId();
 
-				return tarotRepository.findById(pastTarot.getTarotId())
-					.orElseThrow(
-						() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND"));
-			});
+		return tarotRedisRepository.findById(memberId)
+			.map(TodayTarot::getPastCard)
+			.map(pastTarot ->
+			{
+				return tarotRepository.findById(pastTarot.getId())
+				.orElse(
+					tarotRepository.findPastTarot(getToday(), memberId)
+					.orElseThrow(() ->
+						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND"))
+				);
+			}
+		);
+
+	}
+
+	private Integer getCurrentMemberId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return Integer.parseInt((String)authentication.getPrincipal());
+	}
+
+	private LocalDate getToday() {
+		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
+				LocalDate.now() : LocalDate.now().minusDays(1);
 	}
 }
