@@ -1,8 +1,9 @@
-package com.nightletter.domain.diary.dto;
+package com.nightletter.domain.diary.dto.response;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
+
+import com.nightletter.domain.diary.dto.request.GPTRequest;
 
 import lombok.*;
 

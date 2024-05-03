@@ -1,12 +1,12 @@
 package com.nightletter.domain.diary.service;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.global.common.ResponseDto;
 
@@ -16,7 +16,7 @@ public interface DiaryService {
 
 	Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request);
 
-	Optional<DiaryListResponse> findDiaries(DiaryListRequest diaryListRequest);
+	List<DiaryResponse> findDiaries(DiaryListRequest diaryListRequest);
 
 	Optional<DiaryResponse> findDiary(Long diaryId);
 

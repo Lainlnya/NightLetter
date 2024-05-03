@@ -1,4 +1,4 @@
-package com.nightletter.domain.diary.dto;
+package com.nightletter.domain.diary.dto.response;
 
 import java.time.LocalDate;
 

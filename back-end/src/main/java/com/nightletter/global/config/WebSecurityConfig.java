@@ -53,11 +53,11 @@ public class WebSecurityConfig {
 			)
 			.authorizeHttpRequests(request -> request
 				// TODO 수정 필요.
-				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
+				.requestMatchers("/", "/api/v2/auth/**", "/oauth2/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2 -> oauth2
-				.authorizationEndpoint(endPoint -> endPoint.baseUri("/api/v1/auth/oauth2"))
+				.authorizationEndpoint(endPoint -> endPoint.baseUri("/api/v2/auth/oauth2"))
 				.redirectionEndpoint(endPoint -> endPoint.baseUri("/oauth2/callback/**"))
 				.userInfoEndpoint(endPoint -> endPoint.userService(oAuth2UserService))
 				.successHandler(oAuth2SuccessHandler)

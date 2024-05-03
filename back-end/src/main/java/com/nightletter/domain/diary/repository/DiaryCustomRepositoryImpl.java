@@ -4,13 +4,10 @@ import static com.nightletter.domain.diary.entity.QDiary.*;
 import static com.nightletter.domain.diary.entity.QDiaryTarot.*;
 import static com.nightletter.domain.tarot.entity.QTarot.*;
 
-import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryRequestDirection;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
@@ -46,52 +43,13 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.collect(Collectors.toList());
 	}
 
-	// 수정 예정
 	@Override
-	public List<Diary> findDiariesByMemberInDir(Member member, DiaryListRequest request) {
-		List<Diary> diaries = new LinkedList<>();
-
-		LocalDate queryDate = request.getDate();
-		DiaryRequestDirection dir = request.getDirection();
-
-		Integer limitSize = request.getSize();
-		if (dir.equals(DiaryRequestDirection.BEFORE) || dir.equals(DiaryRequestDirection.BOTH)) {
-			diaries.addAll(queryFactory.select(diary)
-				.from(diary)
-				.where(diary.writer.eq(member)
-					.and(diary.date.loe(queryDate)))
-				.orderBy(diary.date.asc())
-				.limit(limitSize)
-				.fetch()
-			);
-		}
-
-		if (dir.equals(DiaryRequestDirection.BOTH) &&
-			!diaries.isEmpty() &&
-			diaries.get(diaries.size() - 1).getDate().isEqual(queryDate)) {
-			diaries.remove(diaries.get(diaries.size() - 1));
-		}
-
-		if (dir.equals(DiaryRequestDirection.AFTER) || dir.equals(DiaryRequestDirection.BOTH)) {
-			diaries.addAll(queryFactory.select(diary)
-				.from(diary)
-				.where(diary.writer.eq(member)
-					.and(diary.date.goe(queryDate)))
-				.orderBy(diary.date.asc())
-				.limit(limitSize)
-				.fetch()
-			);
-		}
-
-		return diaries;
-	}
-
-	@Override
-	public List<Diary> findDiariesByMember(Member member, LocalDate sttDate, LocalDate endDate) {
+	public List<Diary> findDiariesByMember(Member member, DiaryListRequest request) {
 		return queryFactory.select(diary)
 			.from(diary)
 			.where(diary.writer.eq(member)
-				.and(diary.date.between(sttDate, endDate)))
+				.and(diary.date.between(request.getSttDate(), request.getEndDate())))
+			.orderBy(diary.date.asc())
 			.fetch();
 	}
 }

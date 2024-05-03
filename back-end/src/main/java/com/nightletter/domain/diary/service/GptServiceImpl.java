@@ -13,9 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.nightletter.domain.diary.dto.DiaryCommentRequest;
-import com.nightletter.domain.diary.dto.DiaryCommentResponse;
-import com.nightletter.domain.diary.dto.GPTResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCommentRequest;
+import com.nightletter.domain.diary.dto.response.DiaryCommentResponse;
+import com.nightletter.domain.diary.dto.response.GPTResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.repository.DiaryRepository;

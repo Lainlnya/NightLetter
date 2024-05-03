@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/member")
+@RequestMapping("/api/v2/member")
 public class MemberController {
 
 	private final AuthService authService;

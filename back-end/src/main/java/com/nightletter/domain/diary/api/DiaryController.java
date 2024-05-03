@@ -1,5 +1,6 @@
 package com.nightletter.domain.diary.api;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryResponse;
-import com.nightletter.domain.diary.dto.GPTResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryResponse;
+import com.nightletter.domain.diary.dto.response.GPTResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.service.DiaryService;
 import com.nightletter.domain.diary.service.GptServiceImpl;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/diaries")
+@RequestMapping("/api/v2/diaries")
 public class DiaryController {
 
 	private final DiaryService diaryService;
@@ -54,9 +54,7 @@ public class DiaryController {
 
 	@PostMapping("/self")
 	public ResponseEntity<?> findDiaries(@RequestBody DiaryListRequest diaryListRequest) {
-		System.out.println(diaryListRequest.toString());
-
-		Optional<DiaryListResponse> response = diaryService.findDiaries(diaryListRequest);
+		List<DiaryResponse> response = diaryService.findDiaries(diaryListRequest);
 
 		return ResponseEntity.ok(response);
 	}

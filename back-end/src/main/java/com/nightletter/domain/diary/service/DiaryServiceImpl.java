@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,15 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.dto.recommend.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRedisRepository;
@@ -125,17 +126,25 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Optional<DiaryListResponse> findDiaries(DiaryListRequest request) {
+	public List<DiaryResponse> findDiaries(DiaryListRequest request) {
 
-		List<Diary> diaries = diaryRepository.findDiariesByMemberInDir(getCurrentMember(), request);
+		// if (request.getEndDate().isBefore(request.getSttDate())) {
+		// 	throw new BadRequestException();
+		// }
 
-		DiaryListResponse diaryListResponse = new DiaryListResponse();
+		// 해당 일자 만큼의 데이터 받아옴.
+		// TODO 오늘 날짜 처리.
 
-		diaryListResponse.setDiaries(diaries.stream().map(DiaryResponse::of).toList());
+		Map<LocalDate, DiaryResponse> diaryMap = diaryRepository
+			.findDiariesByMember(getCurrentMember(), request)
+			.stream()
+			.collect(Collectors
+				.toMap(Diary::getDate, Diary::toDiaryResponse));
 
-		diaryListResponse.setRequestDiaryIdx(findRequestDiaryIdx(diaries, request.getDate()));
-
-		return Optional.of(diaryListResponse);
+		return Stream.iterate(request.getSttDate(),
+				date -> date.isBefore(request.getEndDate().plusDays(1)), date -> date.plusDays(1))
+			.map(date -> diaryMap.getOrDefault(date, null))
+			.toList();
 	}
 
 	@Override
