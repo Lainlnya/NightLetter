@@ -18,7 +18,7 @@ import getInitialCards from "@/libs/getInitialCards";
 import { useRouter } from "next/navigation";
 
 import Loading from "@/app/loading";
-import GNB from "../common/GNB";
+import getCardListByPeriod from "@/libs/getCardListByPeriod";
 
 export default function Home() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function Home() {
   const { date } = useStore();
   //TODO : useQuery로 변경, 닉네임 받아오기
 
-  const { data } = useQuery({ queryKey: ['card', 'cards'], queryFn: getInitialCards });
+  const { data } = useQuery({ queryKey: ['card', 'cards'], queryFn: () => getCardListByPeriod('2024-04-01', '2024-05-02') });
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);

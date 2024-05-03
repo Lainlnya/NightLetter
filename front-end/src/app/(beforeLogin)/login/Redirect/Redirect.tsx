@@ -19,31 +19,31 @@ interface PastCardInfo {
 
 
 export default function Redirect(props: { pastCardInfo: PastCardInfo }) {
-  const router = useRouter();
-  const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
+  // const router = useRouter();
+  // const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
 
-  const date1 = new Date(data?.diaries?.[data.diaries.length - 1]?.date)
-  const lastPastCard = props.pastCardInfo;
+  // const date1 = new Date(data?.diaries?.[data.diaries.length - 1]?.date)
+  // const lastPastCard = props.pastCardInfo;
 
-  const dateDiff = getDateDiff(date1, new Date());
+  // const dateDiff = getDateDiff(date1, new Date());
 
-  useEffect(() => {
-    if (!data?.diaries?.length) {
+  // useEffect(() => {
+  //   if (!data?.diaries?.length) {
 
-      if (lastPastCard === null) router.push("/tarot?info=past");
-      if (lastPastCard !== null) router.push("/");
-    }
+  //     if (lastPastCard === null) router.push("/tarot?info=past");
+  //     if (lastPastCard !== null) router.push("/");
+  //   }
 
-    if (dateDiff >= 28) {
-      if (lastPastCard === null) router.push("/tarot?info=past");
-      if (lastPastCard !== null) router.push("/");
-    }
+  //   if (dateDiff >= 28) {
+  //     if (lastPastCard === null) router.push("/tarot?info=past");
+  //     if (lastPastCard !== null) router.push("/");
+  //   }
 
-    if (dateDiff < 28) {
-      router.push("/");
-    }
+  //   if (dateDiff < 28) {
+  //     router.push("/");
+  //   }
 
-  }, []);
+  // }, []);
 
   return null;
 }

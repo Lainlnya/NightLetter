@@ -1,7 +1,7 @@
 
 
-export default async function getCardListByPeriod(startDate: string, endDate: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries/self`, {
+export default async function getCardListByPeriod(sttDate: string, endDate: string) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL_V2}/diaries/self`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ export default async function getCardListByPeriod(startDate: string, endDate: st
             tags: ["card", 'cards'],
         },
         body: JSON.stringify({
-            startDate: startDate,
+            sttDate: sttDate,
             endDate: endDate
         }),
     });

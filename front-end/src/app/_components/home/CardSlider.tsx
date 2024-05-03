@@ -53,30 +53,6 @@ export default function CardSlider({
   const { setDate } = useStore();
 
   useEffect(() => {
-    async function fetchPastCard() {
-      const res = await getPastCardInfo();
-      console.log(res);
-      return res;
-    }
-    const dateDiff = getDateDiff(
-      convertDateFormat(TODAY),
-      data?.diaries?.[data.diaries.length - 1]?.date
-    );
-
-    fetchPastCard().then((res) => {
-      if (!data?.diaries?.length) {
-        if (res) {
-          router.push("/post");
-        }
-        if (!res) {
-          router.push("/tarot?info=past");
-        }
-      }
-      if (dateDiff > 28 && !res) router.push("/tarot?info=past");
-    });
-  }, []);
-
-  useEffect(() => {
     if (data) {
       setCardIndex(data?.diaries?.length - 1);
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
