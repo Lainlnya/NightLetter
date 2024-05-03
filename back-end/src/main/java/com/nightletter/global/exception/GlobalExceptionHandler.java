@@ -10,10 +10,6 @@ import com.nightletter.global.common.ResponseDto;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-	public ResponseEntity<ResponseDto> validationExceptionHandler(Exception exception) {
-		return ResponseDto.validationFail();
-	}
-
 	@ExceptionHandler(RecsysConnectionException.class)
 	public ResponseEntity<?> recsysConnectionException(RecsysConnectionException e) {
 		ErrorCode errorCode = CommonErrorCode.REC_SYS_CONNECTION_ERROR;
@@ -23,6 +19,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e) {
 		ErrorCode errorCode = CommonErrorCode.RESOURCE_NOT_FOUND;
+		return handleExceptionInternal(errorCode, e.getDetailMessage());
+	}
+
+	@ExceptionHandler(DupRequestException.class)
+	public ResponseEntity<?> dupRequestException(DupRequestException e) {
+		ErrorCode errorCode = CommonErrorCode.DUPLICATED_REQUEST_ERROR;
+		return handleExceptionInternal(errorCode, e.getDetailMessage());
+	}
+
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<?> InvalidParameterException(InvalidParameterException e) {
+		ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
 		return handleExceptionInternal(errorCode, e.getDetailMessage());
 	}
 
