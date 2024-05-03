@@ -11,7 +11,13 @@ import Loading from "@/app/loading";
 import ErrorFallback from "@/app/_components/error/ErrorFallback";
 
 import { DRAG_BUFFER } from "@/utils/animation";
-import { TODAY, convertDateFormatToKorean, isToday, getDateDiff, convertDateFormat } from "@/utils/dateFormat";
+import {
+  TODAY,
+  convertDateFormatToKorean,
+  isToday,
+  getDateDiff,
+  convertDateFormat,
+} from "@/utils/dateFormat";
 import getInitialCards from "@/libs/getInitialCards";
 import getPastCardInfo from "@/libs/getPastCardInfo";
 
@@ -23,16 +29,27 @@ import { DiaryEntry } from "@/types/card";
 import styles from "./cardSlider.module.scss";
 
 import Image from "next/image";
-import tarot_background from "../../../../public/images/tarot-background.webp";
+import tarot_background from "../../../../public/images/tarot-background.png";
 
-export default function CardSlider({ isSeen, isClicked, setIsClicked }: CalendarProps) {
-  const { data } = useQuery({ queryKey: ["card", "cards"], queryFn: getInitialCards });
+export default function CardSlider({
+  isSeen,
+  isClicked,
+  setIsClicked,
+}: CalendarProps) {
+  const { data } = useQuery({
+    queryKey: ["card", "cards"],
+    queryFn: getInitialCards,
+  });
 
   const router = useRouter();
 
   const [dragging, setDragging] = useState(false);
   const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
-  const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
+  const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(
+    isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
+      ? true
+      : false
+  );
   const { setDate } = useStore();
 
   useEffect(() => {
@@ -41,38 +58,47 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
       console.log(res);
       return res;
     }
-    const dateDiff = getDateDiff(convertDateFormat(TODAY), data?.diaries?.[data.diaries.length - 1]?.date);
+    const dateDiff = getDateDiff(
+      convertDateFormat(TODAY),
+      data?.diaries?.[data.diaries.length - 1]?.date
+    );
 
     fetchPastCard().then((res) => {
       if (!data?.diaries?.length) {
         if (res) {
-          router.push("/post")
+          router.push("/post");
         }
         if (!res) {
-          router.push("/tarot?info=past")
+          router.push("/tarot?info=past");
         }
       }
-      if (dateDiff > 28 && !res) router.push("/tarot?info=past")
-    })
-
-  }, [])
+      if (dateDiff > 28 && !res) router.push("/tarot?info=past");
+    });
+  }, []);
 
   useEffect(() => {
     if (data) {
       setCardIndex(data?.diaries?.length - 1);
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
-      setIsNotedTodayDiaries(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false)
+      setIsNotedTodayDiaries(
+        isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
+          ? true
+          : false
+      );
     }
-    setDate(convertDateFormatToKorean(data?.diaries?.[data?.requestDiaryIdx]?.date + 1));
-  }, [data])
-
+    setDate(
+      convertDateFormatToKorean(
+        data?.diaries?.[data?.requestDiaryIdx]?.date + 1
+      )
+    );
+  }, [data]);
 
   useEffect(() => {
     if (data) {
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
     }
     setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
-  }, [cardIndex, data])
+  }, [cardIndex, data]);
 
   const dragX = useMotionValue(0);
 
@@ -89,7 +115,6 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
       setCardIndex((prev: number) => prev + 1);
 
       setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
-
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev: number) => prev - 1);
 
@@ -99,13 +124,13 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Suspense fallback={<Loading loadingMessage="로딩중입니다." />}>
+      <Suspense fallback={<Loading loadingMessage='로딩중입니다.' />}>
         <div className={styles.carousel_container}>
           <motion.div
             initial={{
               translateX: `-${cardIndex * 100}%`,
             }}
-            drag="x"
+            drag='x'
             dragConstraints={{
               left: 0,
               right: 0,
@@ -137,21 +162,21 @@ export default function CardSlider({ isSeen, isClicked, setIsClicked }: Calendar
                   <Image
                     src={pastCard?.imgUrl ?? tarot_background}
                     className={`${styles.card} ${styles.past}`}
-                    alt="past_card"
+                    alt='past_card'
                     width={120}
                     height={205}
                   />
                   <Image
                     src={nowCard?.imgUrl ?? tarot_background}
                     className={`${styles.card} ${styles.current} `}
-                    alt="current_card"
+                    alt='current_card'
                     width={120}
                     height={205}
                   />
                   <Image
                     src={futureCard?.imgUrl ?? tarot_background}
                     className={`${styles.card} ${styles.future}`}
-                    alt="future_card"
+                    alt='future_card'
                     width={120}
                     height={205}
                   />

@@ -3,7 +3,7 @@ import Link from "next/link";
 import styles from "./not-found.module.scss";
 import React from "react";
 import Image from "next/image";
-import tarotBackground from "../../public/images/tarot-background.webp";
+import tarotBackground from "../../public/images/tarot-background.png";
 
 const ErrorPage = () => {
   return (

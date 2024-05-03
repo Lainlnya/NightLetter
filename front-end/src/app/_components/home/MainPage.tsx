@@ -1,23 +1,24 @@
-'use client';
+"use client";
 
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from "react";
 
-import styles from './mainPage.module.scss';
+import styles from "./mainPage.module.scss";
 
-import useStore from '@/store/date';
-import CardSlider from './CardSlider';
-import { Messages } from '@/utils/msg';
-import CalendarComponent from '../diaries/Calendar';
+import useStore from "@/store/date";
+import CardSlider from "./CardSlider";
+import { Messages } from "@/utils/msg";
+import CalendarComponent from "../diaries/Calendar";
 
-import Image from 'next/image';
-import alarm from '../../../../public/Icons/alarm_icon.svg';
-import { isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFormat';
-import { useQuery } from '@tanstack/react-query';
-import getInitialCards from '@/libs/getInitialCards';
+import Image from "next/image";
+import alarm from "../../../../public/Icons/alarm_icon.svg";
+import { isToday, TODAY, TODAY_CONVERTED } from "@/utils/dateFormat";
+import { useQuery } from "@tanstack/react-query";
+import getInitialCards from "@/libs/getInitialCards";
 
-import { useRouter, } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import Loading from '@/app/loading';
+import Loading from "@/app/loading";
+import GNB from "../common/GNB";
 
 export default function Home() {
   const router = useRouter();
@@ -31,26 +32,33 @@ export default function Home() {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date) ? true : false);
-
+  const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
+    isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
+      ? true
+      : false
+  );
 
   useEffect(() => {
     if (data) {
       SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.diaries?.[data.diaries.length - 1]?.date)
+
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
     function handleTouchOutside(e: TouchEvent) {
-      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target as Node)
+      ) {
         setIsClicked(true);
         setIsSeen(false);
       }
     }
 
-    document.addEventListener('touchstart', handleTouchOutside);
+    document.addEventListener("touchstart", handleTouchOutside);
     return () => {
-      document.removeEventListener('touchstart', handleTouchOutside);
+      document.removeEventListener("touchstart", handleTouchOutside);
     };
   }, [calendarRef, isClicked]);
 
@@ -83,11 +91,16 @@ export default function Home() {
         </header>
         <section className={styles.section}>
           <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-          <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
+          <CardSlider
+            isSeen={isSeen}
+            isClicked={isClicked}
+            setIsClicked={setIsClicked}
+          />
         </section>
 
         {!isNotedTodayDiaries && (
-          <footer className={styles.footer}
+          <footer
+            className={styles.footer}
             onClick={() => {
               router.push("/post");
             }}

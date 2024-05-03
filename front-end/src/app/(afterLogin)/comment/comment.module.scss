@@ -1,11 +1,11 @@
 .commentMain {
-  width: 100%;
-  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   position: relative;
+  height: 90vh;
+  padding: 0 2rem 2rem;
 
   .titleSec {
     width: 100%;

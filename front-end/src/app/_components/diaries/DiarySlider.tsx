@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import styles from "./diarySlider.module.scss";
 import Image from "next/image";
 
-import tarot_background from "../../../../public/images/tarot-background.webp";
+import tarot_background from "../../../../public/images/tarot-background.png";
 import { motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

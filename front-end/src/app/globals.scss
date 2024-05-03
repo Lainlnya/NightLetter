@@ -36,8 +36,6 @@ body {
 
   max-width: 39rem;
 
-  padding: 0 1.6rem 1.6rem;
-
   background-image: url("/images/background.webp");
   background-size: cover;
   background-repeat: no-repeat;
@@ -61,6 +59,7 @@ a {
   font-family: "AritaBuri";
   font-weight: 100;
   font-style: normal;
+  src: url("https://gcore.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.eot");
   src: url("https://gcore.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.eot?#iefix")
       format("embedded-opentype"),
     url("https://gcore.jsdelivr.net/gh/webfontworld/amore/AritaBuri-Thin.woff2")
