@@ -1,0 +1,54 @@
+.popupMain {
+  position: absolute;
+  height: 90dvh;
+  background-color: #191c2ba0;
+  z-index: 200;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .popup {
+    width: 36rem;
+    height: 45dvh;
+    background-color: #252d3d;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem 3rem;
+
+    svg {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.6rem;
+    }
+
+    .buttonSec {
+      display: flex;
+      flex-direction: column;
+    }
+
+    button {
+      all: unset;
+      text-align: center;
+      width: 30rem;
+      height: 5rem;
+      border-radius: 1rem;
+      font-size: 1.6rem;
+      background-color: #242d3d;
+      border: 2px solid #acacac;
+    }
+
+    .signout {
+      border: none;
+      background-color: #fc0505;
+      margin-bottom: 1rem;
+    }
+  }
+}
