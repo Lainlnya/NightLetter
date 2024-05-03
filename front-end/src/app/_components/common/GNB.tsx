@@ -2,12 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import home from "../../../../public/icons/house-solid.svg";
-import envelope from "../../../../public/icons/envelope-solid.svg";
-import chat from "../../../../public/icons/comment-solid.svg";
-import profile from "../../../../public/icons/user-solid.svg";
 import styles from "./GNB.module.scss";
-import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComment,
