@@ -1,6 +1,6 @@
 version: "3"
 services:
-  backend_dev:
+  backend_dev_v2:
     image: nightletter-dev-server-v2
     container_name: backend_dev_v2
     environment:
