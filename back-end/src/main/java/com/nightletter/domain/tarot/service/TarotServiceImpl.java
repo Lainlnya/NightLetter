@@ -150,9 +150,9 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public Optional<TarotResponse> createRandomPastTarot() {
 
-		if (getPastTarot().isPresent()) {
-			throw new DupRequestException(CommonErrorCode.DUPLICATED_REQUEST_ERROR, "ALREADY POPPED");
-		}
+		// if (getPastTarot().isPresent()) {
+		// 	throw new DupRequestException(CommonErrorCode.DUPLICATED_REQUEST_ERROR, "ALREADY POPPED");
+		// }
 
 		int tarotId = new Random().nextInt(1, 157);
 		TarotDirection direction = new Random().nextBoolean() ? TarotDirection.FORWARD : TarotDirection.REVERSE;
