@@ -154,7 +154,7 @@ public class TarotServiceImpl implements TarotService {
 		// 	throw new DupRequestException(CommonErrorCode.DUPLICATED_REQUEST_ERROR, "ALREADY POPPED");
 		// }
 
-		int tarotId = new Random().nextInt(1, 157);
+		int tarotId = new Random().nextInt(156) + 1;
 		TarotDirection direction = new Random().nextBoolean() ? TarotDirection.FORWARD : TarotDirection.REVERSE;
 
 		Optional<Tarot> tarotResponse = tarotRepository.findById(tarotId);
