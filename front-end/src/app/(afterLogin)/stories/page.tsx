@@ -1,27 +1,28 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import styles from "./stories.module.scss";
-import { motion, useMotionValue } from "framer-motion";
-import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import closeIcon from "../../../../public/Icons/xmark-solid.svg";
-import tarotImg from "../../../../public/images/tarot-background.png";
-import { DRAG_BUFFER } from "@/utils/animation";
+import React, { useEffect } from 'react';
+import styles from './stories.module.scss';
+import { motion, useMotionValue } from 'framer-motion';
+import Image from 'next/image';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import closeIcon from '../../../../public/Icons/xmark-solid.svg';
+import tarotImg from '../../../../public/images/tarot-background.png';
+import { DRAG_BUFFER } from '@/utils/animation';
 
 export default function Diaries() {
   const router = useRouter();
+  const cardWidthRem = 30.5;
   const [dragging, setDragging] = useState(false);
   const [contents, setContents] = useState([
     {
-      content: "조회중입니다",
+      content: '조회중입니다',
       imgUrl: `url(${tarotImg})`,
-      nickname: "tarot",
+      nickname: 'tarot',
     },
   ]);
   const [cardIndex, setCardIndex] = useState(0);
-  const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
+  const [nickname, setNickname] = useState(contents[0]?.nickname || '익명');
 
   const dragX = useMotionValue(0);
 
@@ -32,7 +33,7 @@ export default function Diaries() {
   const onDragEnd = () => {
     setDragging(false);
 
-    const x = dragX.get();
+    const x = dragX.get(); // 현재 드래그 위치
 
     if (x <= -DRAG_BUFFER && cardIndex < contents.length - 1) {
       setCardIndex((prev) => prev + 1);
@@ -42,7 +43,7 @@ export default function Diaries() {
   };
 
   useEffect(() => {
-    const recommendList = sessionStorage.getItem("presentCardInfo");
+    const recommendList = sessionStorage.getItem('presentCardInfo');
     if (recommendList) {
       const { recommendDiaries } = JSON.parse(recommendList);
       setContents(recommendDiaries);
@@ -51,7 +52,7 @@ export default function Diaries() {
 
   useEffect(() => {
     if (contents[cardIndex]) {
-      const updatedNickname = contents[cardIndex]?.nickname || "익명";
+      const updatedNickname = contents[cardIndex]?.nickname || '익명';
       setNickname(updatedNickname);
     }
   }, [cardIndex, contents]);
@@ -61,26 +62,25 @@ export default function Diaries() {
       <Image
         className={styles.back}
         src={closeIcon}
-        alt='뒤로가기'
+        alt="뒤로가기"
         width={30}
         height={30}
-        onClick={() => router.replace("/")}
+        onClick={() => router.replace('/')}
       />
       <header className={styles.header}>
         <p>
-          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이
-          도착했습니다.
+          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이 도착했습니다.
         </p>
       </header>
       <div className={styles.carousel_container}>
         <motion.div
-          drag='x'
+          drag="x"
           dragConstraints={{
             left: 0,
             right: 0,
           }}
           animate={{
-            translateX: `-${cardIndex * 30.5}rem`,
+            translateX: `-${cardIndex * cardWidthRem}rem`,
           }}
           style={{
             x: dragX,
@@ -91,29 +91,18 @@ export default function Diaries() {
         >
           {contents &&
             contents.map((diary, idx) => {
-              // 현재 선택된 카드만 내용을 보여주기 위한 조건
-              // style 추가
               const isSelected = idx === cardIndex;
               const storyStyle = {
                 backgroundImage: `url(${isSelected ? diary.imgUrl : tarotImg})`,
               };
               return (
-                <main
-                  key={idx}
-                  className={`${styles.story} ${
-                    !isSelected ? styles.inactive : ""
-                  }`}
-                  style={storyStyle}
-                >
-                  {isSelected && (
-                    <div className={styles.story_contents}>{diary.content}</div>
-                  )}
+                <main key={idx} className={`${styles.story} ${!isSelected ? styles.inactive : ''}`} style={storyStyle}>
+                  {isSelected && <div className={styles.story_contents}>{diary.content}</div>}
                 </main>
               );
             })}
         </motion.div>
       </div>
-
       <footer className={styles.footer}>
         <p>슬라이드하여 다른 일기를 조회할 수 있어요.</p>
       </footer>
