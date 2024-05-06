@@ -11,14 +11,12 @@ import lombok.Data;
 
 @Data
 @Builder
-@RedisHash(value = "today-tarot")
-public class TodayTarot {
+@RedisHash(value = "future-tarot")
+public class FutureTarot {
 
 	@Id
 	private Integer memberId;
-	private TarotResponse pastCard;
-	private TarotResponse nowCard;
-	private TarotResponse futureCard;
+	private Boolean flipped;
 
 	@TimeToLive
 	private Long expiredTime;

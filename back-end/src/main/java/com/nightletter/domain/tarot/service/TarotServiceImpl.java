@@ -127,10 +127,20 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public TarotResponse findFutureTarot() {
 
-		return tarotRedisRepository.findById(getCurrentMemberId())
-			.map(TodayTarot::getFutureCard)
+		// TODO TAROT FUTURE REDIS DAIRY로  수정 필요.
+
+		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
+		// TODO INDEX ERROR 수정
+		Diary diary = diaries.get(0);
+
+		DiaryTarot futureDiaryTarot = diary.getDiaryTarots()
+			.stream()
+			.filter(diaryTarot -> diaryTarot.getType() == DiaryTarotType.FUTURE)
+			.findFirst()
 			.orElseThrow(
-				() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TODAY TAROT NOT FOUND"));
+				() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "DIARY-TAROT NOT FOUND"));
+
+		return futureDiaryTarot.getTarot().toResponse();
 	}
 
 	private double calculateCosineSimilarity(EmbedVector embedVectorA, EmbedVector embedVectorB) {
@@ -157,24 +167,23 @@ public class TarotServiceImpl implements TarotService {
 		int tarotId = new Random().nextInt(1, 157);
 		TarotDirection direction = new Random().nextBoolean() ? TarotDirection.FORWARD : TarotDirection.REVERSE;
 
-		Optional<Tarot> tarotResponse = tarotRepository.findById(tarotId);
-
 		LocalDateTime expiredTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
 
+		// TODO
 		tarotRedisRepository.save(
-			TodayTarot.builder()
-				.pastCard(tarotRepository.findById(tarotId)
-					.map(tarot -> TarotResponse.of(tarot, direction))
-					.orElseThrow(() ->
-						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND")))
-				.nowCard(null)
-				.futureCard(null)
+			PastTarot.builder()
+				.memberId(getCurrentMemberId())
+				.tarotId(tarotId)
+				.direction(direction)
 				.expiredTime(expiredTime.toEpochSecond(ZoneOffset.UTC)
 					- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
 				.build()
 		);
 
-		return tarotResponse.map(tarot -> TarotResponse.of(tarot, tarot.getDir()));
+		return Optional.ofNullable(tarotRepository.findById(tarotId)
+			.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
+			.orElseThrow(() ->
+				new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND")));
 	}
 
 	@Override
@@ -185,13 +194,21 @@ public class TarotServiceImpl implements TarotService {
 		// 캐시 조회.
 		// 없으면 RDB 조회
 		return Optional.ofNullable(
+			// 캐시 조회. 있으면
 			tarotRedisRepository.findById(memberId)
-			.map(TodayTarot::getPastCard)
-			.orElse(
-				tarotRepository.findPastTarot(getToday(), memberId)
-					.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
-					.orElseThrow(() ->
-						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND")))
+				.map(info -> {
+					return tarotRepository.findById(info.getTarotId())
+						.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
+						.orElseThrow(() ->
+							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"));
+					}
+				)
+				.orElse(
+					tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
+						.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
+						.orElseThrow(() ->
+							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
+				)
 		);
 
 	}
@@ -223,14 +240,14 @@ public class TarotServiceImpl implements TarotService {
 		Integer memberId = getCurrentMemberId();
 
 		return tarotRedisRepository.findById(memberId)
-			.map(TodayTarot::getPastCard)
 			.map(pastTarot ->
 			{
-				return tarotRepository.findById(pastTarot.getId())
+				return tarotRepository.findById(pastTarot.getTarotId())
 				.orElse(
 					tarotRepository.findPastTarot(getToday(), memberId)
 					.orElseThrow(() ->
-						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT NOT FOUND"))
+						// TODO : 과거 카드 뽑으라는 알림 전송
+						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
 				);
 			}
 		);
