@@ -9,6 +9,7 @@ import com.nightletter.domain.tarot.dto.*;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
+import com.nightletter.domain.tarot.repository.TarotFutureRedisRepository;
 import com.nightletter.domain.tarot.repository.TarotPastRedisRepository;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.global.exception.CommonErrorCode;
@@ -40,7 +41,8 @@ public class TarotServiceImpl implements TarotService {
 	private static final Map<Integer, TarotDto> deck = new ConcurrentHashMap<>();
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
-	private final TarotPastRedisRepository tarotRedisRepository;
+	private final TarotPastRedisRepository pastRedisRepository;
+	private final TarotFutureRedisRepository futureRedisRepository;
 	private final DiaryRepository diaryRepository;
 
 	@PostConstruct
@@ -116,6 +118,9 @@ public class TarotServiceImpl implements TarotService {
 
 		// TODO TAROT FUTURE REDIS DAIRY로  수정 필요.
 
+		futureRedisRepository.findById(getCurrentMemberId())
+			.ifPresent(futureTarot -> futureTarot.setFlipped(true));
+
 		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
 		// TODO INDEX ERROR 수정
 		Diary diary = diaries.get(0);
@@ -157,7 +162,7 @@ public class TarotServiceImpl implements TarotService {
 		LocalDateTime expiredTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
 
 		// TODO
-		tarotRedisRepository.save(
+		pastRedisRepository.save(
 			PastTarot.builder()
 				.memberId(getCurrentMemberId())
 				.tarotId(tarotId)
@@ -182,7 +187,7 @@ public class TarotServiceImpl implements TarotService {
 		// 없으면 RDB 조회
 		return Optional.ofNullable(
 			// 캐시 조회. 있으면
-			tarotRedisRepository.findById(memberId)
+				pastRedisRepository.findById(memberId)
 				.map(info -> tarotRepository.findById(info.getTarotId())
                     .map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
                     .orElseThrow(() ->
@@ -226,7 +231,7 @@ public class TarotServiceImpl implements TarotService {
 
 		return Optional.ofNullable(
 			// 캐시 조회. 있으면
-			tarotRedisRepository.findById(memberId)
+				pastRedisRepository.findById(memberId)
 				.map(info -> tarotRepository.findById(info.getTarotId())
                     .orElseThrow(() ->
                         new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))

@@ -179,12 +179,12 @@ public class DiaryServiceImpl implements DiaryService {
 			- 조회 시 PASS
 			- 조회하지 않았으면 정보를 지워 전달.
 		 */
+		// TODO 이후 처리 ...
 		futureRedisRepository.findById(getCurrentMemberId())
 			.ifPresent(futureTarot -> {
 				if (!futureTarot.getFlipped() && diaryMap.get(today) != null) {
 					diaryMap.get(today).setFutureCard(null);
 					diaryMap.get(today).setGptComment(null);
-					futureTarot.setFlipped(true);
 				}
 			}
 		);
@@ -194,9 +194,9 @@ public class DiaryServiceImpl implements DiaryService {
 		if (! (today.isAfter(request.getEndDate()) || today.isBefore(request.getSttDate()))) {
 			if (! diaryMap.containsKey(today)) {
 				diaryMap.put(today,
-						DiaryResponse.builder()
-								.pastCard(getUnfinishedDiaryOfToday())
-								.build()
+					DiaryResponse.builder()
+						.pastCard(getUnfinishedDiaryOfToday())
+						.build()
 				);
 			}
 		}
