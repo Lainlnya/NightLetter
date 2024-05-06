@@ -184,6 +184,7 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public Optional<TarotResponse> getPastTarot() {
 
+		// TODO 오늘 카드 제외. 
 		Integer memberId = getCurrentMemberId();
 
 		// 캐시 조회.
