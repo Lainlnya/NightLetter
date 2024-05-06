@@ -191,12 +191,14 @@ public class DiaryServiceImpl implements DiaryService {
 
 		// 쿼리 결과에 오늘이 포함되어야 하고, MAP 내부에 오늘에 대한 값이 없는 경우
 
-		if (diaryMap.containsKey(today) && diaryMap.get(today) == null) {
-			diaryMap.put(today,
-				DiaryResponse.builder()
-					.pastCard(getUnfinishedDiaryOfToday())
-					.build()
-			);
+		if (! (today.isAfter(request.getEndDate()) || today.isBefore(request.getSttDate()))) {
+			if (! diaryMap.containsKey(today)) {
+				diaryMap.put(today,
+						DiaryResponse.builder()
+								.pastCard(getUnfinishedDiaryOfToday())
+								.build()
+				);
+			}
 		}
 
 		return Stream.iterate(request.getSttDate(),
