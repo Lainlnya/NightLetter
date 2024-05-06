@@ -1,6 +1,9 @@
 package com.nightletter.domain.diary.service;
 
+import static com.nightletter.global.exception.CommonErrorCode.*;
+
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,15 +28,19 @@ import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRedisRepository;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
+import com.nightletter.domain.tarot.service.TarotService;
 import com.nightletter.domain.tarot.service.TarotServiceImpl;
 import com.nightletter.global.common.ResponseDto;
 import com.nightletter.global.exception.CommonErrorCode;
+import com.nightletter.global.exception.InvalidParameterException;
 import com.nightletter.global.exception.RecsysConnectionException;
 import com.nightletter.global.exception.ResourceNotFoundException;
 
@@ -51,6 +59,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
 	private final GptServiceImpl gptServiceImpl;
+	private final TarotService tarotServiceImpl;
 
 	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
 
@@ -104,7 +113,7 @@ public class DiaryServiceImpl implements DiaryService {
 		if (recommendDiaries.isEmpty()) {
 			throw new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "RECOMMEND DIARIES NOT FOUND");
 		}
-		log.info("================== ㅋㅋㅋㅋㅋㅋㅋㅋㅋ =========== {} ", recommendDiaries.toString());
+		log.info("============================= {} ", recommendDiaries.toString());
 		return recommendDiaries;
 	}
 
@@ -129,18 +138,38 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public List<DiaryResponse> findDiaries(DiaryListRequest request) {
 
-		// TODO 에러 핸들링
-		// if (request.getEndDate().isBefore(request.getSttDate())) {
-		// 	throw new BadRequestException();
-		// }
+		if (request.getEndDate().isBefore(request.getSttDate())) {
+			throw new InvalidParameterException(INVALID_PARAMETER, "END_DATE MUST BE SAME OR LATER THAN STT_DATE");
+		}
 
-		// TODO 오늘 날짜 처리.
+		// 오늘 일자 LIMIT
+		if (request.getEndDate().isAfter(getToday())) {
+			request.setEndDate(getToday());
+		}
 
 		Map<LocalDate, DiaryResponse> diaryMap = diaryRepository
 			.findDiariesByMember(getCurrentMember(), request)
 			.stream()
 			.collect(Collectors
 				.toMap(Diary::getDate, Diary::toDiaryResponse));
+
+		LocalDate today = getToday();
+
+		/*
+			TODO 오늘의 미래카드 조회 여부를 확인.
+			- 조회 시 PASS
+			- 조회하지 않았으면 정보를 지워 전달.
+		 */
+
+
+
+
+		// 쿼리 결과에 오늘이 포함되어야 하고, MAP 내부에 오늘에 대한 값이 없는 경우
+		if (! (today.isAfter(request.getEndDate()) || today.isBefore(request.getSttDate()))) {
+			if (! diaryMap.containsKey(today)) {
+				// TODO : 오늘의 데이터를 모아서 반환해야함.
+			}
+		}
 
 		return Stream.iterate(request.getSttDate(),
 				date -> date.isBefore(request.getEndDate().plusDays(1)), date -> date.plusDays(1))
@@ -210,4 +239,46 @@ public class DiaryServiceImpl implements DiaryService {
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 	}
 
+	private LocalDate getToday() {
+		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
+			LocalDate.now() : LocalDate.now().minusDays(1);
+	}
+
+	private DiaryResponse getUnfinishedDiaryOfToday() {
+		DiaryResponse response = DiaryResponse.builder()
+			.writerId(getCurrentMember().getMemberId())
+			.diaryId(-1L)
+			.date(getToday())
+			.build();
+
+		// 과거카드
+		response.setPastCard(
+			tarotServiceImpl.findPastTarot()
+				.map(pastTarot -> TarotDto.of(pastTarot, pastTarot.getDir()))
+				.orElseGet(() -> null)
+		);
+
+		if (response.getPastCard() == null) {
+			return response;
+		}
+
+		// 미래카드 까지 존재하는 경우 -> 완성된 경우.
+		// 현재카드 까지 만을 보여주면 됨.
+
+
+
+
+
+
+		// private TarotDto futureCard;
+
+
+
+
+
+		// 미래카드
+
+
+		return null;
+	}
 }
