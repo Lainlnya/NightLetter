@@ -119,7 +119,10 @@ public class TarotServiceImpl implements TarotService {
 		// TODO TAROT FUTURE REDIS DAIRY로  수정 필요.
 
 		futureRedisRepository.findById(getCurrentMemberId())
-			.ifPresent(futureTarot -> futureTarot.setFlipped(true));
+			.ifPresent(futureTarot -> {
+				futureTarot.setFlipped(true);
+				futureRedisRepository.save(futureTarot);
+			});
 
 		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
 		// TODO INDEX ERROR 수정
