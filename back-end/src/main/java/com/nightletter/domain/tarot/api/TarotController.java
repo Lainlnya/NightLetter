@@ -38,6 +38,7 @@ public class TarotController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 
+	// TODO REMOVE AFTER TEST
 	@GetMapping("/past-test")
 	public ResponseEntity<?> findTestPastTarot() {
 
