@@ -3,7 +3,9 @@ package com.nightletter.domain.diary.service;
 import static com.nightletter.global.exception.CommonErrorCode.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.nightletter.domain.tarot.dto.TarotResponse;
+import com.nightletter.domain.tarot.entity.FutureTarot;
+import com.nightletter.domain.tarot.repository.TarotFutureRedisRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,6 +65,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final MemberRepository memberRepository;
 	private final GptServiceImpl gptServiceImpl;
 	private final TarotService tarotServiceImpl;
+	private final TarotFutureRedisRepository futureRedisRepository;
 
 	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
 
@@ -88,7 +94,20 @@ public class DiaryServiceImpl implements DiaryService {
 		userDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
 		userDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
 		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
+
+		// TODO 일괄 수정 예정
+		LocalDateTime expiredTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
+
 		diaryRepository.save(userDiary);
+		futureRedisRepository.save(
+				FutureTarot.builder()
+						// 수정
+						.memberId(getCurrentMemberId())
+						.expiredTime(expiredTime.toEpochSecond(ZoneOffset.UTC)
+								- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+						.flipped(false)
+						.build()
+		);
 		return recResponse;
 	}
 
@@ -156,19 +175,28 @@ public class DiaryServiceImpl implements DiaryService {
 		LocalDate today = getToday();
 
 		/*
-			TODO 오늘의 미래카드 조회 여부를 확인.
+			오늘의 미래카드 조회 여부를 확인.
 			- 조회 시 PASS
 			- 조회하지 않았으면 정보를 지워 전달.
 		 */
-
-
-
+		futureRedisRepository.findById(getCurrentMemberId())
+			.ifPresent(futureTarot -> {
+				if (!futureTarot.getFlipped() && diaryMap.get(today) != null) {
+					diaryMap.get(today).setFutureCard(null);
+					diaryMap.get(today).setGptComment(null);
+					futureTarot.setFlipped(true);
+				}
+			}
+		);
 
 		// 쿼리 결과에 오늘이 포함되어야 하고, MAP 내부에 오늘에 대한 값이 없는 경우
-		if (! (today.isAfter(request.getEndDate()) || today.isBefore(request.getSttDate()))) {
-			if (! diaryMap.containsKey(today)) {
-				// TODO : 오늘의 데이터를 모아서 반환해야함.
-			}
+
+		if (diaryMap.containsKey(today) && diaryMap.get(today) == null) {
+			diaryMap.put(today,
+				DiaryResponse.builder()
+					.pastCard(getUnfinishedDiaryOfToday())
+					.build()
+			);
 		}
 
 		return Stream.iterate(request.getSttDate(),
@@ -239,46 +267,21 @@ public class DiaryServiceImpl implements DiaryService {
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 	}
 
+	private Integer getCurrentMemberId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return Integer.parseInt((String)authentication.getPrincipal());
+	}
+
 	private LocalDate getToday() {
 		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
 			LocalDate.now() : LocalDate.now().minusDays(1);
 	}
 
-	private DiaryResponse getUnfinishedDiaryOfToday() {
-		DiaryResponse response = DiaryResponse.builder()
-			.writerId(getCurrentMember().getMemberId())
-			.diaryId(-1L)
-			.date(getToday())
-			.build();
+	private TarotDto getUnfinishedDiaryOfToday() {
 
-		// 과거카드
-		response.setPastCard(
-			tarotServiceImpl.findPastTarot()
+		return tarotServiceImpl.findPastTarot()
 				.map(pastTarot -> TarotDto.of(pastTarot, pastTarot.getDir()))
-				.orElseGet(() -> null)
-		);
+				.orElseGet(() -> null);
 
-		if (response.getPastCard() == null) {
-			return response;
-		}
-
-		// 미래카드 까지 존재하는 경우 -> 완성된 경우.
-		// 현재카드 까지 만을 보여주면 됨.
-
-
-
-
-
-
-		// private TarotDto futureCard;
-
-
-
-
-
-		// 미래카드
-
-
-		return null;
 	}
 }

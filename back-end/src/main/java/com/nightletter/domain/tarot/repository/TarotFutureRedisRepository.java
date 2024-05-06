@@ -1,10 +1,9 @@
 package com.nightletter.domain.tarot.repository;
 
+import com.nightletter.domain.tarot.entity.FutureTarot;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.nightletter.domain.tarot.entity.PastTarot;
-
 @Repository
-public interface TarotRedisRepository extends CrudRepository<PastTarot, Integer> {
+public interface TarotFutureRedisRepository extends CrudRepository<FutureTarot, Integer> {
 }

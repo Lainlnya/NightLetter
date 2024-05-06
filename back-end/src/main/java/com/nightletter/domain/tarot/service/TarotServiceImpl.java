@@ -9,7 +9,7 @@ import com.nightletter.domain.tarot.dto.*;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
-import com.nightletter.domain.tarot.repository.TarotRedisRepository;
+import com.nightletter.domain.tarot.repository.TarotPastRedisRepository;
 import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.global.exception.CommonErrorCode;
 import com.nightletter.global.exception.RecsysConnectionException;
@@ -40,7 +40,7 @@ public class TarotServiceImpl implements TarotService {
 	private static final Map<Integer, TarotDto> deck = new ConcurrentHashMap<>();
 	private final TarotRepository tarotRepository;
 	private final WebClient webClient;
-	private final TarotRedisRepository tarotRedisRepository;
+	private final TarotPastRedisRepository tarotRedisRepository;
 	private final DiaryRepository diaryRepository;
 
 	@PostConstruct
