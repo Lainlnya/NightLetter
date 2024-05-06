@@ -38,6 +38,13 @@ public class TarotController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 
+	@GetMapping("/past-test")
+	public ResponseEntity<?> findTestPastTarot() {
+
+		return tarotService.findPastTarot().map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
+	}
+
 	@PostMapping("/past")
 	public ResponseEntity<?> addPastTarot() {
 

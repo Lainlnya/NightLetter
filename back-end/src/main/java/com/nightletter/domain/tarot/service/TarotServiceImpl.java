@@ -239,17 +239,20 @@ public class TarotServiceImpl implements TarotService {
 		 */
 		Integer memberId = getCurrentMemberId();
 
-		return tarotRedisRepository.findById(memberId)
-			.map(pastTarot ->
-			{
-				return tarotRepository.findById(pastTarot.getTarotId())
+		return Optional.ofNullable(
+			// 캐시 조회. 있으면
+			tarotRedisRepository.findById(memberId)
+				.map(info -> {
+					return tarotRepository.findById(info.getTarotId())
+						.orElseThrow(() ->
+							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"));
+					}
+				)
 				.orElse(
-					tarotRepository.findPastTarot(getToday(), memberId)
-					.orElseThrow(() ->
-						// TODO : 과거 카드 뽑으라는 알림 전송
-						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
-				);
-			}
+					tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
+						.orElseThrow(() ->
+							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
+				)
 		);
 
 	}
