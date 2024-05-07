@@ -13,17 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-<<<<<<< Updated upstream
-import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
-import com.nightletter.domain.diary.entity.Scrap;
-import com.nightletter.domain.diary.repository.ScrapRepository;
-import com.nightletter.domain.tarot.dto.TarotResponse;
-import com.nightletter.domain.tarot.entity.FutureTarot;
-import com.nightletter.domain.tarot.repository.TarotFutureRedisRepository;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
-=======
->>>>>>> Stashed changes
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,10 +29,13 @@ import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
+import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
+import com.nightletter.domain.diary.entity.Scrap;
 import com.nightletter.domain.diary.repository.DiaryRedisRepository;
 import com.nightletter.domain.diary.repository.DiaryRepository;
+import com.nightletter.domain.diary.repository.ScrapRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.tarot.dto.TarotDto;
