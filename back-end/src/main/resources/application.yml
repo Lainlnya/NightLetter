@@ -49,7 +49,7 @@ spring:
                       internal:
                         JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
   data:
     redis:
