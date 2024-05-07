@@ -1,10 +1,10 @@
 export async function setData(newData: any) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    credentials: "include",
+    credentials: 'include',
     body: JSON.stringify(newData),
   });
 
@@ -12,14 +12,21 @@ export async function setData(newData: any) {
 }
 
 export async function getGPTData() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/diaries/get_comment`,
-    {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    }
-  );
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries/get_comment`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  });
+
+  return response.json();
+}
+
+export async function getScrapData() {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries/scrap/0`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  });
 
   return response.json();
 }

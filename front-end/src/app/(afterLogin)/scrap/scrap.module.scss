@@ -1,3 +1,53 @@
 .scrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
   height: 90dvh;
+  background-color: #191c2b;
+  padding-top: 2rem;
+}
+
+.cardSec {
+  width: 34rem;
+  height: 15rem;
+  background-color: #252d3d;
+  border-radius: 2rem;
+  padding: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .cardDate {
+    color: #868686;
+    font-weight: 900;
+  }
+  .cardBtn {
+    all: unset;
+  }
+
+  .cardBtn > svg {
+    width: 3.5rem;
+    height: 3rem;
+  }
+
+  .cardBtn > svg > path {
+    color: #fee500;
+  }
+}
+
+.cardContent {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  width: 25rem;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
