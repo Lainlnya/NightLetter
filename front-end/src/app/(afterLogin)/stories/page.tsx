@@ -1,14 +1,17 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import styles from './stories.module.scss';
-import { motion, useMotionValue } from 'framer-motion';
-import Image from 'next/image';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import closeIcon from '../../../../public/Icons/xmark-solid.svg';
-import tarotImg from '../../../../public/images/tarot-background.png';
-import { DRAG_BUFFER } from '@/utils/animation';
+import React, { useEffect, useRef } from "react";
+import styles from "./stories.module.scss";
+import { motion, useMotionValue } from "framer-motion";
+import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import closeIcon from "../../../../public/Icons/xmark-solid.svg";
+import tarotImg from "../../../../public/images/tarot-background.png";
+import { DRAG_BUFFER } from "@/utils/animation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as fasFaStar } from "@fortawesome/free-regular-svg-icons";
+import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
 
 export default function Diaries() {
   const router = useRouter();
@@ -16,13 +19,13 @@ export default function Diaries() {
   const [dragging, setDragging] = useState(false);
   const [contents, setContents] = useState([
     {
-      content: '조회중입니다',
+      content: "조회중입니다",
       imgUrl: `url(${tarotImg})`,
-      nickname: 'tarot',
+      nickname: "tarot",
     },
   ]);
   const [cardIndex, setCardIndex] = useState(0);
-  const [nickname, setNickname] = useState(contents[0]?.nickname || '익명');
+  const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
 
   const dragX = useMotionValue(0);
 
@@ -43,7 +46,7 @@ export default function Diaries() {
   };
 
   useEffect(() => {
-    const recommendList = sessionStorage.getItem('presentCardInfo');
+    const recommendList = sessionStorage.getItem("presentCardInfo");
     if (recommendList) {
       const { recommendDiaries } = JSON.parse(recommendList);
       setContents(recommendDiaries);
@@ -52,7 +55,7 @@ export default function Diaries() {
 
   useEffect(() => {
     if (contents[cardIndex]) {
-      const updatedNickname = contents[cardIndex]?.nickname || '익명';
+      const updatedNickname = contents[cardIndex]?.nickname || "익명";
       setNickname(updatedNickname);
     }
   }, [cardIndex, contents]);
@@ -62,19 +65,20 @@ export default function Diaries() {
       <Image
         className={styles.back}
         src={closeIcon}
-        alt="뒤로가기"
+        alt='뒤로가기'
         width={30}
         height={30}
-        onClick={() => router.replace('/')}
+        onClick={() => router.replace("/")}
       />
       <header className={styles.header}>
         <p>
-          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이 도착했습니다.
+          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이
+          도착했습니다.
         </p>
       </header>
       <div className={styles.carousel_container}>
         <motion.div
-          drag="x"
+          drag='x'
           dragConstraints={{
             left: 0,
             right: 0,
@@ -96,8 +100,24 @@ export default function Diaries() {
                 backgroundImage: `url(${isSelected ? diary.imgUrl : tarotImg})`,
               };
               return (
-                <main key={idx} className={`${styles.story} ${!isSelected ? styles.inactive : ''}`} style={storyStyle}>
-                  {isSelected && <div className={styles.story_contents}>{diary.content}</div>}
+                <main
+                  key={idx}
+                  className={`${styles.story} ${
+                    !isSelected ? styles.inactive : ""
+                  }`}
+                  style={storyStyle}
+                >
+                  {isSelected && (
+                    <section className={styles.scrap}>
+                      <FontAwesomeIcon
+                        className={styles.star}
+                        icon={diary.nickname ? farFaStar : fasFaStar}
+                      />
+                      <div className={styles.story_contents}>
+                        {diary.content}
+                      </div>
+                    </section>
+                  )}
                 </main>
               );
             })}
