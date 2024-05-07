@@ -13,10 +13,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.entity.Scrap;
+import com.nightletter.domain.diary.repository.ScrapRepository;
 import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.entity.FutureTarot;
 import com.nightletter.domain.tarot.repository.TarotFutureRedisRepository;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -63,6 +67,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final WebClient webClient;
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
+	private final ScrapRepository scrapRepository;
 	private final GptServiceImpl gptServiceImpl;
 	private final TarotService tarotServiceImpl;
 	private final TarotFutureRedisRepository futureRedisRepository;
@@ -264,6 +269,46 @@ public class DiaryServiceImpl implements DiaryService {
 		return Optional.empty();
 	}
 
+	@Override
+	public Page<DiaryScrapResponse> findScrappedRecommends(Integer pageNo) {
+		return diaryRepository.findScrappedDiaries(getCurrentMemberId(), pageNo);
+	}
+
+	@Transactional
+	@Override
+	public void scrapDiary(Long diaryId) {
+
+		Member member = getCurrentMember();
+		Diary diary = diaryRepository.findById(diaryId)
+			.orElseThrow(() ->
+				new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "Diary Not Found"));
+
+		System.out.println("SAVING ====");
+
+		Scrap scrap = Scrap.builder()
+			.member(member)
+			.diary(diary)
+			.scrappedAt(getToday())
+			.build();
+
+		member.scrapDiary(scrap);
+		// TODO 중복 에러 해결, 먼저 조회 (Member에서)
+	}
+
+	@Transactional
+	@Override
+	public void unscrapDiary(Long diaryId) {
+		Member member = getCurrentMember();
+		Diary diary = diaryRepository.findById(diaryId)
+			.orElseThrow(() ->
+				new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "Diary Not Found"));
+
+		long result = scrapRepository.deleteByMemberAndDiary(member, diary);
+
+		// TODO if result is 0, throw a exception
+
+	}
+
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
@@ -284,6 +329,5 @@ public class DiaryServiceImpl implements DiaryService {
 		return tarotServiceImpl.findPastTarot()
 				.map(pastTarot -> TarotDto.of(pastTarot, pastTarot.getDir()))
 				.orElseGet(() -> null);
-
 	}
 }

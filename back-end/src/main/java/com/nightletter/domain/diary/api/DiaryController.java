@@ -3,6 +3,7 @@ package com.nightletter.domain.diary.api;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
+import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.GPTResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.service.DiaryService;
@@ -86,4 +89,23 @@ public class DiaryController {
 		Optional<GPTResponse> response = gptService.findGptComment();
 		return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@GetMapping("/scrap/{pageNo}")
+	public ResponseEntity<?> findScraps(@PathVariable Integer pageNo) {
+		Page<DiaryScrapResponse> scraps = diaryService.findScrappedRecommends(pageNo);
+		return ResponseEntity.status(HttpStatus.OK).body(scraps);
+	}
+
+	@PostMapping("/scrap")
+	public ResponseEntity<?> scrapDiary(@RequestParam Long diaryId) {
+		diaryService.scrapDiary(diaryId);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@DeleteMapping("/scrap")
+	public ResponseEntity<?> unscrapDiary(@RequestParam Long diaryId) {
+		diaryService.unscrapDiary(diaryId);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
 }
