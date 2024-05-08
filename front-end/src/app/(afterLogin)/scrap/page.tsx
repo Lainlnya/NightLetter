@@ -1,28 +1,50 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import styles from './scrap.module.scss';
-import { getScrapData } from '@/libs/DiaryApis';
-import ScrapCard from '@/app/_components/common/ScrapCard';
-import { useEffect } from 'react';
-import { ScarpCardResponseBody } from '@/types/apis';
+import styles from "./scrap.module.scss";
+import ScrapCard from "@/app/_components/common/ScrapCard";
+import { useEffect, useRef } from "react";
+import { ScrapItem } from "@/types/apis";
+import useScrapStore from "@/store/stories";
 
 const Scrap: React.FC = () => {
-  const { isLoading, data: scrapList } = useQuery({ queryKey: ['ScrapList'], queryFn: () => getScrapData() });
+  const target = useRef<HTMLDivElement>(null);
+  const { scraps, loadScraps, hasMore } = useScrapStore();
 
   useEffect(() => {
-    console.log(scrapList);
-  }, [scrapList]);
+    loadScraps();
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadScraps();
+        }
+      },
+      {
+        threshold: 1,
+      }
+    );
+    if (target.current) {
+      observer.observe(target.current);
+    }
+    return () => {
+      if (target.current) observer.unobserve(target.current);
+    };
+  }, [scraps.length, hasMore]);
+
   return (
-    scrapList && (
+    scraps && (
       <section className={styles.scrap}>
-        {scrapList.content.map((card: ScarpCardResponseBody) => (
+        {scraps.map((card: ScrapItem, index: number) => (
           <ScrapCard
+            key={card.diaryId}
             diaryId={card.diaryId}
             nickname={card.nickname}
             scrappedAt={card.scrappedAt}
             content={card.content}
             imgUrl={card.imgUrl}
+            ref={index === 9 ? target : null}
           />
         ))}
       </section>

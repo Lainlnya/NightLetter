@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import styles from "./stories.module.scss";
 import { motion, useMotionValue } from "framer-motion";
 import Image from "next/image";
@@ -10,8 +10,11 @@ import closeIcon from "../../../../public/Icons/xmark-solid.svg";
 import tarotImg from "../../../../public/images/tarot-background.png";
 import { DRAG_BUFFER } from "@/utils/animation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as fasFaStar } from "@fortawesome/free-regular-svg-icons";
-import { faStar as farFaStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as farFaStar } from "@fortawesome/free-regular-svg-icons"; // 비어있음
+import { faStar as fasFaStar } from "@fortawesome/free-solid-svg-icons"; // 가득참
+import useScrapStore from "@/store/stories";
+import { setScrapData } from "@/libs/ScrapApis";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Diaries() {
   const router = useRouter();
@@ -22,10 +25,17 @@ export default function Diaries() {
       content: "조회중입니다",
       imgUrl: `url(${tarotImg})`,
       nickname: "tarot",
+      diaryId: -1,
     },
   ]);
   const [cardIndex, setCardIndex] = useState(0);
   const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
+  const { scraps, isScrapped, addScrap, toggleScrap } = useScrapStore();
+
+  const setScrappedData = useMutation({
+    mutationKey: ["scrappedData"],
+    mutationFn: (diaryId: number) => setScrapData(diaryId),
+  });
 
   const dragX = useMotionValue(0);
 
@@ -42,6 +52,16 @@ export default function Diaries() {
       setCardIndex((prev) => prev + 1);
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev) => prev - 1);
+    }
+  };
+
+  const handleScrap = (diaryId: number) => {
+    if (!isScrapped(diaryId)) {
+      console.log("scrapped");
+      addScrap({ diaryId, isScrapped: true });
+      setScrappedData.mutate(diaryId);
+    } else {
+      toggleScrap(diaryId);
     }
   };
 
@@ -111,7 +131,8 @@ export default function Diaries() {
                     <section className={styles.scrap}>
                       <FontAwesomeIcon
                         className={styles.star}
-                        icon={diary.nickname ? farFaStar : fasFaStar}
+                        icon={isScrapped(diary.diaryId) ? fasFaStar : farFaStar}
+                        onClick={() => handleScrap(diary.diaryId)}
                       />
                       <div className={styles.story_contents}>
                         {diary.content}

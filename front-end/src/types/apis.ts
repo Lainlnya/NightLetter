@@ -4,10 +4,11 @@ export interface CardsRequestBody {
   size: number;
 }
 
-export interface ScarpCardResponseBody {
+export interface ScrapItem {
   diaryId: number;
   nickname: string;
   content: string;
   imgUrl: string;
   scrappedAt: string;
+  isScrapped: boolean;
 }
