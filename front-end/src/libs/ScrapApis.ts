@@ -22,12 +22,23 @@ export async function setScrapData(diaryId: number) {
 }
 
 export async function deleteScrapData(diaryId: number) {
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaries/scrap`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({ diaryId: diaryId }),
-  });
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/diaries/scrap?diaryId=${diaryId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        // body: JSON.stringify({ diaryId: diaryId }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else console.log("Deleted");
+  } catch (error) {
+    console.error("Error", error);
+  }
 }

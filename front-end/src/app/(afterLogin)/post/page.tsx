@@ -67,7 +67,18 @@ const Post: React.FC = () => {
     mutationFn: () =>
       setData({ content: diaryText, type: checked ? "PUBLIC" : "PRIVATE" })
         .then((value) => {
-          sessionStorage.setItem("presentCardInfo", JSON.stringify(value));
+          const updateDiaries = value;
+          const updatedRecommendDiaries = value.recommendDiaries.map(
+            (diary) => ({
+              ...diary,
+              isScrapped: false,
+            })
+          );
+          updateDiaries.recommendDiaries = updatedRecommendDiaries;
+          sessionStorage.setItem(
+            "presentCardInfo",
+            JSON.stringify(updateDiaries)
+          );
           localStorage.removeItem("diaryPost");
           router.push("/card?info=present");
         })

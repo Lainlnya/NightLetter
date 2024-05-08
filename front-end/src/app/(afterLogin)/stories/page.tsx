@@ -15,6 +15,7 @@ import { faStar as fasFaStar } from "@fortawesome/free-solid-svg-icons"; // 가�
 import useScrapStore from "@/store/stories";
 import { setScrapData } from "@/libs/ScrapApis";
 import { useMutation } from "@tanstack/react-query";
+import { ScrapItem } from "@/types/apis";
 
 export default function Diaries() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function Diaries() {
   ]);
   const [cardIndex, setCardIndex] = useState(0);
   const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
-  const { scraps, isScrapped, addScrap, toggleScrap } = useScrapStore();
+  const { scraps, isScrappedDiary, addScrap, toggleScrap } = useScrapStore();
 
   const setScrappedData = useMutation({
     mutationKey: ["scrappedData"],
@@ -55,13 +56,22 @@ export default function Diaries() {
     }
   };
 
-  const handleScrap = (diaryId: number) => {
-    if (!isScrapped(diaryId)) {
+  const handleScrap = (diary: ScrapItem) => {
+    const { diaryId, nickname, content, imgUrl, scrappedAt } = diary;
+    if (!isScrappedDiary(diary.diaryId)) {
       console.log("scrapped");
-      addScrap({ diaryId, isScrapped: true });
+      addScrap({
+        diaryId,
+        nickname,
+        content,
+        imgUrl,
+        scrappedAt,
+        isScrapped: true,
+      });
       setScrappedData.mutate(diaryId);
+      console.log(scraps);
     } else {
-      toggleScrap(diaryId);
+      toggleScrap(diary.diaryId);
     }
   };
 
@@ -131,8 +141,8 @@ export default function Diaries() {
                     <section className={styles.scrap}>
                       <FontAwesomeIcon
                         className={styles.star}
-                        icon={isScrapped(diary.diaryId) ? fasFaStar : farFaStar}
-                        onClick={() => handleScrap(diary.diaryId)}
+                        icon={diary.isScrapped ? fasFaStar : farFaStar}
+                        onClick={() => handleScrap(diary)}
                       />
                       <div className={styles.story_contents}>
                         {diary.content}

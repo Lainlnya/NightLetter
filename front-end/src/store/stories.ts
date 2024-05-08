@@ -5,7 +5,7 @@ interface ScrapState {
   scraps: ScrapItem[];
   page: number;
   hasMore: boolean;
-  isScrapped: (diaryId: number) => boolean;
+  isScrappedDiary: (diaryId: number) => boolean;
   addScrap: (scrap: ScrapItem) => void;
   removeScrap: (diaryId: number) => void;
   toggleScrap: (diaryId: number) => void;
@@ -16,11 +16,12 @@ const useScrapStore = create<ScrapState>((set, get) => ({
   scraps: [],
   page: 0,
   hasMore: true,
-  isScrapped: (diaryId) => {
+  isScrappedDiary: (diaryId) => {
     return get().scraps.some(
       (scrap: ScrapItem) => scrap.diaryId === diaryId && scrap.isScrapped
     );
   },
+
   addScrap: (scrap) =>
     set((state) => ({
       scraps: [...state.scraps, scrap],
@@ -55,9 +56,12 @@ const useScrapStore = create<ScrapState>((set, get) => ({
 
       if (response.ok) {
         const data = await response.json();
-        // console.log(data);
+        const scrapItems = data.content.map((value) => ({
+          ...value,
+          isScrapped: true,
+        }));
         set({
-          scraps: [...scraps, ...data.content],
+          scraps: [...scraps, ...scrapItems],
           page: page + 1,
           hasMore: data.content.length === 10,
         });

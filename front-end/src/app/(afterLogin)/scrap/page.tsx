@@ -5,6 +5,7 @@ import ScrapCard from "@/app/_components/common/ScrapCard";
 import { useEffect, useRef } from "react";
 import { ScrapItem } from "@/types/apis";
 import useScrapStore from "@/store/stories";
+import { v4 as uuidv4 } from "uuid";
 
 const Scrap: React.FC = () => {
   const target = useRef<HTMLDivElement>(null);
@@ -38,12 +39,13 @@ const Scrap: React.FC = () => {
       <section className={styles.scrap}>
         {scraps.map((card: ScrapItem, index: number) => (
           <ScrapCard
-            key={card.diaryId}
+            key={card.diaryId + uuidv4()}
             diaryId={card.diaryId}
             nickname={card.nickname}
             scrappedAt={card.scrappedAt}
             content={card.content}
             imgUrl={card.imgUrl}
+            isScrapped={card.isScrapped}
             ref={index === 9 ? target : null}
           />
         ))}
