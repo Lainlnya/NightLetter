@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes } from 'react';
 
 export interface CardsRequestBody {
   date: string;
@@ -11,6 +11,6 @@ export interface ScrapItem extends HTMLAttributes<HTMLDivElement> {
   nickname: string;
   content: string;
   imgUrl: string;
-  scrappedAt: string;
+  scrappedAt?: string;
   isScrapped: boolean;
 }

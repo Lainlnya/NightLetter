@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import styles from "./stories.module.scss";
-import { motion, useMotionValue } from "framer-motion";
-import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import closeIcon from "../../../../public/Icons/xmark-solid.svg";
-import tarotImg from "../../../../public/images/tarot-background.png";
-import { DRAG_BUFFER } from "@/utils/animation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar as farFaStar } from "@fortawesome/free-regular-svg-icons"; // 비어있음
-import { faStar as fasFaStar } from "@fortawesome/free-solid-svg-icons"; // 가득참
-import useScrapStore from "@/store/stories";
-import { setScrapData } from "@/libs/ScrapApis";
-import { useMutation } from "@tanstack/react-query";
-import { ScrapItem } from "@/types/apis";
-import useRecomStore from "@/store/recommendations";
+import React, { useEffect } from 'react';
+import styles from './stories.module.scss';
+import { motion, useMotionValue } from 'framer-motion';
+import Image from 'next/image';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import closeIcon from '../../../../public/Icons/xmark-solid.svg';
+import tarotImg from '../../../../public/images/tarot-background.png';
+import { DRAG_BUFFER } from '@/utils/animation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as farFaStar } from '@fortawesome/free-regular-svg-icons'; // 비어있음
+import { faStar as fasFaStar } from '@fortawesome/free-solid-svg-icons'; // 가득참
+import useScrapStore from '@/store/stories';
+import { deleteScrapData, setScrapData } from '@/libs/ScrapApis';
+import { useMutation } from '@tanstack/react-query';
+import { ScrapItem } from '@/types/apis';
+import useRecomStore from '@/store/recommendations';
 
 export default function Diaries() {
   const router = useRouter();
@@ -24,20 +24,25 @@ export default function Diaries() {
   const [dragging, setDragging] = useState(false);
   const [contents, setContents] = useState([
     {
-      content: "조회중입니다",
-      imgUrl: `url(${tarotImg})`,
-      nickname: "tarot",
       diaryId: -1,
+      nickname: 'tarot',
+      content: '조회중입니다',
+      imgUrl: `url(${tarotImg})`,
+      isScrapped: false,
     },
   ]);
   const [cardIndex, setCardIndex] = useState(0);
-  const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
-  const { scraps, isScrappedDiary, addScrap, toggleScrap } = useScrapStore();
-  const { stories } = useRecomStore();
+  const [nickname, setNickname] = useState(contents[0]?.nickname || '익명');
+  const { stories, toggleStories } = useRecomStore();
 
-  const setScrappedData = useMutation({
-    mutationKey: ["scrappedData"],
+  const addScrappedData = useMutation({
+    mutationKey: ['AddedData'],
     mutationFn: (diaryId: number) => setScrapData(diaryId),
+  });
+
+  const deleteScrappedData = useMutation({
+    mutationKey: ['DeletedData'],
+    mutationFn: (diaryId: number) => deleteScrapData(diaryId),
   });
 
   const dragX = useMotionValue(0);
@@ -59,22 +64,10 @@ export default function Diaries() {
   };
 
   const handleScrap = (diary: ScrapItem) => {
-    const { diaryId, nickname, content, imgUrl, scrappedAt } = diary;
-    if (!isScrappedDiary(diary.diaryId)) {
-      console.log("scrapped");
-      addScrap({
-        diaryId,
-        nickname,
-        content,
-        imgUrl,
-        scrappedAt,
-        isScrapped: true,
-      });
-      setScrappedData.mutate(diaryId);
-      console.log(scraps);
+    if (diary.isScrapped) {
     } else {
-      toggleScrap(diary.diaryId);
     }
+    toggleStories(diary.diaryId);
   };
 
   useEffect(() => {
@@ -86,7 +79,7 @@ export default function Diaries() {
 
   useEffect(() => {
     if (contents[cardIndex]) {
-      const updatedNickname = contents[cardIndex]?.nickname || "익명";
+      const updatedNickname = contents[cardIndex]?.nickname || '익명';
       setNickname(updatedNickname);
     }
   }, [cardIndex, contents]);
@@ -96,20 +89,19 @@ export default function Diaries() {
       <Image
         className={styles.back}
         src={closeIcon}
-        alt='뒤로가기'
+        alt="뒤로가기"
         width={30}
         height={30}
-        onClick={() => router.replace("/")}
+        onClick={() => router.replace('/')}
       />
       <header className={styles.header}>
         <p>
-          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이
-          도착했습니다.
+          <span className={styles.nickname}>{nickname}</span>님의 <br /> 사연이 도착했습니다.
         </p>
       </header>
       <div className={styles.carousel_container}>
         <motion.div
-          drag='x'
+          drag="x"
           dragConstraints={{
             left: 0,
             right: 0,
@@ -131,13 +123,7 @@ export default function Diaries() {
                 backgroundImage: `url(${isSelected ? diary.imgUrl : tarotImg})`,
               };
               return (
-                <main
-                  key={idx}
-                  className={`${styles.story} ${
-                    !isSelected ? styles.inactive : ""
-                  }`}
-                  style={storyStyle}
-                >
+                <main key={idx} className={`${styles.story} ${!isSelected ? styles.inactive : ''}`} style={storyStyle}>
                   {isSelected && (
                     <section className={styles.scrap}>
                       <FontAwesomeIcon
@@ -145,9 +131,7 @@ export default function Diaries() {
                         icon={diary.isScrapped ? fasFaStar : farFaStar}
                         onClick={() => handleScrap(diary)}
                       />
-                      <div className={styles.story_contents}>
-                        {diary.content}
-                      </div>
+                      <div className={styles.story_contents}>{diary.content}</div>
                     </section>
                   )}
                 </main>
