@@ -90,9 +90,9 @@ public class DiaryController {
 		return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/scrap/{pageNo}")
-	public ResponseEntity<?> findScraps(@PathVariable Integer pageNo) {
-		Page<DiaryScrapResponse> scraps = diaryService.findScrappedRecommends(pageNo);
+	@GetMapping("/scrap")
+	public ResponseEntity<?> findScraps(@RequestParam Integer page) {
+		Page<DiaryScrapResponse> scraps = diaryService.findScrappedRecommends(page);
 		return ResponseEntity.status(HttpStatus.OK).body(scraps);
 	}
 
