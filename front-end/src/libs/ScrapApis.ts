@@ -31,7 +31,6 @@ export async function deleteScrapData(diaryId: number) {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        // body: JSON.stringify({ diaryId: diaryId }),
       }
     );
 

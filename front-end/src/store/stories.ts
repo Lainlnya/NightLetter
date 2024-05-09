@@ -46,7 +46,7 @@ const useScrapStore = create<ScrapState>((set, get) => ({
     if (!hasMore) return;
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diaries/scrap/${page}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/diaries/scrap?page=${page}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -56,7 +56,8 @@ const useScrapStore = create<ScrapState>((set, get) => ({
 
       if (response.ok) {
         const data = await response.json();
-        const scrapItems = data.content.map((value) => ({
+        console.log(data);
+        const scrapItems = data.content.map((value: ScrapItem) => ({
           ...value,
           isScrapped: true,
         }));

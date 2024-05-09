@@ -8,6 +8,10 @@
   overflow: scroll;
 }
 
+.scrap::-webkit-scrollbar {
+  display: none;
+}
+
 .cardSec {
   width: 34rem;
   height: 15rem;
