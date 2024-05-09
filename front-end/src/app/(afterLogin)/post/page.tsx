@@ -7,6 +7,7 @@ import { setData } from "@/libs/DiaryApis";
 import { Messages } from "@/utils/msg";
 import { useRouter } from "next/navigation";
 import { TODAY, TOMORROW } from "@/utils/dateFormat";
+import useRecomStore from "@/store/recommendations";
 
 const Post: React.FC = () => {
   const [diaryText, setDiaryText] = useState("");
@@ -67,18 +68,14 @@ const Post: React.FC = () => {
     mutationFn: () =>
       setData({ content: diaryText, type: checked ? "PUBLIC" : "PRIVATE" })
         .then((value) => {
-          const updateDiaries = value;
-          const updatedRecommendDiaries = value.recommendDiaries.map(
-            (diary) => ({
-              ...diary,
-              isScrapped: false,
-            })
-          );
-          updateDiaries.recommendDiaries = updatedRecommendDiaries;
-          sessionStorage.setItem(
-            "presentCardInfo",
-            JSON.stringify(updateDiaries)
-          );
+          sessionStorage.setItem("presentCardInfo", JSON.stringify(value));
+          const recommendDiaries = value.recommendDiaries;
+          const setStories = useRecomStore.getState().setStories;
+
+          if (recommendDiaries) {
+            setStories(recommendDiaries);
+          }
+
           localStorage.removeItem("diaryPost");
           router.push("/card?info=present");
         })

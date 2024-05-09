@@ -16,6 +16,7 @@ import useScrapStore from "@/store/stories";
 import { setScrapData } from "@/libs/ScrapApis";
 import { useMutation } from "@tanstack/react-query";
 import { ScrapItem } from "@/types/apis";
+import useRecomStore from "@/store/recommendations";
 
 export default function Diaries() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function Diaries() {
   const [cardIndex, setCardIndex] = useState(0);
   const [nickname, setNickname] = useState(contents[0]?.nickname || "익명");
   const { scraps, isScrappedDiary, addScrap, toggleScrap } = useScrapStore();
+  const { stories } = useRecomStore();
 
   const setScrappedData = useMutation({
     mutationKey: ["scrappedData"],
@@ -76,10 +78,9 @@ export default function Diaries() {
   };
 
   useEffect(() => {
-    const recommendList = sessionStorage.getItem("presentCardInfo");
-    if (recommendList) {
-      const { recommendDiaries } = JSON.parse(recommendList);
-      setContents(recommendDiaries);
+    console.log(stories);
+    if (stories) {
+      setContents(stories);
     }
   }, []);
 
