@@ -69,7 +69,6 @@ const Scrap: React.FC = () => {
             isScrapped={card.isScrapped}
             ref={index === 9 ? target : null}
             onClick={() => {
-              console.log("clicked");
               setIsOpen(!isOpen);
               setCardInfo(card);
             }}

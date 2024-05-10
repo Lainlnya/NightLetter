@@ -1,6 +1,6 @@
 import { ScrapItem } from "@/types/apis";
 import styles from "./scrapPopup.module.scss";
-import React, { useEffect, useRef, MouseEvent, TouchEvent } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { formattedDate } from "@/utils/dateFormat";
 
