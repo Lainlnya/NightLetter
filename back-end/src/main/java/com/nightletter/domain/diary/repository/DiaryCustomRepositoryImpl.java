@@ -1,11 +1,13 @@
 package com.nightletter.domain.diary.repository;
 
+import static com.nightletter.domain.diary.entity.DiaryTarotType.*;
 import static com.nightletter.domain.diary.entity.QDiary.*;
 import static com.nightletter.domain.diary.entity.QDiaryTarot.*;
 import static com.nightletter.domain.diary.entity.QScrap.*;
 import static com.nightletter.domain.member.entity.QMember.*;
 import static com.nightletter.domain.tarot.entity.QTarot.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,10 +20,13 @@ import org.springframework.data.domain.Pageable;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
+import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.entity.TarotDirection;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -86,6 +91,26 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.orElse(0L);
 
 		return new PageImpl<>(results, pageable, count);
+	}
+
+	@Override
+	public List<TodayTarot> findTodayDiary(Member member, LocalDate today) {
+
+		// TodayDiaryResponse response = new TodayDiaryResponse();
+
+		return queryFactory.select(Projections.constructor(
+			TodayTarot.class,
+			diaryTarot.tarot.id,
+			diaryTarot.tarot.name,
+			diaryTarot.tarot.imgUrl,
+			diaryTarot.tarot.dir,
+			diaryTarot.type
+			))
+			.from(diary)
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.diary.writer.eq(member)
+				.and(diary.date.eq(today)))
+			.fetch();
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.global.common.ResponseDto;
 
 public interface DiaryService {
@@ -23,6 +24,7 @@ public interface DiaryService {
 	List<DiaryResponse> findDiaries(DiaryListRequest diaryListRequest);
 
 	Optional<DiaryResponse> findDiary(Long diaryId);
+	TodayDiaryResponse isTodayDiaryWritten();
 
 	Optional<ResponseDto> deleteDiary(Long diaryId);
 

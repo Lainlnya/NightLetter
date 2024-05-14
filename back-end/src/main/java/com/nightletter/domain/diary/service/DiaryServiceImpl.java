@@ -30,6 +30,8 @@ import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
+import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.entity.Scrap;
@@ -98,7 +100,7 @@ public class DiaryServiceImpl implements DiaryService {
 		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
 
 		// TODO 일괄 수정 예정
-		LocalDateTime expiredTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
+		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
 
 		diaryRepository.save(userDiary);
 		futureRedisRepository.save(
@@ -219,6 +221,21 @@ public class DiaryServiceImpl implements DiaryService {
 		}
 
 		return Optional.ofNullable(DiaryResponse.of(diary));
+	}
+
+	@Override
+	public TodayDiaryResponse isTodayDiaryWritten() {
+
+		List<TodayTarot> tarots = diaryRepository.findTodayDiary(getCurrentMember(), getToday());
+
+		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
+
+		if (! futureRedisRepository.existsById(getCurrentMemberId())) {
+			response.setFutureCard(null);
+		}
+
+		return response;
+
 	}
 
 	@Override

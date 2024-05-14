@@ -24,6 +24,7 @@ import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.GPTResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
+import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.domain.diary.service.DiaryService;
 import com.nightletter.domain.diary.service.GptServiceImpl;
 
@@ -48,11 +49,21 @@ public class DiaryController {
 	@PatchMapping("")
 	public ResponseEntity<DiaryResponse> modifyDiary(@RequestBody DiaryDisclosureRequest diaryDisclosureRequest) {
 
-		Optional<DiaryResponse> diary =
-			diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
+		Optional<DiaryResponse> diary = diaryService.updateDiaryDisclosure(diaryDisclosureRequest);
 
-		return diary.map(ResponseEntity::ok)
+		return diary
+			.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.badRequest().build());
+	}
+
+	@GetMapping("/today")
+	public ResponseEntity<?> isTodayDiaryWritten() {
+
+		TodayDiaryResponse response = diaryService.isTodayDiaryWritten();
+
+		return ResponseEntity.ok(
+			response
+		);
 	}
 
 	@PostMapping("/self")
