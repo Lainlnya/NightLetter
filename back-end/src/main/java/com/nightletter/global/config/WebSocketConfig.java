@@ -27,7 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	// TODO Security 설정 필요.
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/api/v2/chat/ws-stomp")
+		registry.addEndpoint("/ws-stomp")
 			.setAllowedOrigins("http://localhost:5500", "https://localhost:3001", "*");
 	}
 
