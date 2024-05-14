@@ -10,7 +10,6 @@ import {
   faHouse,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-// import {}
 
 const GNB = () => {
   const pathname = usePathname();
@@ -31,7 +30,11 @@ const GNB = () => {
           </li>
         </Link>
         <Link href='/chatting'>
-          <li className={`${pathname === "/chatting" ? styles.active : ""}`}>
+          <li
+            className={`${
+              pathname.startsWith("/chatting") ? styles.active : ""
+            }`}
+          >
             <FontAwesomeIcon icon={faComment} />
             <span>CHAT</span>
           </li>
