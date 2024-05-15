@@ -21,6 +21,7 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - OPENAI_MODEL=${OPENAI_MODEL}
       - OPENAI_SECRET_KEY=${OPENAI_SECRET_KEY}
+      - TEST_PROFILE=${TEST_PROFILE}
       - TZ=Asia/Seoul
     networks:
       - night-letter
