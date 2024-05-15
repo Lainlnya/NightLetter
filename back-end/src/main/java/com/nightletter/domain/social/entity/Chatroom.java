@@ -1,6 +1,7 @@
 package com.nightletter.domain.social.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.tarot.entity.Tarot;
@@ -13,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class Chatroom {
+
 	@Id
 	@Column(name = "chatroom_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,13 +37,10 @@ public class Chatroom {
 	@JoinColumn(name = "tarot_id")
 	Tarot tarot;
 
-
-
 	// TODO room Number 필요.
 
-	@Column(name = "send_time")
-	LocalDateTime sendTime;
+	@OneToMany
+	@JoinColumn(name = "member_id")
+	List<Member> participants;
 
-	@Column(name = "message")
-	String message;
 }

@@ -102,13 +102,19 @@ public class DiaryServiceImpl implements DiaryService {
 		// TODO 일괄 수정 예정
 		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
 
+		System.out.println("Estimated expiration time : " + expiredTime.toString() );
+
+		Long timeToLive = expiredTime.toEpochSecond(ZoneOffset.UTC)
+			- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+		System.out.println("Time To Live : " + timeToLive);
+
 		diaryRepository.save(userDiary);
 		futureRedisRepository.save(
 				FutureTarot.builder()
 						// 수정
 						.memberId(getCurrentMemberId())
-						.expiredTime(expiredTime.toEpochSecond(ZoneOffset.UTC)
-								- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+						.expiredTime(timeToLive)
 						.flipped(false)
 						.build()
 		);

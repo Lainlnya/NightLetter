@@ -6,8 +6,8 @@ import com.nightletter.domain.social.repository.ChatRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
-public class ChatService {
-	private final ChatRepository chatRepository;
+public interface ChatService {
+
+	public void joinChatroom(String destination);
 }

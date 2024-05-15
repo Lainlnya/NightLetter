@@ -32,7 +32,9 @@ public class Chat {
 	@JoinColumn(name = "member_id", updatable = false)
 	Member sender;
 
-	// TODO room Number 필요.
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chatroom_id", updatable = false)
+	Chatroom chatroom;
 
 	@Column(name = "send_time")
 	LocalDateTime sendTime;
