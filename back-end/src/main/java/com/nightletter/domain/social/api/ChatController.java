@@ -23,10 +23,12 @@ public class ChatController {
 			System.out.println(roomId);
 			System.out.println(request);
 
+			// TODO 임시 Response
 			return ChatResponse.builder()
 				.chatId(-1L)
 				.message(request.getMessage())
 				.nickname("예롬예롬")
+				.profileImgUrl("https://i.namu.wiki/i/MCV0dofhJ6D7afd6Ajr2ZK3jXTm9fGKUcBpwNSfaz-cJWDbvtNodOd_Paqrmh7C49U4L3MAPYoE_PKAJtMKlpCsP0gnJ3n833LcCobsfgsu4S1a2HELeLZM9ZreFC-NhtD3lpyMlOgSW8idLWgC9FA.webp")
 				.senderId(3)
 				.sendTime(LocalDateTime.now())
 				.sentByMe(new Random().nextBoolean())
