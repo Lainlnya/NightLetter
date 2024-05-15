@@ -1,3 +1,95 @@
 .roomSection {
-  height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+
+  .nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 3rem 0rem;
+    font-size: 2rem;
+  }
+  .chattingArea {
+    width: 100%;
+    height: 77dvh;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3rem;
+
+    .message {
+      display: flex;
+      height: 10dvh;
+    }
+
+    .meMsg {
+      justify-content: flex-end;
+    }
+
+    .me {
+      display: none;
+    }
+
+    .profileImg {
+      border-radius: 50%;
+    }
+
+    .msgBox {
+      margin-left: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .nickname {
+      font-size: 1.5rem;
+    }
+
+    .nickname + div {
+      display: flex;
+
+      .msg {
+        margin-top: 1rem;
+        border-radius: 0.5rem;
+        background-color: #d5ccc1;
+        padding: 1rem;
+        font-size: 2rem;
+        color: #000000;
+        font-weight: 600;
+      }
+
+      .msg + span {
+        margin-left: 0.6rem;
+        align-self: flex-end;
+      }
+    }
+  }
+
+  .sendSection {
+    display: flex;
+    align-items: center;
+    width: 90dvw;
+    height: 6dvh;
+    background-color: #d5ccc1;
+    border-radius: 3rem;
+    padding: 1rem;
+
+    input {
+      outline: none;
+      width: 78dvw;
+      height: 100%;
+      border: none;
+      background: transparent;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    button {
+      border: none;
+      background-color: #3f4850;
+      width: 4.5dvh;
+      height: 4.5dvh;
+      border-radius: 50%;
+      font-size: 2.5rem;
+    }
+  }
 }
