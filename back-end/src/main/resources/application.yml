@@ -1,6 +1,9 @@
 server:
   port: 8081
 
+chat:
+  test-profile: ${TEST_PROFILE}
+
 spring:
   security:
     dev-token: ${KAKAO_LOCAL_TOKEN}
