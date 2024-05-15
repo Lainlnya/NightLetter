@@ -1,7 +1,10 @@
 package com.nightletter.domain.social.repository;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class ChatRepository {
+import com.nightletter.domain.social.entity.Chat;
+import com.nightletter.domain.tarot.entity.Tarot;
+import com.nightletter.domain.tarot.repository.TarotCustomRepository;
+
+public interface ChatRepository extends JpaRepository<Chat, Integer> {
 }

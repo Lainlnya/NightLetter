@@ -37,10 +37,4 @@ public class Chatroom {
 	@JoinColumn(name = "tarot_id")
 	Tarot tarot;
 
-	// TODO room Number 필요.
-
-	@OneToMany
-	@JoinColumn(name = "member_id")
-	List<Member> participants;
-
 }

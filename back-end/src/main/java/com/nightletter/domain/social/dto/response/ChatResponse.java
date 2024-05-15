@@ -2,6 +2,8 @@ package com.nightletter.domain.social.dto.response;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.social.entity.Chat;
 
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data @Builder
 public class ChatResponse {
+
 	Long chatId;
 	Integer senderId;
 	String nickname;
@@ -29,7 +32,7 @@ public class ChatResponse {
 			.chatId(chat.getId())
 			.senderId(sender.getMemberId())
 			.nickname(sender.getNickname())
-			.profileImgUrl(sender.getProfileImgUrl())
+			.profileImgUrl(chat.getSender().getProfileImgUrl())
 			.sendTime(chat.getSendTime())
 			.message(chat.getMessage())
 			.sentByMe(chat.getSender().getMemberId().equals(userId))

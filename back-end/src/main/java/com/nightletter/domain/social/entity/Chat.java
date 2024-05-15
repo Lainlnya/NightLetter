@@ -2,6 +2,8 @@ package com.nightletter.domain.social.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.nightletter.domain.member.entity.Member;
 
 import jakarta.persistence.Column;

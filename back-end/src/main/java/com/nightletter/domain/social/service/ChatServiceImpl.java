@@ -1,8 +1,23 @@
 package com.nightletter.domain.social.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.domain.social.dto.request.ChatRequest;
+import com.nightletter.domain.social.dto.response.ChatResponse;
+import com.nightletter.domain.social.entity.Chat;
+import com.nightletter.domain.social.entity.Chatroom;
+import com.nightletter.domain.social.entity.Participant;
 import com.nightletter.domain.social.repository.ChatRepository;
+import com.nightletter.domain.social.repository.ChatroomRepository;
+import com.nightletter.domain.social.repository.ParticipantRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,10 +26,57 @@ import lombok.RequiredArgsConstructor;
 public class ChatServiceImpl implements ChatService {
 
 	private final ChatRepository chatRepository;
+	private final ChatroomRepository chatroomRepository;
+	private final ParticipantRepository participantRepository;
+	private final MemberRepository memberRepository;
 
 	@Override
-	public void joinChatroom(String destination) {
-		// if (destination)
+	public ChatResponse sendMessage(Integer roomId, String message) {
+
+		Chatroom chatroom = chatroomRepository.findById(roomId)
+			.orElseThrow();
+
+		Member member = getCurrentMember();
+
+		Chat chat = Chat.builder()
+					.message(message)
+					.chatroom(chatroom)
+					.sender(member)
+					.sendTime(LocalDateTime.now())
+					.build();
+
+		chatRepository.save(chat);
+
+		return ChatResponse.of(chat, member.getMemberId());
+	}
+
+	@Override
+	public void joinChatroom(Integer roomId) {
+
+		Chatroom chatroom = chatroomRepository.findById(roomId)
+			.orElseThrow();
+
+		Member member = getCurrentMember();
+
+		Participant participant = Participant.builder()
+			.chatroom(chatroom)
+			.member(member)
+			.participatedTime(LocalDateTime.now())
+			.build();
+
+		// TODO 동일한 유저 여러번 안들어가게 처리 확인
+		// 현재 Disconn 시 삭제 기능 없음. 만들지도 미지수.
+		participantRepository.save(participant);
+	}
+
+	private Member getCurrentMember() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+	}
+
+	private Integer getCurrentMemberId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return Integer.parseInt((String)authentication.getPrincipal());
 	}
 
 }

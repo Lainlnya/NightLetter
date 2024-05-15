@@ -116,7 +116,7 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public TarotResponse findFutureTarot() {
 
-		// TODO TAROT FUTURE REDIS DAIRY로  수정 필요.
+		// TODO TAROT FUTURE REDIS DIARY로  수정 필요.
 
 		futureRedisRepository.findById(getCurrentMemberId())
 			.ifPresent(futureTarot -> {
@@ -124,7 +124,8 @@ public class TarotServiceImpl implements TarotService {
 				futureRedisRepository.save(futureTarot);
 			});
 
-		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), LocalDate.now());
+		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), getToday());
+
 		// TODO INDEX ERROR 수정
 		Diary diary = diaries.get(0);
 

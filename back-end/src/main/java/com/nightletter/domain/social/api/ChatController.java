@@ -1,14 +1,8 @@
 package com.nightletter.domain.social.api;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.reactivestreams.Subscriber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -35,6 +29,8 @@ public class ChatController {
 	@Value("${chat.test-profile}")
 	private String testProfileImg;
 
+	private int testMemberCount = 0;
+
 	@MessageMapping("/{roomId}")
 	@SendTo("/room/{roomId}")
 	public ChatResponse greeting(
@@ -43,16 +39,19 @@ public class ChatController {
 			System.out.println(roomId);
 			System.out.println(request);
 
-			// TODO 임시 Response
-			return ChatResponse.builder()
-				.chatId(-1L)
-				.message(request.getMessage())
-				.nickname("예롬예롬")
-				.profileImgUrl(testProfileImg + ThreadLocalRandom.current().nextInt(0, 4) + ".jpg")
-				.senderId(3)
-				.sendTime(LocalDateTime.now())
-				.sentByMe(new Random().nextBoolean())
-				.build();
+			// TODO 임시 Response 수정 필요.
+
+			ChatResponse response = chatService.sendMessage(roomId, request.getMessage());
+
+			int memberId = testMemberCount / 3 + 1;
+
+			response.setProfileImgUrl(testProfileImg + memberId + ".jpg");
+			response.setSentByMe(memberId == 3);
+			response.setSenderId(memberId);
+
+			testMemberCount = (++testMemberCount % 12);
+
+			return response;
 	}
 
 	@EventListener
@@ -60,12 +59,17 @@ public class ChatController {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String destination = headerAccessor.getDestination();
 
+		// TODO null 처리 .
+		if (destination == null) {
+
+		}
+
 		Pattern pattern = Pattern.compile("/room/(\\d+)(\\?)?"); // 정규 표현식
 		Matcher matcher = pattern.matcher(destination);
 
 		if (matcher.find()) {
-			String number = matcher.group(1); // 첫 번째 캡처 그룹(숫자) 추출
-			System.out.println("Extracted number: " + number);
+			Integer roomId = Integer.parseInt(matcher.group(1)); // 첫 번째 캡처 그룹(숫자) 추출
+			System.out.println("Extracted number: " + roomId);
 		} else {
 			// TODO 예외 처리 필요.
 			System.out.println("No number found in the string.");
@@ -82,6 +86,5 @@ public class ChatController {
 
 		System.out.println("disconnected");
 	}
-
 
 }
