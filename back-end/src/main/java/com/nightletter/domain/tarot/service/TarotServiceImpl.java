@@ -162,7 +162,7 @@ public class TarotServiceImpl implements TarotService {
 		int tarotId = new Random().nextInt(156) + 1;
 		TarotDirection direction = new Random().nextBoolean() ? TarotDirection.FORWARD : TarotDirection.REVERSE;
 
-		LocalDateTime expiredTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
+		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
 
 		// TODO
 		pastRedisRepository.save(
