@@ -33,17 +33,17 @@ public class ChatController {
 
 	@MessageMapping("/{roomId}")
 	@SendTo("/room/{roomId}")
-	public ChatResponse greeting(
+	public ChatResponse sendMessage(
 		@DestinationVariable("roomId") Integer roomId,
 		@Payload ChatRequest request) throws Exception {
 			System.out.println(roomId);
 			System.out.println(request);
 
 			// TODO 임시 Response 수정 필요.
-
-			ChatResponse response = chatService.sendMessage(roomId, request.getMessage());
-
 			int memberId = testMemberCount / 3 + 1;
+
+			ChatResponse response = chatService.sendMessage(memberId, roomId, request.getMessage());
+
 
 			response.setProfileImgUrl(testProfileImg + memberId + ".jpg");
 			response.setSentByMe(memberId == 3);

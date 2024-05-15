@@ -31,12 +31,12 @@ public class ChatServiceImpl implements ChatService {
 	private final MemberRepository memberRepository;
 
 	@Override
-	public ChatResponse sendMessage(Integer roomId, String message) {
+	public ChatResponse sendMessage(Integer memberId, Integer roomId, String message) {
 
 		Chatroom chatroom = chatroomRepository.findById(roomId)
 			.orElseThrow();
 
-		Member member = getCurrentMember();
+		Member member = memberRepository.findByMemberId(memberId);
 
 		Chat chat = Chat.builder()
 					.message(message)

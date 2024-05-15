@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public interface ChatService {
 
-	public ChatResponse sendMessage(Integer roomId, String message);
+	public ChatResponse sendMessage(Integer memberId, Integer roomId, String message);
 
 	public void joinChatroom(Integer roomId);
 }
