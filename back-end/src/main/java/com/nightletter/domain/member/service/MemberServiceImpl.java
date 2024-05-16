@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nightletter.domain.member.dto.MemberNicknameResponse;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.global.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,12 @@ public class MemberServiceImpl implements MemberService {
 		memberRepository.save(member);
 
 		return new MemberNicknameResponse(member.getNickname());
+	}
+
+	@Override
+	public void deleteMember() {
+		Member member = getCurrentMember();
+		memberRepository.delete(member);
 	}
 
 	private Member getCurrentMember() {

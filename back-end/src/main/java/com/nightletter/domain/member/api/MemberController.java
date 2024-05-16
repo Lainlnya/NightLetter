@@ -1,6 +1,7 @@
 package com.nightletter.domain.member.api;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,12 @@ public class MemberController {
 	@PatchMapping("/nickname")
 	public ResponseEntity<?> addDiary(@RequestParam String nickname) {
 		return ResponseEntity.ok(memberService.updateMemberNickname(nickname));
+	}
+
+	@DeleteMapping("")
+	public ResponseEntity<?> removeMember() {
+		memberService.deleteMember();
+		return ResponseEntity.noContent().build();
 	}
 
 }

@@ -7,4 +7,5 @@ public interface MemberService {
 	public MemberNicknameResponse getMemberNickname();
 	public MemberNicknameResponse updateMemberNickname(String nickname);
 
+	public void deleteMember();
 }
