@@ -36,7 +36,7 @@
       border-radius: 50%;
     }
 
-    .msgBox {
+    .oneConv {
       margin-left: 1rem;
       font-size: 1.5rem;
     }
@@ -45,30 +45,29 @@
       font-size: 1.5rem;
     }
 
-    .nickname + div {
+    .msgBox {
       display: flex;
+    }
 
-      .msg {
-        margin-top: 1rem;
-        border-radius: 0.5rem;
-        background-color: #d5ccc1;
-        padding: 1rem;
-        font-size: 2rem;
-        color: #000000;
-        font-weight: 600;
-      }
+    .msg {
+      margin-top: 1rem;
+      border-radius: 0.5rem;
+      background-color: #d5ccc1;
+      padding: 1rem;
+      font-size: 2rem;
+      color: #000000;
+      font-weight: 600;
+    }
 
-      .msg + span {
-        margin-left: 0.6rem;
-        align-self: flex-end;
-      }
+    .msg + span {
+      margin-left: 0.6rem;
+      align-self: flex-end;
     }
   }
 
   .sendSection {
     display: flex;
     align-items: center;
-    width: 90dvw;
     height: 6dvh;
     background-color: #d5ccc1;
     border-radius: 3rem;
@@ -76,7 +75,6 @@
 
     input {
       outline: none;
-      width: 78dvw;
       height: 100%;
       border: none;
       background: transparent;

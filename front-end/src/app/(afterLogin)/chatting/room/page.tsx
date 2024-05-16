@@ -1,49 +1,47 @@
-'use client';
+"use client";
 
-import styles from './room.module.scss';
-import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Client, IMessage } from '@stomp/stompjs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import { convertTime } from '@/utils/dateFormat';
-import Link from 'next/link';
+import styles from "./room.module.scss";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Client, IMessage } from "@stomp/stompjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { convertTime } from "@/utils/dateFormat";
+import Link from "next/link";
+import { v4 as uuidv4 } from "uuid";
 
-interface ChatMessageRequest {
-  message: string;
-}
-
-interface ChatMessageResponse {
-  senderId: number;
-  profileImageUrl: string;
-  sendTime: string;
-  nickname: string;
-  message: string;
-  sentByMe: boolean;
-}
+import { ChatMessageRequest, ChatMessageResponse } from "@/types/chat";
+import {
+  MyChat,
+  OthersChat,
+  OthersChatWithThumbnail,
+} from "@/app/_components/chatting/ChatBlock";
+import SendButton from "@/app/_components/chatting/SendButton";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import getChatHistory from "@/libs/ChatApis/getChatHistory";
 
 export default function Room() {
   const searchParams = useSearchParams();
-  const roomId = searchParams.get('roomId');
-  const cardState = searchParams.get('state');
+  const roomId = searchParams.get("roomId");
+  const cardState = searchParams.get("state");
   const [stompClient, setStompClient] = useState<Client | null>(null);
   const [messages, setMessages] = useState<ChatMessageResponse[]>([]);
-  const [newMessage, setNewMessage] = useState<string>('');
-  const [prevInfo, setPrevInfo] = useState({ name: '', time: '' });
+  const [newMessage, setNewMessage] = useState<string>("");
 
+  // const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+  //   queryKey: ["chatHistory"],
+  //   queryFn: ({ pageParam = 0 }) => getChatHistory(roomId, pageParam),
+  //   getNextPageParam: (lastPage, allPages) => true,
+  //   },
+  // });
   useEffect(() => {
     // 과거 채팅 히스토리
-    const loadChatHistory = async () => {
-      try {
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    const loadChatHistory = () => {};
     loadChatHistory();
 
+    // 웹소켓 연결
     const client = new Client({
-      brokerURL: 'wss://dev.letter-for.me/ws-stomp',
+      brokerURL: "wss://dev.letter-for.me/ws-stomp",
       reconnectDelay: 5000,
       onConnect: () => {
         client.subscribe(`/room/${roomId}`, (message: IMessage) => {
@@ -62,6 +60,7 @@ export default function Room() {
     };
   }, [roomId]);
 
+  // 메세지 보내는 부분
   const sendMessage = () => {
     if (stompClient && newMessage) {
       const chatMessage: ChatMessageRequest = {
@@ -74,78 +73,65 @@ export default function Room() {
       });
 
       console.log(messages);
-      setNewMessage('');
+      setNewMessage("");
     }
   };
 
-  const identifySamePerson = (name: string, time: string) => {
-    const convertedTime = convertTime(time);
-    // if (name === prevInfo.name && convertedTime === prevInfo.time) {
-    if (convertedTime === prevInfo.time) {
-      return 'same';
-      // } else if (name === prevInfo.name && convertedTime !== prevInfo.time) {
-    } else if (convertedTime !== prevInfo.time) {
-      return 'time';
-    } else {
-      setPrevInfo({ name, time: convertedTime });
-      return 'diff';
-    }
-  };
+  // 메세지 렌더링
+  const renderChatting = messages.map((msg: ChatMessageResponse, idx) => {
+    const prevChat = idx >= 1 ? messages[idx - 1] : undefined;
+    const prevTime = prevChat ? convertTime(prevChat.sendTime) : "";
+    const isPrevSender = prevChat ? prevChat.senderId === msg.senderId : false;
+    const isSameDate = prevTime === convertTime(msg.sendTime);
 
-  const isLastMessageOfSameTimeGroup = (index: number) => {
-    if (index === messages.length - 1) return true;
-    const currentMessageTime = convertTime(messages[index].sendTime);
-    const nextMessageTime = convertTime(messages[index + 1].sendTime);
-    return currentMessageTime !== nextMessageTime;
-  };
+    if (idx === messages.length - 1) {
+      if (msg.sentByMe) {
+        return <MyChat key={uuidv4()} msg={msg} last={true} />;
+      }
+
+      if (isPrevSender && isSameDate) {
+        return <OthersChat key={uuidv4()} msg={msg} last={true} />;
+      }
+
+      return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={true} />;
+    }
+
+    // 채팅 시간 표기
+    if (msg.sentByMe) {
+      const lastWritten = msg.senderId !== messages[idx + 1].senderId;
+      return <MyChat key={uuidv4()} msg={msg} last={lastWritten} />;
+    }
+
+    if (msg.senderId !== messages[idx + 1].senderId) {
+      return <OthersChat key={uuidv4()} msg={msg} last={true} />;
+    }
+
+    if (isPrevSender && isSameDate && convertTime(msg.sendTime) === prevTime) {
+      return <OthersChat key={uuidv4()} msg={msg} last={false} />;
+    }
+
+    return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={false} />;
+  });
 
   return (
     <section className={styles.roomSection}>
       <nav className={styles.nav}>
-        <Link href="/chatting" replace>
+        <Link href='/chatting' replace>
           <FontAwesomeIcon icon={faAngleLeft} />
         </Link>
-        <div>{cardState === '0' ? '과거' : cardState === '1' ? '현재' : '미래'}의 방</div>
+        <div>
+          {cardState === "0" ? "과거" : cardState === "1" ? "현재" : "미래"}의
+          방
+        </div>
         <div></div>
       </nav>
-      <section className={styles.chattingArea}>
-        {messages.map((msg, idx) => {
-          const result = identifySamePerson(msg.nickname, msg.sendTime);
-          const showNickName = result === 'diff';
-          const showTime = isLastMessageOfSameTimeGroup(idx);
-
-          return (
-            <div key={idx} className={`${styles.message} ${msg.sentByMe === true ? styles.meMsg : ''}`}>
-              <Image
-                className={`${styles.profileImg} ${msg.sentByMe === true ? styles.me : ''}`}
-                src={'https://ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com/profile/1.jpg'}
-                width={40}
-                height={40}
-                alt="profile"
-              />
-              <div className={styles.msgBox}>
-                {showNickName && (
-                  <div className={`${styles.nickname} ${msg.sentByMe === true ? styles.me : ''}`}>{msg.nickname}</div>
-                )}
-                <div>
-                  <span className={styles.msg}>{msg.message}</span>
-                  {(showTime || msg.sentByMe) && <span>{convertTime(msg.sendTime)}</span>}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </section>
+      <section className={styles.chattingArea}>{renderChatting}</section>
       <section className={styles.sendSection}>
-        <input
-          style={{ color: 'black' }}
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+        <SendButton
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          sendMessage={sendMessage}
         />
-        <button onClick={sendMessage}>
-          <FontAwesomeIcon icon={faArrowUp} />
-        </button>
       </section>
     </section>
   );
