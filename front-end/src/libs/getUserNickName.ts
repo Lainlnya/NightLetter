@@ -1,5 +1,5 @@
 export default async function getUserNickName() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL_V2}/members`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL_V2}/members/nickname`, {
         headers: {
             'Content-Type': 'application/json',
         },

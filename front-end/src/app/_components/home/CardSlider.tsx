@@ -116,48 +116,35 @@ export default function CardSlider({
               return (
                 <div
                   key={idx.toString()}
-                >
-                  <div
-                    className={styles.card_wrapper}
-                    onClick={() => {
-                      if (!isSeen && isClicked) {
-                        setIsClicked(false);
-                      }
-                      // if (isClicked === false) router.push("/diaries");
-                    }}
-                  >
-                    <Image
-                      src={pastCard?.imgUrl ?? tarot_background}
-                      className={`${styles.card} ${styles.past}`}
-                      alt='past_card'
-                      width={120}
-                      height={205}
-                    />
-                    <Image
-                      src={nowCard?.imgUrl ?? tarot_background}
-                      className={`${styles.card} ${styles.current} `}
-                      alt='current_card'
-                      width={120}
-                      height={205}
-                    />
-                    <Image
-                      src={futureCard?.imgUrl ?? tarot_background}
-                      className={`${styles.card} ${styles.future}`}
-                      alt='future_card'
-                      width={120}
-                      height={205}
-                    />
-
-                  </div>
-                  <div
-                    className={styles.content_wrapper}
-                  >
-                    {content ?
-                      <div>{content}</div> :
-                      <div>이 날은 작성한 일기가 없어요.</div>
+                  className={styles.card_wrapper}
+                  onClick={() => {
+                    if (!isSeen && isClicked) {
+                      setIsClicked(false);
                     }
-                  </div>
-
+                    // if (isClicked === false) router.push("/diaries");
+                  }}
+                >
+                  <Image
+                    src={pastCard?.imgUrl ?? tarot_background}
+                    className={`${styles.card} ${styles.past}`}
+                    alt='past_card'
+                    width={120}
+                    height={205}
+                  />
+                  <Image
+                    src={nowCard?.imgUrl ?? tarot_background}
+                    className={`${styles.card} ${styles.current} `}
+                    alt='current_card'
+                    width={120}
+                    height={205}
+                  />
+                  <Image
+                    src={futureCard?.imgUrl ?? tarot_background}
+                    className={`${styles.card} ${styles.future}`}
+                    alt='future_card'
+                    width={120}
+                    height={205}
+                  />
                 </div>
               );
             })}
