@@ -291,7 +291,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 	@Override
 	public Page<DiaryScrapResponse> findScrappedRecommends(Integer pageNo) {
-		return diaryRepository.findScrappedDiaries(getCurrentMemberId(), pageNo);
+		return diaryRepository.findScrappedDiaryPages(getCurrentMemberId(), pageNo);
 	}
 
 	@Transactional

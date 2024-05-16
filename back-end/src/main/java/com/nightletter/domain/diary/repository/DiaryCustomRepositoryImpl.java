@@ -60,7 +60,7 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 	}
 
 	@Override
-	public Page<DiaryScrapResponse> findScrappedDiaries(Integer memberId, Integer pageNo) {
+	public Page<DiaryScrapResponse> findScrappedDiaryPages(Integer memberId, Integer pageNo) {
 
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
 

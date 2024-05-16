@@ -19,7 +19,7 @@ public interface DiaryCustomRepository {
 	List<Diary> findDiariesByMember(Member member, DiaryListRequest request);
 
 	List<RecommendDiaryResponse> findRecommendDiaries(List<Long> diariesId, Member member);
-	Page<DiaryScrapResponse> findScrappedDiaries(Integer memberId, Integer pageNo);
+	Page<DiaryScrapResponse> findScrappedDiaryPages(Integer memberId, Integer pageNo);
 
 	List<TodayTarot> findTodayDiary(Member member, LocalDate today);
 
