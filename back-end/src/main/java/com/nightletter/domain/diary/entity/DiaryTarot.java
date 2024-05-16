@@ -45,4 +45,5 @@ public class DiaryTarot extends BaseTimeEntity {
 		this.tarot = tarot;
 		this.type = type;
 	}
+
 }
