@@ -1,9 +1,7 @@
 package com.nightletter.domain.social.service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
-import com.nightletter.domain.social.dto.request.ChatRequest;
 import com.nightletter.domain.social.dto.response.ChatResponse;
 import com.nightletter.domain.social.entity.Chat;
 import com.nightletter.domain.social.entity.Chatroom;
