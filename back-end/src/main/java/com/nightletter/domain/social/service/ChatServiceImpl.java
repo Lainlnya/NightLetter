@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,23 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
+	public Page<ChatResponse> findChatByChatroomId(int chatroomId, int pageNo) {
+
+		return chatRepository.findChatPages(chatroomId, pageNo, getCurrentMemberId());
+	}
+
+	@Override
+	public Page<ChatResponse> findChatByChatroom(int chatroomId, int pageNo) {
+		// 에러 처리.
+		Chatroom chatroom = chatroomRepository.findById(chatroomId)
+			.orElseThrow();
+
+		Member member = getCurrentMember();
+
+		return chatRepository.findChatPages(chatroom, pageNo, member);
+	}
+
+	@Override
 	public void joinChatroom(Integer roomId) {
 
 		Chatroom chatroom = chatroomRepository.findById(roomId)
@@ -68,6 +86,8 @@ public class ChatServiceImpl implements ChatService {
 		// 현재 Disconn 시 삭제 기능 없음. 만들지도 미지수.
 		participantRepository.save(participant);
 	}
+
+
 
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
