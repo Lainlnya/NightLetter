@@ -119,4 +119,11 @@ public class DiaryController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	@GetMapping("/recommend")
+	public ResponseEntity<?> findTodayRecommendedDiaries() {
+
+		return ResponseEntity.ok(diaryService.findTodayRecommendedDiaries());
+	}
+
+
 }

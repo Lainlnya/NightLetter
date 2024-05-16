@@ -1,5 +1,6 @@
 package com.nightletter.domain.diary.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,10 +10,12 @@ import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
+import com.nightletter.domain.member.entity.Member;
 import com.nightletter.global.common.ResponseDto;
 
 public interface DiaryService {
@@ -32,5 +35,6 @@ public interface DiaryService {
 	Page<DiaryScrapResponse> findScrappedRecommends(Integer pageNo);
 	void scrapDiary(Long diaryId);
 	void unscrapDiary(Long diaryId);
+	List<DiaryRecResponse> findTodayRecommendedDiaries();
 
 }

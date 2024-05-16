@@ -29,3 +29,5 @@ Hibernate: select count(distinct c1_0.chat_id) from chat c1_0 where c1_0.chatroo
 ```
 
 두번 다 세 번의 쿼리 발생.
+
+boolean Boolean Jackson isScrapped

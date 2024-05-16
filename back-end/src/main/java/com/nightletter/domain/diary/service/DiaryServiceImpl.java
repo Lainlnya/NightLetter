@@ -28,6 +28,7 @@ import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
@@ -102,12 +103,8 @@ public class DiaryServiceImpl implements DiaryService {
 		// TODO 일괄 수정 예정
 		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
 
-		System.out.println("Estimated expiration time : " + expiredTime.toString() );
-
 		Long timeToLive = expiredTime.toEpochSecond(ZoneOffset.UTC)
 			- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
-		System.out.println("Time To Live : " + timeToLive);
 
 		diaryRepository.save(userDiary);
 		futureRedisRepository.save(
@@ -327,6 +324,11 @@ public class DiaryServiceImpl implements DiaryService {
 
 		// TODO if result is 0, throw a exception
 
+	}
+
+	@Override
+	public List<DiaryRecResponse> findTodayRecommendedDiaries() {
+		return diaryRepository.findTodayDiaryRecommends(getCurrentMember(), getToday());
 	}
 
 	private Member getCurrentMember() {

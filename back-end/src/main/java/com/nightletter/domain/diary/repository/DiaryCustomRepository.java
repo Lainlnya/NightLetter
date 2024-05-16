@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.domain.diary.dto.response.TodayTarot;
@@ -22,5 +23,7 @@ public interface DiaryCustomRepository {
 	Page<DiaryScrapResponse> findScrappedDiaryPages(Integer memberId, Integer pageNo);
 
 	List<TodayTarot> findTodayDiary(Member member, LocalDate today);
+
+	List<DiaryRecResponse> findTodayDiaryRecommends(Member member, LocalDate today);
 
 }
