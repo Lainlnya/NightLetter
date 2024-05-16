@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatCustomRepositoryImpl implements ChatCustomRepository {
 
-	static final int PAGE_SIZE = 50;
+	static final int PAGE_SIZE = 30;
 	private final JPAQueryFactory queryFactory;
 
 	// 쿼리 수 비교.
