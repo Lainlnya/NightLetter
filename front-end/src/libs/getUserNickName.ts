@@ -1,0 +1,14 @@
+export default async function getUserNickName() {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL_V2}/members`, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+}

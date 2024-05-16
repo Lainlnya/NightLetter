@@ -13,35 +13,32 @@ import Image from "next/image";
 import alarm from "../../../../public/Icons/alarm_icon.svg";
 import { isToday, TODAY, TODAY_CONVERTED } from "@/utils/dateFormat";
 import { useQuery } from "@tanstack/react-query";
-import getInitialCards from "@/libs/getInitialCards";
-
-import { useRouter } from "next/navigation";
 
 import Loading from "@/app/loading";
 import getCardListByPeriod from "@/libs/getCardListByPeriod";
 
 export default function Home() {
-  const router = useRouter();
-
   const { date } = useStore();
-  //TODO : useQuery로 변경, 닉네임 받아오기
 
-  const { data } = useQuery({ queryKey: ['card', 'cards'], queryFn: () => getCardListByPeriod('2024-04-01', '2024-05-02') });
+  const { data } = useQuery({
+    queryKey: ['card', 'cards'],
+    queryFn: () => getCardListByPeriod('2024-04-01', '2024-05-02')
+  });
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
-    isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
+    isToday(TODAY, data?.[data?.length - 1]?.date)
       ? true
       : false
   );
 
+
   useEffect(() => {
     if (data) {
-      SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.diaries?.[data.diaries.length - 1]?.date)
-
+      SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.[data?.length - 1]?.date)
     }
   }, [data]);
 
@@ -97,18 +94,6 @@ export default function Home() {
             setIsClicked={setIsClicked}
           />
         </section>
-
-        {!isNotedTodayDiaries && (
-          <footer
-            className={styles.footer}
-            onClick={() => {
-              router.push("/post");
-            }}
-          >
-            <p>오늘의 일기 작성하기</p>
-          </footer>
-        )}
-        {isSeen && <div className={styles.darken}></div>}
       </>
     </Suspense>
   );

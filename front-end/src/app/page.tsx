@@ -12,7 +12,7 @@ export default async function Home() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["card", "cards"],
-    queryFn: () => getCardListByPeriod("2021-01-01", "2021-12-31"),
+    queryFn: () => getCardListByPeriod("2024-04-01", "2021-05-10"),
   });
 
   const dehydrateState = dehydrate(queryClient);

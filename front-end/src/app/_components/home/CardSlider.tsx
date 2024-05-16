@@ -12,14 +12,9 @@ import ErrorFallback from "@/app/_components/error/ErrorFallback";
 
 import { DRAG_BUFFER } from "@/utils/animation";
 import {
-  TODAY,
   convertDateFormatToKorean,
-  isToday,
-  getDateDiff,
-  convertDateFormat,
+  getPreviousDate,
 } from "@/utils/dateFormat";
-import getInitialCards from "@/libs/getInitialCards";
-import getPastCardInfo from "@/libs/getPastCardInfo";
 
 import useStore from "@/store/date";
 
@@ -30,53 +25,47 @@ import styles from "./cardSlider.module.scss";
 
 import Image from "next/image";
 import tarot_background from "../../../../public/images/tarot-background.png";
+import getCardListByPeriod from "@/libs/getCardListByPeriod";
 
 export default function CardSlider({
   isSeen,
   isClicked,
   setIsClicked,
 }: CalendarProps) {
-  const { data } = useQuery({
-    queryKey: ["card", "cards"],
-    queryFn: getInitialCards,
+  const { PIVOT_DATE_YYYY_MM_DD, setDate } = useStore();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['card', PIVOT_DATE_YYYY_MM_DD],
+    queryFn: () => getCardListByPeriod(getPreviousDate(PIVOT_DATE_YYYY_MM_DD, 30), PIVOT_DATE_YYYY_MM_DD),
   });
 
   const router = useRouter();
 
   const [dragging, setDragging] = useState(false);
-  const [cardIndex, setCardIndex] = useState(data?.diaries?.length - 1);
-  const [isNotedTodayDiaries, setIsNotedTodayDiaries] = useState(
-    isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
-      ? true
-      : false
-  );
-  const { setDate } = useStore();
+  const [cardIndex, setCardIndex] = useState(data?.length - 1);
 
   useEffect(() => {
     if (data) {
-      setCardIndex(data?.diaries?.length - 1);
-      setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
-      setIsNotedTodayDiaries(
-        isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
-          ? true
-          : false
-      );
+      setCardIndex(data?.length - 1);
+      setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
     }
     setDate(
       convertDateFormatToKorean(
-        data?.diaries?.[data?.requestDiaryIdx]?.date + 1
+        data?.[data?.requestDiaryIdx]?.date + 1
       )
     );
   }, [data]);
 
   useEffect(() => {
     if (data) {
-      setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
+      setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
     }
-    setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+    setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
   }, [cardIndex, data]);
 
   const dragX = useMotionValue(0);
+
+  if (isLoading) return <Loading loadingMessage='로딩중입니다.' />
 
   const onDragStart = () => {
     setDragging(true);
@@ -87,14 +76,14 @@ export default function CardSlider({
 
     const x = dragX.get();
 
-    if (x <= -DRAG_BUFFER && cardIndex < data?.diaries?.length - 1) {
+    if (x <= -DRAG_BUFFER && cardIndex < data?.length - 1) {
       setCardIndex((prev: number) => prev + 1);
 
-      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+      setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
     } else if (x >= DRAG_BUFFER && cardIndex > 0) {
       setCardIndex((prev: number) => prev - 1);
 
-      setDate(convertDateFormatToKorean(data?.diaries?.[cardIndex]?.date));
+      setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
     }
   };
 
@@ -121,41 +110,54 @@ export default function CardSlider({
             onDragEnd={onDragEnd}
             className={styles.carousel}
           >
-            {data?.diaries?.map((cardData: DiaryEntry, idx: number) => {
-              const { pastCard, nowCard, futureCard } = cardData;
+            {data.map((cardData: DiaryEntry, idx: number) => {
+              const { pastCard, nowCard, futureCard, content } = cardData;
 
               return (
                 <div
-                  key={idx}
-                  className={styles.card_wrapper}
-                  onClick={() => {
-                    if (!isSeen && isClicked) {
-                      setIsClicked(false);
-                    }
-                    if (isClicked === false) router.push("/diaries");
-                  }}
+                  key={idx.toString()}
                 >
-                  <Image
-                    src={pastCard?.imgUrl ?? tarot_background}
-                    className={`${styles.card} ${styles.past}`}
-                    alt='past_card'
-                    width={120}
-                    height={205}
-                  />
-                  <Image
-                    src={nowCard?.imgUrl ?? tarot_background}
-                    className={`${styles.card} ${styles.current} `}
-                    alt='current_card'
-                    width={120}
-                    height={205}
-                  />
-                  <Image
-                    src={futureCard?.imgUrl ?? tarot_background}
-                    className={`${styles.card} ${styles.future}`}
-                    alt='future_card'
-                    width={120}
-                    height={205}
-                  />
+                  <div
+                    className={styles.card_wrapper}
+                    onClick={() => {
+                      if (!isSeen && isClicked) {
+                        setIsClicked(false);
+                      }
+                      // if (isClicked === false) router.push("/diaries");
+                    }}
+                  >
+                    <Image
+                      src={pastCard?.imgUrl ?? tarot_background}
+                      className={`${styles.card} ${styles.past}`}
+                      alt='past_card'
+                      width={120}
+                      height={205}
+                    />
+                    <Image
+                      src={nowCard?.imgUrl ?? tarot_background}
+                      className={`${styles.card} ${styles.current} `}
+                      alt='current_card'
+                      width={120}
+                      height={205}
+                    />
+                    <Image
+                      src={futureCard?.imgUrl ?? tarot_background}
+                      className={`${styles.card} ${styles.future}`}
+                      alt='future_card'
+                      width={120}
+                      height={205}
+                    />
+
+                  </div>
+                  <div
+                    className={styles.content_wrapper}
+                  >
+                    {content ?
+                      <div>{content}</div> :
+                      <div>이 날은 작성한 일기가 없어요.</div>
+                    }
+                  </div>
+
                 </div>
               );
             })}
