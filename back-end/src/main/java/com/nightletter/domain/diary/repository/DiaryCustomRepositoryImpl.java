@@ -121,7 +121,7 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 		return queryFactory.select(
 			new QDiaryRecResponse(
 				recommendedDiary.diary.diaryId,
-				recommendedDiary.member.nickname,
+				recommendedDiary.diary.writer.nickname,
 				recommendedDiary.diary.content,
 				// 오늘 타로 정보.
 				tarot.imgUrl,
