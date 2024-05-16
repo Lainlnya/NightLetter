@@ -6,6 +6,7 @@ import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.tarot.dto.*;
+import com.nightletter.domain.tarot.entity.FutureTarot;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
@@ -118,11 +119,16 @@ public class TarotServiceImpl implements TarotService {
 
 		// TODO TAROT FUTURE REDIS DIARY로  수정 필요.
 
-		futureRedisRepository.findById(getCurrentMemberId())
-			.ifPresent(futureTarot -> {
-				futureTarot.setFlipped(true);
-				futureRedisRepository.save(futureTarot);
-			});
+		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
+			.orElseThrow();
+
+		futureRedisRepository.save(
+			FutureTarot.builder()
+				.memberId(futureTarot.getMemberId())
+				.flipped(true)
+				.expiredTime(futureTarot.getExpiredTime())
+				.build()
+		);
 
 		List<Diary> diaries = diaryRepository.findAllByWriterMemberIdAndDate(getCurrentMemberId(), getToday());
 

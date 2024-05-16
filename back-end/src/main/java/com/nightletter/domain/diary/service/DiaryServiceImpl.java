@@ -234,6 +234,9 @@ public class DiaryServiceImpl implements DiaryService {
 
 		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
 
+		System.out.println("today: " + futureRedisRepository.existsById(getCurrentMemberId()));
+		System.out.println("today: " + futureRedisRepository.findById(getCurrentMemberId()));
+
 		if (! futureRedisRepository.existsById(getCurrentMemberId())) {
 			response.setFutureCard(null);
 		}
