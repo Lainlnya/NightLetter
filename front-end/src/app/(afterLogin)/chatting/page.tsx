@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Suspense, useEffect, useState } from "react";
-import styles from "./chatting.module.scss";
-import Link from "next/link";
-import { motion, useAnimation, useMotionValue } from "framer-motion";
-import Loading from "@/app/loading";
-import { Messages } from "@/utils/msg";
-import { useQuery } from "@tanstack/react-query";
-import getTodayCardInfo from "@/libs/ChatApis/getTodayCardInfo";
-import Image from "next/image";
+import { Suspense, useEffect, useState } from 'react';
+import styles from './chatting.module.scss';
+import Link from 'next/link';
+import { motion, useAnimation, useMotionValue } from 'framer-motion';
+import Loading from '@/app/loading';
+import { Messages } from '@/utils/msg';
+import { useQuery } from '@tanstack/react-query';
+import getTodayCardInfo from '@/libs/ChatApis/getTodayCardInfo';
+import Image from 'next/image';
 
 interface ChatRoom {
   cardNo: number;
@@ -24,7 +24,7 @@ const Chatting: React.FC = () => {
   const [chatRoomIndex, setChatRoomIndex] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const { data: todayCard } = useQuery({
-    queryKey: ["todayCard"],
+    queryKey: ['todayCard'],
     queryFn: () => getTodayCardInfo(),
   });
 
@@ -38,6 +38,7 @@ const Chatting: React.FC = () => {
         setChatRoomList([pastCard, nowCard, futureCard]);
         setChatRoomIndex([pastCard.cardNo, nowCard.cardNo, futureCard.cardNo]);
       }
+      console.log(todayCard);
     }
   }, [todayCard]);
 
@@ -51,9 +52,7 @@ const Chatting: React.FC = () => {
       }
       return newOrder;
     });
-    setCurrentIndex(
-      (prev) => (prev + direction + chatRoomList.length) % chatRoomList.length
-    );
+    setCurrentIndex((prev) => (prev + direction + chatRoomList.length) % chatRoomList.length);
   };
 
   const handleDragEnd = (event: any, info: any) => {
@@ -73,23 +72,21 @@ const Chatting: React.FC = () => {
   };
 
   return (
-    <Suspense
-      fallback={<Loading loadingMessage={Messages.LOADING_CARD_INFO} />}
-    >
+    <Suspense fallback={<Loading loadingMessage={Messages.LOADING_CARD_INFO} />}>
       <section className={styles.chatting}>
         {chatRoomList.length === 0 ? (
           <section className={styles.noCard}>
             <div>
-              아직 일기를 작성하지 않으셨네요! <br /> 오늘의 일기를 작성해보는건
-              어떨까요 ? <br /> 일기를 쓰시면 오늘의 채팅에 참여할 수 있어요!
+              아직 일기를 작성하지 않으셨네요! <br /> 오늘의 일기를 작성해보는건 어떨까요 ? <br /> 일기를 쓰시면 오늘의
+              채팅에 참여할 수 있어요!
             </div>
-            <Link href='/post' replace>
+            <Link href="/post" replace>
               <button className={styles.goPost}>일기 쓰러 가기</button>
             </Link>
           </section>
         ) : (
           <motion.div
-            drag='x'
+            drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
             style={{ x }}
@@ -113,33 +110,16 @@ const Chatting: React.FC = () => {
                           pathname: `/chatting/room`,
                           query: {
                             roomId: chatRoom.cardNo,
-                            state: chatRoomIndex.findIndex(
-                              (value) => value === chatRoom.cardNo
-                            ),
+                            state: chatRoomIndex.findIndex((value) => value === chatRoom.cardNo),
                           },
                         }}
                       >
                         <motion.div className={styles.card}>
-                          {chatRoom.cardNo === chatRoomIndex[0] && (
-                            <div>과거의 방</div>
-                          )}
-                          {chatRoom.cardNo === chatRoomIndex[1] && (
-                            <div>현재의 방</div>
-                          )}
-                          {chatRoom.cardNo === chatRoomIndex[2] && (
-                            <div>미래의 방</div>
-                          )}
-                          <Image
-                            src={chatRoom.cardImgUrl}
-                            alt={chatRoom.cardName}
-                            width={150}
-                            height={270}
-                          />
-                          {index === 1 && (
-                            <button className={styles.goChat}>
-                              채팅방 들어가기
-                            </button>
-                          )}
+                          {chatRoom.cardNo === chatRoomIndex[0] && <div>과거의 방</div>}
+                          {chatRoom.cardNo === chatRoomIndex[1] && <div>현재의 방</div>}
+                          {chatRoom.cardNo === chatRoomIndex[2] && <div>미래의 방</div>}
+                          <Image src={chatRoom.cardImgUrl} alt={chatRoom.cardName} width={150} height={270} />
+                          {index === 1 && <button className={styles.goChat}>채팅방 들어가기</button>}
                         </motion.div>
                       </Link>
                     </motion.li>
