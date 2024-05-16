@@ -28,6 +28,7 @@ import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
@@ -323,6 +324,11 @@ public class DiaryServiceImpl implements DiaryService {
 
 		// TODO if result is 0, throw a exception
 
+	}
+
+	@Override
+	public List<DiaryRecResponse> findTodayRecommendedDiaries() {
+		return diaryRepository.findTodayDiaryRecommends(getCurrentMember(), getToday());
 	}
 
 	private Member getCurrentMember() {

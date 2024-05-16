@@ -12,15 +12,17 @@ import lombok.NoArgsConstructor;
 @Data
 public class DiaryRecResponse {
 	long diaryId;
-	int memberId;
-	LocalDate recommendedOn;
-	boolean isScrapped;
+	String nickname;
+	String content;
+	String imgUrl;
+	Boolean isScrapped;
 
 	@QueryProjection
-	public DiaryRecResponse(long diaryId, int memberId, LocalDate recommendedOn, boolean isScrapped) {
+	public DiaryRecResponse(long diaryId, String nickname, String content, String imgUrl, Boolean isScrapped) {
 		this.diaryId = diaryId;
-		this.memberId = memberId;
-		this.recommendedOn = recommendedOn;
+		this.nickname = nickname;
+		this.content = content;
+		this.imgUrl = imgUrl;
 		this.isScrapped = isScrapped;
 	}
 

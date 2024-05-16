@@ -6,7 +6,6 @@ import static com.nightletter.domain.diary.entity.QDiaryTarot.*;
 import static com.nightletter.domain.diary.entity.QRecommendedDiary.*;
 import static com.nightletter.domain.diary.entity.QScrap.*;
 import static com.nightletter.domain.member.entity.QMember.*;
-import static com.nightletter.domain.social.entity.QChat.*;
 import static com.nightletter.domain.tarot.entity.QTarot.*;
 
 import java.time.LocalDate;
@@ -19,29 +18,20 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
-import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
+import com.nightletter.domain.diary.dto.response.QDiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
-import com.nightletter.domain.diary.entity.QRecommendedDiary;
-import com.nightletter.domain.diary.entity.RecommendedDiary;
 import com.nightletter.domain.member.entity.Member;
-import com.nightletter.domain.tarot.entity.TarotDirection;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -127,24 +117,31 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 
 	@Override
 	public List<DiaryRecResponse> findTodayDiaryRecommends(Member member, LocalDate today) {
+
 		return queryFactory.select(
-			new QRecommendedDiary(
-				recommendedDiary.id,
-				recommendedDiary.member,
-				recommendedDiary.diary,
+			new QDiaryRecResponse(
+				recommendedDiary.diary.diaryId,
+				recommendedDiary.member.nickname,
+				recommendedDiary.diary.content,
+				// 오늘 타로 정보.
+				tarot.imgUrl,
 				// 조인 해서 조회해야 함.
 				// 내가 스크랩 했는지 여부.
 				new CaseBuilder()
-					.when(chat.sender.memberId.eq(memberId))
-					.then(true)
-					.otherwise(false)
+					.when(scrap.id.isNull())
+					.then(false)
+					.otherwise(true)
 				)
 			)
+			.from(recommendedDiary)
 			.where(recommendedDiary.scrappedDate.eq(today)
 				.and(recommendedDiary.member.eq(member)))
-			.innerJoin(recommendedDiary.diary)
-
-		return null;
+			.innerJoin(recommendedDiary.diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.type.eq(NOW))
+			.innerJoin(diaryTarot.tarot, tarot)
+			.leftJoin(scrap)
+			.on(recommendedDiary.diary.diaryId.eq(scrap.diary.diaryId))
+			.fetch();
 	}
 
 	@Override
