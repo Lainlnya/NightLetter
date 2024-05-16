@@ -62,8 +62,8 @@ public class Member extends BaseTimeEntity {
 		scrap.setMember(this);
 	}
 
-	public void unscrap(Scrap scrap) {
-		this.scraps.remove(scrap);
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 }

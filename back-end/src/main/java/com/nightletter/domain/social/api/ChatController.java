@@ -19,14 +19,14 @@ public class ChatController {
 
 	@GetMapping("")
 	public ResponseEntity<?> findChatByChatroomId(
-		@RequestParam(name = "chatroomId") Integer chatroomId,
+		@RequestParam(name = "roomId") Integer chatroomId,
 		@RequestParam(name = "pageNo", defaultValue = "0", required = false) Integer pageNo) {
 		return ResponseEntity.ok(chatService.findChatByChatroomId(chatroomId, pageNo));
 	}
 
 	@GetMapping("/entity")
 	public ResponseEntity<?> findChatByChatroom(
-		@RequestParam(name = "chatroomId") Integer chatroomId,
+		@RequestParam(name = "roomId") Integer chatroomId,
 		@RequestParam(name = "pageNo", defaultValue = "0", required = false) Integer pageNo) {
 		return ResponseEntity.ok(chatService.findChatByChatroomId(chatroomId, pageNo));
 	}

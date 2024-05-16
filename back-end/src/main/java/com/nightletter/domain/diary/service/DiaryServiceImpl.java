@@ -78,6 +78,7 @@ public class DiaryServiceImpl implements DiaryService {
 	@Transactional
 	public RecommendResponse createDiary(DiaryCreateRequest diaryRequest) {
 
+		// 추천 사연 받아옴.
 		RecommendDataResponse recDataResponse = fetchRecData(diaryRequest);
 		List<Long> recDiariesId = recDataResponse.getDiariesId();
 		EmbedVector embedVector = recDataResponse.getEmbedVector();

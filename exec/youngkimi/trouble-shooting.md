@@ -12,6 +12,8 @@ https://www.nginx.com/blog/websocket-nginx/
 
 ### 24.05.16
 
+#### issue #1
+
 int 활용해서 쿼리. (총 세번의 쿼리)
 
 ```
@@ -30,4 +32,23 @@ Hibernate: select count(distinct c1_0.chat_id) from chat c1_0 where c1_0.chatroo
 
 두번 다 세 번의 쿼리 발생.
 
+#### issue #2
+
 boolean Boolean Jackson isScrapped
+
+#### issue #3
+
+Hibernate: select m1_0.member_id,m1_0.oauth2id,m1_0.created_at,m1_0.created_by,m1_0.deleted_at,m1_0.email,m1_0.nickname,m1_0.profile_img_url,m1_0.provider,m1_0.updated_at,m1_0.updated_by from member m1_0 where (m1_0.deleted_at IS NULL) and m1_0.member_id=?
+Hibernate: select m1_0.member_id,m1_0.oauth2id,m1_0.created_at,m1_0.created_by,m1_0.deleted_at,m1_0.email,m1_0.nickname,m1_0.profile_img_url,m1_0.provider,m1_0.updated_at,m1_0.updated_by from member m1_0 where (m1_0.deleted_at IS NULL) and m1_0.member_id=?
+
+단순한 이름 조회에 두번의 동일한 쿼리 발생.
+
+private Member getCurrentMember() {
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+return null;
+// return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+}
+Authentication 과정에서 한 번의 쿼리.
+memberRepository 에서 한번의 쿼리 더 발생.
+
+사실 처음부터 Member 두면 괜찮은데
