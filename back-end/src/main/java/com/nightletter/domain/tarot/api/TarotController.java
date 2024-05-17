@@ -55,4 +55,19 @@ public class TarotController {
 			return databaseError();
 		return ResponseEntity.ok(response);
 	}
+
+	// @GetMapping("/test")
+	public ResponseEntity<?> getFutureTarotTTL() {
+		return ResponseEntity.ok(tarotService.getFutureTarot());
+	}
+
+	// @PatchMapping("/test-entity")
+	public ResponseEntity<?> updateWithNewEntity() {
+		return ResponseEntity.ok(tarotService.updateWithNewEntity());
+	}
+
+	// @PatchMapping("/test-single")
+	public ResponseEntity<?> updateSingleValue() {
+		return ResponseEntity.ok(tarotService.updateOnlyFlipped());
+	}
 }

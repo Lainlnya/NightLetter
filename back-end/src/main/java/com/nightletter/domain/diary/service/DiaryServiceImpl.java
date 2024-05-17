@@ -204,6 +204,7 @@ public class DiaryServiceImpl implements DiaryService {
 				diaryMap.put(today,
 					DiaryResponse.builder()
 						.pastCard(getUnfinishedDiaryOfToday())
+						.date(today)
 						.build()
 				);
 			}

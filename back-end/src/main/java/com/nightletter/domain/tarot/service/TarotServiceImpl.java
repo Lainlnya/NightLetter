@@ -19,6 +19,9 @@ import com.nightletter.global.exception.ResourceNotFoundException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -254,6 +257,45 @@ public class TarotServiceImpl implements TarotService {
 				)
 		);
 
+	}
+
+	@Override
+	public Optional<FutureTarot> getFutureTarot() {
+
+		return futureRedisRepository.findById(getCurrentMemberId());
+	}
+
+	@Override
+	public Optional<FutureTarot> updateWithNewEntity() {
+		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
+			.orElseThrow();
+
+		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
+
+		Long timeToLive = expiredTime.toEpochSecond(ZoneOffset.UTC)
+			- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+		futureRedisRepository.save(
+			FutureTarot.builder()
+				.memberId(futureTarot.getMemberId())
+				.flipped(true)
+				.expiredTime(timeToLive)
+				.build()
+		);
+
+		return futureRedisRepository.findById(getCurrentMemberId());
+	}
+
+	@Override
+	public Optional<FutureTarot> updateOnlyFlipped() {
+		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
+			.orElseThrow();
+
+		futureTarot.setFlipped(! futureTarot.getFlipped());
+
+		futureRedisRepository.save(futureTarot);
+
+		return futureRedisRepository.findById(getCurrentMemberId());
 	}
 
 	private Integer getCurrentMemberId() {
