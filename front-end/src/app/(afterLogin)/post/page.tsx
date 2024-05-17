@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { setData } from '@/libs/DiaryApi/setData';
 import { Messages } from '@/utils/msg';
 import { useRouter } from 'next/navigation';
-import { TODAY, TOMORROW } from '@/utils/dateFormat';
+import { TODAY, getNextDate } from '@/utils/dateFormat';
 import Loading from '@/app/loading';
 
 const Post: React.FC = () => {
@@ -22,7 +22,7 @@ const Post: React.FC = () => {
   const saveTemp = () => {
     setToast(true);
     if (debouncedValue.trim().length !== 0) {
-      localStorage.setItem('diaryPost', JSON.stringify([debouncedValue, TOMORROW]));
+      localStorage.setItem('diaryPost', JSON.stringify([debouncedValue, getNextDate()]));
     }
   };
 
