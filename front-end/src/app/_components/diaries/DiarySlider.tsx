@@ -85,7 +85,7 @@ export default function DiarySlider() {
         onDragEnd={onDragEnd}
         className={styles.carousel}
       >
-        {data?.map((_, idx) => {
+        {/* {data?.map((_:, idx) => {
           return (
             <main key={idx} className={styles.diary}>
               <div className={styles.diary_thumbnail}>
@@ -124,7 +124,7 @@ export default function DiarySlider() {
               </div>
             </main>
           );
-        })}
+        })} */}
       </motion.div>
     </div>
   );
