@@ -2,6 +2,9 @@ package com.nightletter.domain.social.repository;
 
 import static com.nightletter.domain.social.entity.QChat.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,10 @@ public class ChatCustomRepositoryImpl implements ChatCustomRepository {
 	// 이후 offset 0로 ...
 	@Override
 	public Page<ChatResponse> findChatPages(int chatroomId, int pageNo, int memberId) {
+
+		// TODO 함수 전역 처리
+		LocalDateTime todayStdTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
+
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
 
 		List<ChatResponse> results = queryFactory
@@ -46,7 +53,9 @@ public class ChatCustomRepositoryImpl implements ChatCustomRepository {
 				)
 			)
 			.from(chat)
-			.where(chat.chatroom.id.eq(chatroomId))
+			.where(
+				chat.sendTime.after(todayStdTime)
+					.and(chat.chatroom.id.eq(chatroomId)))
 			.orderBy(chat.sendTime.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
@@ -99,4 +108,8 @@ public class ChatCustomRepositoryImpl implements ChatCustomRepository {
 		return new PageImpl<>(results, pageable, count);
 	}
 
+	private LocalDate getToday() {
+		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
+			LocalDate.now() : LocalDate.now().minusDays(1);
+	}
 }
