@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
@@ -64,7 +64,6 @@ export const convertTime = (dateString: string | null) => {
 };
 
 export const isToday = (date1: string, data2: string) => date1.match(data2);
-
 
 export function getNextDate() {
   const tomorrow = new Date();
