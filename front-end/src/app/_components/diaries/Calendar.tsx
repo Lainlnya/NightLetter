@@ -4,29 +4,29 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./calendar.scss";
-import moment from "moment";
+import dayjs from "dayjs";
+import store from "@/store/date";
 
-type ValuePiece = Date | null;
-
-type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-// 아무래도 전체를 다 가져오기는 어려울 듯 보입니다.
-// 오늘 날짜 표시해주고, 해당 날짜 클릭했을 때 없으면 없다고 표시
-// 있으면 아래 카드 이동하는걸로 해야할 것 같습니다.
 export default function CalendarComponent() {
-  const [value, onChange] = useState<Value>(new Date());
+  const [value, setValue] = useState(new Date());
+
+  const { PIVOT_DATE_YYYY_MM_DD, setPivotDate } = store();
+
+  function handleChange(nextValue:any) {
+    setValue(nextValue);
+    
+    setPivotDate(dayjs(nextValue).format("YYYY-MM-DD"));
+  }
+
   return (
     <div className="calendar">
       <Calendar
-        locale="en"
-        onChange={onChange}
+        onChange={handleChange}
         value={value}
-        // minDetail="month"
-        // maxDetail="month"
         prev2Label={null}
-        next2Label={null}
+        next2Label={null} 
         showNeighboringMonth={false}
-        formatDay={(locale, date) => moment(date).format("DD")}
+        formatDay={(locale, date) => dayjs(date).format("DD")}
       />
     </div>
   );
