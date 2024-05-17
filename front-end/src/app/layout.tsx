@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import RQProvider from "./_components/RQProvider";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "밤편지",

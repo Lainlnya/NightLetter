@@ -11,39 +11,47 @@ import CalendarComponent from "../diaries/Calendar";
 
 import Image from "next/image";
 import alarm from "../../../../public/Icons/alarm_icon.svg";
-import { isToday, TODAY, TODAY_CONVERTED } from "@/utils/dateFormat";
+import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from "@/utils/dateFormat";
 import { useQuery } from "@tanstack/react-query";
-import getInitialCards from "@/libs/getInitialCards";
-
-import { useRouter } from "next/navigation";
 
 import Loading from "@/app/loading";
-import GNB from "../common/GNB";
+import getCardListByPeriod from "@/libs/getCardListByPeriod";
+import getUserNickName from "@/libs/getUserNickName";
 
 export default function Home() {
-  const router = useRouter();
+  const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
 
-  const { date } = useStore();
-  const { data } = useQuery({
-    queryKey: ["card", "cards"],
-    queryFn: getInitialCards,
+  const { data, isLoading } = useQuery({
+    queryKey: ['card', PIVOT_DATE_YYYY_MM_DD],
+    queryFn: () => getCardListByPeriod(getPreviousDate(PIVOT_DATE_YYYY_MM_DD, 30), PIVOT_DATE_YYYY_MM_DD),
   });
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { nickname } = await getUserNickName();
+        setUserName(nickname);
+      } catch (error) {
+        console.error("Failed to fetch data");
+      }
+    }
+    fetchData();
+  }, []);
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
-    isToday(TODAY, data?.diaries?.[data.diaries.length - 1]?.date)
+    isToday(TODAY, data?.[data?.length - 1]?.date)
       ? true
       : false
   );
 
+
   useEffect(() => {
     if (data) {
-      SetIsNotedTodayDiaries(
-        TODAY_CONVERTED === data?.diaries?.[data.diaries.length - 1]?.date
-      );
+      SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.[data?.length - 1]?.date)
     }
   }, [data]);
 
@@ -66,48 +74,37 @@ export default function Home() {
 
   return (
     <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
-      <>
-        <header className={styles.header}>
-          <div className={styles.header_icons}>
-            {/* <Image
-              src={alarm}
-              alt='alarm'
-              width={24}
-              height={24}
-              className={styles.header_icon}
-              onClick={() => setIsSeen(true)}
-            /> */}
-            {isSeen && (
-              <div ref={calendarRef}>
-                <CalendarComponent />
-              </div>
-            )}
-          </div>
-          <div className={styles.header_title}>
-            <h1>{date}</h1>
-          </div>
-        </header>
-        <section className={styles.section}>
-          <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-          <CardSlider
-            isSeen={isSeen}
-            isClicked={isClicked}
-            setIsClicked={setIsClicked}
+      <header className={styles.header}>
+        <div className={styles.header_icons}>
+          <Image
+            src={alarm}
+            alt='alarm'
+            width={24}
+            height={24}
+            className={styles.header_icon}
+            onClick={() => setIsSeen(true)}
           />
-        </section>
-
-        {!isNotedTodayDiaries && (
-          <footer
-            className={styles.footer}
-            onClick={() => {
-              router.push("/post");
-            }}
-          >
-            <p>오늘의 일기 작성하기</p>
-          </footer>
-        )}
-        {isSeen && <div className={styles.darken}></div>}
-      </>
+          {isSeen && (
+            <div ref={calendarRef}>
+              <CalendarComponent />
+            </div>
+          )}
+        </div>
+        <div className={styles.header_title}>
+          <h1>반가워요 {username}님.</h1>
+          <br />
+          <br />
+          <h1>{date}</h1>
+        </div>
+      </header>
+      <section className={styles.section}>
+        <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
+        <CardSlider
+          isSeen={isSeen}
+          isClicked={isClicked}
+          setIsClicked={setIsClicked}
+        />
+      </section>
     </Suspense>
   );
 }
