@@ -1,4 +1,4 @@
-export default async function getChatHistory(roomId: string, pageNo: number) {
+export default async function getChatHistory(roomId: string | null, pageNo: number) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat?roomId=${roomId}&pageNo=${pageNo}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },

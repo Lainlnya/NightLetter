@@ -110,7 +110,7 @@ export default function Room() {
         return <MyChat key={uuidv4()} msg={msg} last={true} />;
       }
 
-      if (isPrevSender && isSameDate) {
+      if (isPrevSender) {
         return <OthersChat key={uuidv4()} msg={msg} last={true} />;
       }
 
@@ -127,11 +127,14 @@ export default function Room() {
       return <OthersChat key={uuidv4()} msg={msg} last={true} />;
     }
 
-    if (isPrevSender && isSameDate && convertTime(msg.sendTime) === prevTime) {
-      return <OthersChat key={uuidv4()} msg={msg} last={false} />;
+    if (isPrevSender) {
+      // 같은 날짜가 아니다
+      if (isSameDate === false && convertTime(msg.sendTime) !== convertTime(messages[idx + 1].sendTime)) {
+        return <OthersChat key={uuidv4()} msg={msg} last={true} />;
+      } else return <OthersChat key={uuidv4()} msg={msg} last={false} />;
     }
 
-    return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={false} />;
+    return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={isSameDate === false} />;
   });
 
   return (
@@ -144,9 +147,15 @@ export default function Room() {
         <div></div>
       </nav>
       <section className={styles.chattingArea} ref={messageContainerRef}>
-        <div ref={setTarget}></div>
-        <section>{renderChatting}</section>
-        <div ref={messageEndRef}></div>
+        {messages.length === 0 ? (
+          <div className={styles.noMessage}>첫 메세지를 보내보세요!</div>
+        ) : (
+          <>
+            <div ref={setTarget}></div>
+            <section>{renderChatting}</section>
+            <div ref={messageEndRef}></div>
+          </>
+        )}
       </section>
       <section className={styles.sendSection}>
         <SendButton newMessage={newMessage} setNewMessage={setNewMessage} sendMessage={sendMessage} />

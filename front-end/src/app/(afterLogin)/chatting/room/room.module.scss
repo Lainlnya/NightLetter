@@ -23,6 +23,11 @@
     flex-direction: column;
     margin-bottom: 3rem;
 
+    .noMessage {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 2rem;
+    }
     .message {
       display: flex;
       height: 10dvh;

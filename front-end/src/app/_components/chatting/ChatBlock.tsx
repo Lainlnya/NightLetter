@@ -1,12 +1,9 @@
-import { ChatMessageResponse } from "@/types/chat";
-import Image from "next/image";
-import styles from "./chatBlock.module.scss";
-import { convertTime } from "@/utils/dateFormat";
+import { ChatMessageResponse } from '@/types/chat';
+import Image from 'next/image';
+import styles from './chatBlock.module.scss';
+import { convertTime } from '@/utils/dateFormat';
 
-export const MyChat: React.FC<{ msg: ChatMessageResponse; last: boolean }> = ({
-  msg,
-  last,
-}) => {
+export const MyChat: React.FC<{ msg: ChatMessageResponse; last: boolean }> = ({ msg, last }) => {
   const { sendTime, message } = msg;
   return (
     <section className={`${styles.message} ${styles.me}`}>
@@ -34,18 +31,11 @@ export const OthersChatWithThumbnail: React.FC<{
   msg: ChatMessageResponse;
   last: boolean;
 }> = ({ msg, last }) => {
-  const { nickname, message, sendTime } = msg;
+  const { nickname, message, sendTime, profileImageUrl } = msg;
+  const profileImg = profileImageUrl || 'https://ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com/profile/1.webp';
   return (
     <section className={styles.oneConv}>
-      <Image
-        className={styles.profileImg}
-        src={
-          "https://ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com/profile/1.jpg"
-        }
-        width={40}
-        height={40}
-        alt='profile'
-      />
+      <Image className={styles.profileImg} src={profileImg} width={40} height={40} alt="profile" />
       <div className={styles.boxWithImage}>
         <div>{nickname}</div>
         <div className={styles.box}>
