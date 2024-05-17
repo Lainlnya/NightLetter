@@ -19,26 +19,23 @@ export function parseDateToKoreanFormatWithDay(day = 0) {
 
   if (day !== 0) today.setDate(today.getDate() + day);
 
-  return `${today.getFullYear()}년 ${today.getMonth() + 1
-    }월 ${today.getDate()}일`;
+  return `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
 }
 
 export function convertDateFormat(dateString: string | null) {
-  const parts =
-    dateString && dateString.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
+  const parts = dateString && dateString.match(/(\d{4})년 (\d{1,2})월 (\d{1,2})일/);
 
   if (parts) {
     const year = parts[1];
-    const month = parts[2].padStart(2, "0");
-    const day = parts[3].padStart(2, "0");
+    const month = parts[2].padStart(2, '0');
+    const day = parts[3].padStart(2, '0');
     return `${year}-${month}-${day}`;
   } else {
-    return "";
+    return '';
   }
 }
 
 export function convertDateFormatToKorean(dateString: string) {
-
   const parts = dateString && dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
 
   if (parts) {
@@ -48,7 +45,7 @@ export function convertDateFormatToKorean(dateString: string) {
 
     return `${year}년 ${month}월 ${day}일`;
   } else {
-    return "";
+    return '';
   }
 }
 
@@ -58,6 +55,12 @@ export const getDateDiff = (d1: string | Date, d2: string | Date) => {
 
   const diffDate = date1.getTime() - date2.getTime();
   return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리초 * 초 * 분 * 시 = 일
+};
+
+export const convertTime = (dateString: string | null) => {
+  const time = dateString && dateString.split('T')[1];
+  const timeSlice = time?.slice(0, 5);
+  return timeSlice;
 };
 
 export const isToday = (date1: string, data2: string) => date1.match(data2);

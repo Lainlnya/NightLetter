@@ -23,7 +23,7 @@ export default function RQProvider({ children }: Props) {
   return (
     <QueryClientProvider client={client}>
       {children}
-      {/* <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE === 'local'} /> */}
+      <ReactQueryDevtools initialIsOpen={process.env.NEXT_PUBLIC_MODE === 'local'} />
     </QueryClientProvider>
   );
 }
