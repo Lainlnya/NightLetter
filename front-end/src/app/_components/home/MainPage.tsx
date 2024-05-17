@@ -40,6 +40,7 @@ export default function Home() {
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [cardIndex, setCardIndex] = useState<number>(data?.length - 1);
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
@@ -47,7 +48,6 @@ export default function Home() {
       ? true
       : false
   );
-
 
   useEffect(() => {
     if (data) {
@@ -100,9 +100,12 @@ export default function Home() {
       <section className={styles.section}>
         <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
         <CardSlider
+          data={data}
           isSeen={isSeen}
           isClicked={isClicked}
           setIsClicked={setIsClicked}
+          cardIndex={cardIndex}
+          setCardIndex={setCardIndex}
         />
       </section>
     </Suspense>

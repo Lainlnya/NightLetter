@@ -18,8 +18,8 @@ import {
 
 import useStore from "@/store/date";
 
-import { CalendarProps } from "@/types/calender";
-import { DiaryEntry } from "@/types/card";
+import { DataProps } from "@/types/calender";
+import { DiaryEntry, NullableTarotDiary } from "@/types/card";
 
 import styles from "./cardSlider.module.scss";
 
@@ -31,29 +31,21 @@ export default function CardSlider({
   isSeen,
   isClicked,
   setIsClicked,
-}: CalendarProps) {
+  data,
+  cardIndex,
+  setCardIndex
+}: DataProps) {
   const { PIVOT_DATE_YYYY_MM_DD, setDate } = useStore();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['card', PIVOT_DATE_YYYY_MM_DD],
-    queryFn: () => getCardListByPeriod(getPreviousDate(PIVOT_DATE_YYYY_MM_DD, 30), PIVOT_DATE_YYYY_MM_DD),
-  });
-
-  const router = useRouter();
+  console.log(data);
 
   const [dragging, setDragging] = useState(false);
-  const [cardIndex, setCardIndex] = useState(data?.length - 1);
 
   useEffect(() => {
     if (data) {
       setCardIndex(data?.length - 1);
       setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
     }
-    setDate(
-      convertDateFormatToKorean(
-        data?.[data?.requestDiaryIdx]?.date + 1
-      )
-    );
   }, [data]);
 
   useEffect(() => {
@@ -64,8 +56,6 @@ export default function CardSlider({
   }, [cardIndex, data]);
 
   const dragX = useMotionValue(0);
-
-  if (isLoading) return <Loading loadingMessage='로딩중입니다.' />
 
   const onDragStart = () => {
     setDragging(true);
@@ -110,7 +100,7 @@ export default function CardSlider({
             onDragEnd={onDragEnd}
             className={styles.carousel}
           >
-            {data.map((cardData: DiaryEntry, idx: number) => {
+            {data.map((cardData: NullableTarotDiary, idx: number) => {
               const { pastCard, nowCard, futureCard, content } = cardData;
 
               return (
