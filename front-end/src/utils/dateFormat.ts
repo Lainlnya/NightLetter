@@ -73,10 +73,13 @@ export function getNextDate() {
   return tomorrow;
 }
 
+export function formattedDate(dateString: string) {
+  const parts = dateString.split('-');
+  const month = parts[1];
+  const day = parts[2];
+
+  return `${month}월 ${day}일`;
+}
 export const TODAY = parseDateToKoreanFormatWithDay();
 export const TODAY_CONVERTED = getTodayDate();
 export const TOMORROW = dayjs().add(1, 'day').format('YYYY-MM-DD');
-
-
-
-
