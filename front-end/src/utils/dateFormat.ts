@@ -1,3 +1,19 @@
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+export function getTodayDate() {
+  return dayjs().format('YYYY-MM-DD');
+}
+
+export function getPreviousDate(today: string, date: number) {
+  return dayjs(today).subtract(date, 'day').format('YYYY-MM-DD');
+}
+
+export function getAdditionalDate(today: string, date: number) {
+  return dayjs(today).add(date, 'day').format('YYYY-MM-DD');
+}
+
 export function parseDateToKoreanFormatWithDay(day = 0) {
   const today = new Date();
 
@@ -33,17 +49,6 @@ export function convertDateFormatToKorean(dateString: string) {
   }
 }
 
-export function getTodayDate() {
-  var d = new Date();
-  return (
-    d.getFullYear() +
-    '-' +
-    (d.getMonth() + 1 > 9 ? (d.getMonth() + 1).toString() : '0' + (d.getMonth() + 1)) +
-    '-' +
-    (d.getDate() > 9 ? d.getDate().toString() : '0' + d.getDate().toString())
-  );
-}
-
 export const getDateDiff = (d1: string | Date, d2: string | Date) => {
   const date1 = new Date(d1);
   const date2 = new Date(d2);
@@ -52,10 +57,14 @@ export const getDateDiff = (d1: string | Date, d2: string | Date) => {
   return Math.abs(diffDate / (1000 * 60 * 60 * 24)); // 밀리초 * 초 * 분 * 시 = 일
 };
 
+export const convertTime = (dateString: string | null) => {
+  const time = dateString && dateString.split('T')[1];
+  const timeSlice = time?.slice(0, 5);
+  return timeSlice;
+};
+
 export const isToday = (date1: string, data2: string) => date1.match(data2);
 
-export const TODAY = parseDateToKoreanFormatWithDay();
-export const TODAY_CONVERTED = convertDateFormat(TODAY);
 
 export function getNextDate() {
   const tomorrow = new Date();
@@ -64,8 +73,6 @@ export function getNextDate() {
   return tomorrow;
 }
 
-export const TOMORROW = getNextDate();
-
 export function formattedDate(dateString: string) {
   const parts = dateString.split('-');
   const month = parts[1];
@@ -73,3 +80,6 @@ export function formattedDate(dateString: string) {
 
   return `${month}월 ${day}일`;
 }
+export const TODAY = parseDateToKoreanFormatWithDay();
+export const TODAY_CONVERTED = getTodayDate();
+export const TOMORROW = dayjs().add(1, 'day').format('YYYY-MM-DD');

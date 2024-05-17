@@ -14,6 +14,7 @@ import { CardInfo } from '@/types/card';
 const ViewCard: React.FC = () => {
   const [card, setCard] = useState<CardInfo>();
   const [isBack, setIsBack] = useState<boolean>(true);
+  const [isLoadingCustom, setIsLoadingCustom] = useState<boolean>(true);
 
   const router = useRouter();
   const searchParams: ReadonlyURLSearchParams = useSearchParams();
@@ -31,22 +32,38 @@ const ViewCard: React.FC = () => {
   });
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | number | null = null;
+
+    const updateCardData = (cardData: CardInfo) => {
+      setCard(cardData);
+
+      timer = setTimeout(() => {
+        setIsLoadingCustom(false);
+      }, 1500);
+    };
+    
     const presentCardInfo = sessionStorage.getItem('presentCardInfo');
     if (searchParams.get('info') === 'present' && presentCardInfo !== null) {
       const { name, imgUrl, keyword, desc } = JSON.parse(presentCardInfo);
-      setCard({ name, imgUrl, keyword, desc });
+      updateCardData({ name, imgUrl, keyword, desc });
     }
 
     if (pastCard && searchParams.get('info') === 'past') {
-      setCard(pastCard);
+      updateCardData(pastCard);
     }
 
     if (futureCard && searchParams.get('info') === 'future') {
-      setCard(futureCard);
+      updateCardData(futureCard);
     }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [pastCard, futureCard]);
 
-  if (!card || isLoading) {
+  if (!card || isLoading || isLoadingCustom) {
     return <Loading loadingMessage={Messages.LOADING_CARD_INFO} />;
   }
 
