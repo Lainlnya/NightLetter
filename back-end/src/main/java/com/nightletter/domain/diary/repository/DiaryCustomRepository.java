@@ -26,4 +26,6 @@ public interface DiaryCustomRepository {
 
 	List<DiaryRecResponse> findTodayDiaryRecommends(Member member, LocalDate today);
 
+	// void insertDiaryRecommends(List<Long> diaries);
+
 }

@@ -35,9 +35,11 @@ import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
+import com.nightletter.domain.diary.entity.RecommendedDiary;
 import com.nightletter.domain.diary.entity.Scrap;
 import com.nightletter.domain.diary.repository.DiaryRedisRepository;
 import com.nightletter.domain.diary.repository.DiaryRepository;
+import com.nightletter.domain.diary.repository.RecommendedDiaryRepository;
 import com.nightletter.domain.diary.repository.ScrapRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
@@ -71,6 +73,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final GptServiceImpl gptServiceImpl;
 	private final TarotService tarotServiceImpl;
 	private final TarotFutureRedisRepository futureRedisRepository;
+	private final RecommendedDiaryRepository recommendedDiaryRepository;
 
 	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
 
@@ -85,6 +88,19 @@ public class DiaryServiceImpl implements DiaryService {
 
 		RecommendResponse recResponse = new RecommendResponse();
 		recResponse.setRecommendDiaries(getRecDiaries(recDiariesId));
+
+		recommendedDiaryRepository.saveAll(
+			getRecommendedDiaries(recDiariesId)
+				.stream()
+				.map(diary -> {
+					return RecommendedDiary.builder()
+						.diary(diary)
+						.member(getCurrentMember())
+						.recommendedDate(getToday())
+						.build();
+				}
+			).toList()
+		);
 
 		// TODO: WRAP WITH OPTIONAL
 		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
@@ -132,6 +148,15 @@ public class DiaryServiceImpl implements DiaryService {
 		assert recDataResponse != null;
 		recDataResponse.validation();
 		return recDataResponse;
+	}
+
+	private List<Diary> getRecommendedDiaries(List<Long> diariesId) {
+		List<Diary> recommendDiaries =  diaryRepository.findAllById(diariesId);
+		if (recommendDiaries.isEmpty()) {
+			throw new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "RECOMMEND DIARIES NOT FOUND");
+		}
+		log.info("============================= {} ", recommendDiaries.toString());
+		return recommendDiaries;
 	}
 
 	private List<RecommendDiaryResponse> getRecDiaries(List<Long> diariesId) {

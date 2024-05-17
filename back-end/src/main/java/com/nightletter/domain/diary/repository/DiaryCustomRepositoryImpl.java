@@ -134,7 +134,7 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 				)
 			)
 			.from(recommendedDiary)
-			.where(recommendedDiary.scrappedDate.eq(today)
+			.where(recommendedDiary.recommendedDate.eq(today)
 				.and(recommendedDiary.member.eq(member)))
 			.innerJoin(recommendedDiary.diary.diaryTarots, diaryTarot)
 			.where(diaryTarot.type.eq(NOW))

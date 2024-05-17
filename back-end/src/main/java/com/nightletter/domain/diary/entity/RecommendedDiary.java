@@ -37,7 +37,7 @@ public class RecommendedDiary {
 	private Diary diary;
 
 	@Column
-	private LocalDate scrappedDate;
+	private LocalDate recommendedDate;
 
 
 	// 별도의 컬럼으로 저장.

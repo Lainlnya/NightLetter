@@ -2,6 +2,8 @@ package com.nightletter.domain.diary.dto.recommend;
 
 import java.util.Objects;
 
+import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.global.utils.Nickname;
 
 import lombok.Getter;
