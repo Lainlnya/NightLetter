@@ -52,3 +52,15 @@ Authentication 과정에서 한 번의 쿼리.
 memberRepository 에서 한번의 쿼리 더 발생.
 
 사실 처음부터 Member 두면 괜찮은데
+
+### 24.05.17
+
+#### issue #1
+
+Diary 작성 시의 문제.
+
+무수한 Select와 무수한 Insert
+
+```
+
+```
