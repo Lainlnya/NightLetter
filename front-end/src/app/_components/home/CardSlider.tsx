@@ -100,7 +100,7 @@ export default function CardSlider({
             onDragEnd={onDragEnd}
             className={styles.carousel}
           >
-            {data.map((cardData: NullableTarotDiary, idx: number) => {
+            {data?.map((cardData: NullableTarotDiary, idx: number) => {
               const { pastCard, nowCard, futureCard, content } = cardData;
 
               return (
