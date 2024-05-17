@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
@@ -65,7 +65,6 @@ export const convertTime = (dateString: string | null) => {
 
 export const isToday = (date1: string, data2: string) => date1.match(data2);
 
-
 export function getNextDate() {
   const tomorrow = new Date();
   tomorrow.setDate(new Date().getDate() + 1);
@@ -73,10 +72,13 @@ export function getNextDate() {
   return tomorrow;
 }
 
+export function formattedDate(dateString: string) {
+  const parts = dateString.split('-');
+  const month = parts[1];
+  const day = parts[2];
+
+  return `${month}월 ${day}일`;
+}
 export const TODAY = parseDateToKoreanFormatWithDay();
 export const TODAY_CONVERTED = getTodayDate();
 export const TOMORROW = dayjs().add(1, 'day').format('YYYY-MM-DD');
-
-
-
-

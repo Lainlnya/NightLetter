@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './card.module.scss';
-import { getTarotCard } from '@/libs/TarotApis';
+import { getTarotCard } from '@/libs/getTarotCard';
 import Loading from '@/app/loading';
 import { useEffect, useState } from 'react';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
@@ -41,7 +41,7 @@ const ViewCard: React.FC = () => {
         setIsLoadingCustom(false);
       }, 1500);
     };
-
+    
     const presentCardInfo = sessionStorage.getItem('presentCardInfo');
     if (searchParams.get('info') === 'present' && presentCardInfo !== null) {
       const { name, imgUrl, keyword, desc } = JSON.parse(presentCardInfo);

@@ -13,7 +13,6 @@ export async function getTarotCard(info: string, method: string) {
   );
 
   const data = await response.json();
-  console.log(data);
   const { name, imgUrl, keyword, desc }: CardInfo = data;
 
   return { name, imgUrl, keyword, desc };

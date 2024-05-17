@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import styles from "./diarySlider.module.scss";
-import Image from "next/image";
+import React, { useEffect } from 'react';
+import styles from './diarySlider.module.scss';
+import Image from 'next/image';
 
-import tarot_background from "../../../../public/images/tarot-background.png";
-import { motion, useMotionValue } from "framer-motion";
-import { useState } from "react";
-import { DRAG_BUFFER } from "@/utils/animation";
-import useStore from "@/store/date";
-import { convertDateFormatToKorean, getPreviousDate, parseDateToKoreanFormatWithDay } from "@/utils/dateFormat";
-import { useRouter } from "next/navigation";
-import getCardListByPeriod from "@/libs/getCardListByPeriod";
-import { useQuery } from "@tanstack/react-query";
-import Loading from "@/app/loading";
+import tarot_background from '../../../../public/images/tarot-background.png';
+import { motion, useMotionValue } from 'framer-motion';
+import { useState } from 'react';
+import { DRAG_BUFFER } from '@/utils/animation';
+import useStore from '@/store/date';
+import { convertDateFormatToKorean, getPreviousDate } from '@/utils/dateFormat';
+import { useRouter } from 'next/navigation';
+import getCardListByPeriod from '@/libs/getCardListByPeriod';
+import { useQuery } from '@tanstack/react-query';
+import Loading from '@/app/loading';
 
 export default function DiarySlider() {
   const { PIVOT_DATE_YYYY_MM_DD, setDate } = useStore();
@@ -33,11 +33,7 @@ export default function DiarySlider() {
       setCardIndex(data?.length - 1);
       setDate(convertDateFormatToKorean(data?.[cardIndex]?.date));
     }
-    setDate(
-      convertDateFormatToKorean(
-        data?.[data?.requestDiaryIdx]?.date + 1
-      )
-    );
+    setDate(convertDateFormatToKorean(data?.[data?.requestDiaryIdx]?.date + 1));
   }, [data]);
 
   useEffect(() => {
@@ -65,7 +61,7 @@ export default function DiarySlider() {
     }
   };
 
-  if (isLoading) return <Loading loadingMessage='로딩중입니다.' />
+  if (isLoading) return <Loading loadingMessage="로딩중입니다." />;
 
   return (
     <div className={styles.carousel_container}>
@@ -114,12 +110,10 @@ export default function DiarySlider() {
               <div className={styles.diary_text}>
                 <h2>오늘의 일기</h2>
                 <p>
-                  나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이
-                  아니라오직 호날두의 플레이를 보기 위해서였다 나의 눈이 다시
-                  떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라 오직 호날두의
-                  플레이를 보기 위해서였다 나의 눈이 다시 떠진 이유는내 딸
-                  심청이의 슬픈 희생때문이 아니라 오직 호날두의 플레이를 보기
-                  위해서였다 나의 눈이 다시{" "}
+                  나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라오직 호날두의 플레이를 보기 위해서였다
+                  나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라 오직 호날두의 플레이를 보기 위해서였다
+                  나의 눈이 다시 떠진 이유는내 딸 심청이의 슬픈 희생때문이 아니라 오직 호날두의 플레이를 보기 위해서였다
+                  나의 눈이 다시{' '}
                 </p>
               </div>
             </main>
