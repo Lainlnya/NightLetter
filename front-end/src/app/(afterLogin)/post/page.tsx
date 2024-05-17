@@ -3,7 +3,7 @@ import Toast from '@/app/_components/post/Toast';
 import styles from './post.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { setData } from '@/libs/DiaryApi/setData';
+import { setData } from '@/libs/DIaryApi/setData';
 import { Messages } from '@/utils/msg';
 import { useRouter } from 'next/navigation';
 import { TODAY, getNextDate } from '@/utils/dateFormat';
