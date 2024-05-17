@@ -9,6 +9,7 @@ interface DateState {
     setDate: (date: string) => void;
     setDaysDifference: (daysDifference: number) => void;
     setUserName: (username: string) => void;
+    setPivotDate: (PIVOT_DATE_YYYY_MM_DD: string) => void;
 }
 
 const useStore = create<DateState>(set => ({
@@ -18,7 +19,8 @@ const useStore = create<DateState>(set => ({
     daysDifference: 0,
     setDate: (date: string) => set({ date }),
     setDaysDifference: (daysDifference: number) => set({ daysDifference }),
-    setUserName: (username: string) => set({ username })
+    setUserName: (username: string) => set({ username }),
+    setPivotDate: (PIVOT_DATE_YYYY_MM_DD: string) => set({ PIVOT_DATE_YYYY_MM_DD }),
 }));
 
 export default useStore;

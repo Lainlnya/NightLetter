@@ -32,7 +32,7 @@ export default function Home() {
         const { nickname } = await getUserNickName();
         setUserName(nickname);
       } catch (error) {
-        console.error("Failed to fetch data");
+        console.error("닉네임 불러오기 실패");
       }
     }
     fetchData();
