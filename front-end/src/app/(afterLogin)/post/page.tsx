@@ -3,11 +3,10 @@ import Toast from '@/app/_components/post/Toast';
 import styles from './post.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { setData } from '@/libs/DiaryApis';
+import { setData } from '@/libs/DiaryApi/setData';
 import { Messages } from '@/utils/msg';
 import { useRouter } from 'next/navigation';
 import { TODAY, TOMORROW } from '@/utils/dateFormat';
-import useRecomStore from '@/store/recommendations';
 import Loading from '@/app/loading';
 
 const Post: React.FC = () => {
@@ -76,12 +75,6 @@ const Post: React.FC = () => {
     },
     onSuccess: (value) => {
       sessionStorage.setItem('presentCardInfo', JSON.stringify(value));
-      const recommendDiaries = value.recommendDiaries;
-      const setStories = useRecomStore.getState().setStories;
-
-      if (recommendDiaries) {
-        setStories(recommendDiaries);
-      }
 
       localStorage.removeItem('diaryPost');
       router.push('/card?info=present');

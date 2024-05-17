@@ -24,21 +24,30 @@
   justify-content: space-between;
   margin-top: 3rem;
 
+  .scrapped {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+
   h1 {
     font-size: 2rem;
   }
 
   .cardDate {
-    color: #868686;
+    color: #b8b8b8;
     font-weight: 900;
+    font-size: 1.3rem;
   }
+
   .cardBtn {
     all: unset;
+    margin-top: -0.2rem;
+    margin-left: 0.5rem;
   }
 
   .cardBtn > svg {
-    width: 3.5rem;
-    height: 3rem;
+    width: 3rem;
+    height: 2.5rem;
   }
 
   .cardBtn > svg > path {
@@ -47,7 +56,6 @@
 }
 
 .cardContent {
-  margin-top: 1rem;
   font-size: 1.5rem;
   line-height: 2rem;
   width: 25rem;

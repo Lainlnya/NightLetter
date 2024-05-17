@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import styles from "./scrap.module.scss";
-import ScrapCard from "@/app/_components/scrap/ScrapCard";
-import { useEffect, useRef, useState } from "react";
-import { ScrapItem } from "@/types/apis";
-import useScrapStore from "@/store/stories";
-import { useMutation } from "@tanstack/react-query";
-import { deleteScrapData } from "@/libs/ScrapApis";
-import ScrapPopup from "@/app/_components/scrap/ScrapPopup";
+import styles from './scrap.module.scss';
+import ScrapCard from '@/app/_components/scrap/ScrapCard';
+import { useEffect, useRef, useState } from 'react';
+import { ScrapItem } from '@/types/apis';
+import useScrapStore from '@/store/stories';
+import { useMutation } from '@tanstack/react-query';
+import { deleteScrapData } from '@/libs/ScrapApi/deleteScrapData';
+import ScrapPopup from '@/app/_components/scrap/ScrapPopup';
 
 const Scrap: React.FC = () => {
   const target = useRef<HTMLDivElement>(null);
   const { scraps, loadScraps, hasMore } = useScrapStore();
   const deleteScrappedData = useMutation({
-    mutationKey: ["deletedData"],
+    mutationKey: ['deletedData'],
     mutationFn: (diaryId: number) => deleteScrapData(diaryId),
   });
 
@@ -74,9 +74,7 @@ const Scrap: React.FC = () => {
             }}
           />
         ))}
-        {isOpen && cardInfo && (
-          <ScrapPopup scrapInfo={cardInfo} onClose={setIsOpen} />
-        )}
+        {isOpen && cardInfo && <ScrapPopup scrapInfo={cardInfo} onClose={setIsOpen} />}
       </section>
     )
   );
