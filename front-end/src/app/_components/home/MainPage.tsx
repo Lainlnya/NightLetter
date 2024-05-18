@@ -8,6 +8,7 @@ import useStore from "@/store/date";
 import CardSlider from "./CardSlider";
 import { Messages } from "@/utils/msg";
 import CalendarComponent from "../diaries/Calendar";
+import CommentViewer from "./CommentViewer";
 
 import Image from "next/image";
 import alarm from "../../../../public/Icons/alarm_icon.svg";
@@ -17,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "@/app/loading";
 import getCardListByPeriod from "@/libs/getCardListByPeriod";
 import getUserNickName from "@/libs/getUserNickName";
+import ToastModal from "../common/ToastModal";
 
 export default function Home() {
   const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
@@ -40,6 +42,7 @@ export default function Home() {
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [cardIndex, setCardIndex] = useState<number>(data?.length - 1);
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
@@ -47,7 +50,6 @@ export default function Home() {
       ? true
       : false
   );
-
 
   useEffect(() => {
     if (data) {
@@ -74,6 +76,7 @@ export default function Home() {
 
   return (
     <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
+      <div className={styles.root}>
       <header className={styles.header}>
         <div className={styles.header_icons}>
           <Image
@@ -100,11 +103,20 @@ export default function Home() {
       <section className={styles.section}>
         <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
         <CardSlider
+          data={data}
           isSeen={isSeen}
           isClicked={isClicked}
           setIsClicked={setIsClicked}
+          cardIndex={cardIndex}
+          setCardIndex={setCardIndex}
         />
       </section>
+      </div>
+      <CommentViewer 
+        data={data}
+        cardIndex={cardIndex}
+      />
+      <ToastModal />
     </Suspense>
   );
 }
