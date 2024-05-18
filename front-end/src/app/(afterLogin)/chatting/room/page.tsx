@@ -16,12 +16,12 @@ import SendButton from '@/app/_components/chatting/SendButton';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import getChatHistory from '@/libs/ChatApis/getChatHistory';
 import { useIntersectionObserver } from '@/libs/ChatApis/useIntersectionObserver';
+import { useWebSocket } from '@/context/WebSocketClient';
 
 export default function Room() {
   const searchParams = useSearchParams();
   const roomId = searchParams.get('roomId');
   const cardState = searchParams.get('state');
-  const [stompClient, setStompClient] = useState<Client | null>(null);
   const [messages, setMessages] = useState<ChatMessageResponse[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
 
@@ -46,6 +46,8 @@ export default function Room() {
   const { setTarget } = useIntersectionObserver({ hasNextPage, fetchNextPage });
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
+  const subscriptionRef = useRef<any>(null);
+  const client = useWebSocket();
 
   useEffect(() => {
     if (chatHistory) {
@@ -58,26 +60,33 @@ export default function Room() {
         }
       }, 0);
     }
-    // 웹소켓 연결
-    const client = new Client({
-      brokerURL: 'wss://dev.letter-for.me/ws-stomp',
-      reconnectDelay: 5000,
-      onConnect: () => {
-        client.subscribe(`/room/${roomId}`, (message: IMessage) => {
-          const msg: ChatMessageResponse = JSON.parse(message.body);
-          setMessages((prevMessages) => [...prevMessages, msg]);
-          console.log(msg);
-        });
-      },
-    });
-    client.activate();
 
-    setStompClient(client);
+    if (!client) return;
+    const onConnect = () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+      }
+
+      const subscription = client.subscribe(`/room/${roomId}`, (message: IMessage) => {
+        const msg: ChatMessageResponse = JSON.parse(message.body);
+        setMessages((prevMessages) => [...prevMessages, msg]);
+        console.log(msg);
+      });
+      subscriptionRef.current = subscription;
+    };
+
+    if (client.connected) {
+      onConnect();
+    } else {
+      client.onConnect = onConnect;
+    }
 
     return () => {
-      client.deactivate();
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+      }
     };
-  }, [roomId, chatHistory]);
+  }, [roomId, chatHistory, client]);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -85,12 +94,12 @@ export default function Room() {
 
   // 메세지 보내는 부분
   const sendMessage = () => {
-    if (stompClient && newMessage) {
+    if (client && newMessage) {
       const chatMessage: ChatMessageRequest = {
         message: newMessage,
       };
 
-      stompClient.publish({
+      client.publish({
         destination: `/send/${roomId}`,
         body: JSON.stringify(chatMessage),
       });
@@ -123,8 +132,12 @@ export default function Room() {
       return <MyChat key={uuidv4()} msg={msg} last={lastWritten} />;
     }
 
-    if (msg.senderId !== messages[idx + 1].senderId) {
-      return <OthersChat key={uuidv4()} msg={msg} last={true} />;
+    if (
+      idx !== 0 &&
+      msg.senderId !== messages[idx - 1].senderId &&
+      convertTime(msg.sendTime) !== convertTime(messages[idx + 1].sendTime)
+    ) {
+      return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={false} />;
     }
 
     if (isPrevSender) {
@@ -134,7 +147,7 @@ export default function Room() {
       } else return <OthersChat key={uuidv4()} msg={msg} last={false} />;
     }
 
-    return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={isSameDate === false} />;
+    return <OthersChatWithThumbnail key={uuidv4()} msg={msg} last={true} />;
   });
 
   return (

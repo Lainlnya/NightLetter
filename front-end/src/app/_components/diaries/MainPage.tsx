@@ -1,29 +1,27 @@
-"use client";
+'use client';
 
-import React, { use, useEffect, useLayoutEffect } from "react";
-import styles from "./diaries.module.scss";
-import Image from "next/image";
-import back_button from "../../../../public/Icons/back_button.svg";
-import alarm from "../../../../public/Icons/calender_icon.svg";
+import React, { use, useEffect, useLayoutEffect } from 'react';
+import styles from './diaries.module.scss';
+import Image from 'next/image';
+import back_button from '../../../../public/Icons/back_button.svg';
+import calendar from '../../../../public/Icons/calendar_icon.svg';
+import alarm from '../../../../public/Icons/alarm_icon.svg';
 
-import { motion, useMotionValue } from "framer-motion";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { DRAG_BUFFER } from "@/utils/animation";
-import {
-  convertDateFormat,
-  convertDateFormatToKorean,
-} from "@/utils/dateFormat";
-import { useQuery } from "@tanstack/react-query";
-import getInitialDiaries from "@/libs/getInitialDiaries";
-import { DiaryEntry } from "@/types/card";
-import useStore from "@/store/date";
+import { motion, useMotionValue } from 'framer-motion';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { DRAG_BUFFER } from '@/utils/animation';
+import { convertDateFormat, convertDateFormatToKorean } from '@/utils/dateFormat';
+import { useQuery } from '@tanstack/react-query';
+import getInitialDiaries from '@/libs/getInitialDiaries';
+import { DiaryEntry } from '@/types/card';
+import useStore from '@/store/date';
 
 export default function MainPage() {
   const router = useRouter();
   const { date, setDate } = useStore();
   const { data } = useQuery({
-    queryKey: ["diary", "diaries"],
+    queryKey: ['diary', 'diaries'],
     queryFn: () => getInitialDiaries(convertDateFormat(date)),
   });
 
@@ -35,20 +33,16 @@ export default function MainPage() {
   useEffect(() => {
     if (data) {
       setCardIndex(data.requestDiaryIdx);
-      setDate(
-        convertDateFormatToKorean(data.diaries?.[data.requestDiaryIdx]?.date)
-      );
+      setDate(convertDateFormatToKorean(data.diaries?.[data.requestDiaryIdx]?.date));
     }
 
     console.log(data);
-
   }, [data]);
 
   useEffect(() => {
     if (data) {
       setDate(convertDateFormatToKorean(data.diaries?.[cardIndex]?.date));
     }
-
   }, [data, cardIndex]);
 
   const onDragStart = () => {
@@ -75,10 +69,11 @@ export default function MainPage() {
           alt="back_button"
           className={styles.back_button}
           onClick={() => {
-            router.replace("/");
+            router.replace('/');
           }}
         />
         <h1>{date}</h1>
+        <Image src={calendar} alt="calendar" className={styles.calendar} />
         <Image src={alarm} alt="alarm" className={styles.alarm} />
       </header>
       <div className={styles.carousel_container}>
