@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from 'react';
 
-import styles from "./mainPage.module.scss";
+import styles from './mainPage.module.scss';
 
-import useStore from "@/store/date";
-import CardSlider from "./CardSlider";
-import { Messages } from "@/utils/msg";
-import CalendarComponent from "../diaries/Calendar";
+import useStore from '@/store/date';
+import CardSlider from './CardSlider';
+import { Messages } from '@/utils/msg';
+import CalendarComponent from '../diaries/Calendar';
 
-import Image from "next/image";
-import alarm from "../../../../public/Icons/alarm_icon.svg";
-import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from "@/utils/dateFormat";
-import { useQuery } from "@tanstack/react-query";
+import Image from 'next/image';
+import alarm from '../../../../public/Icons/alarm_icon.svg';
+import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFormat';
+import { useQuery } from '@tanstack/react-query';
 
-import Loading from "@/app/loading";
-import getCardListByPeriod from "@/libs/getCardListByPeriod";
-import getUserNickName from "@/libs/getUserNickName";
+import Loading from '@/app/loading';
+import getCardListByPeriod from '@/libs/getCardListByPeriod';
+import getUserNickName from '@/libs/DIaryApi/getUserNickName';
 
 export default function Home() {
   const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
@@ -32,7 +32,7 @@ export default function Home() {
         const { nickname } = await getUserNickName();
         setUserName(nickname);
       } catch (error) {
-        console.error("닉네임 불러오기 실패");
+        console.error('닉네임 불러오기 실패');
       }
     }
     fetchData();
@@ -43,32 +43,26 @@ export default function Home() {
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
-    isToday(TODAY, data?.[data?.length - 1]?.date)
-      ? true
-      : false
+    isToday(TODAY, data?.[data?.length - 1]?.date) ? true : false
   );
-
 
   useEffect(() => {
     if (data) {
-      SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.[data?.length - 1]?.date)
+      SetIsNotedTodayDiaries(TODAY_CONVERTED === data?.[data?.length - 1]?.date);
     }
   }, [data]);
 
   useEffect(() => {
     function handleTouchOutside(e: TouchEvent) {
-      if (
-        calendarRef.current &&
-        !calendarRef.current.contains(e.target as Node)
-      ) {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
         setIsClicked(true);
         setIsSeen(false);
       }
     }
 
-    document.addEventListener("touchstart", handleTouchOutside);
+    document.addEventListener('touchstart', handleTouchOutside);
     return () => {
-      document.removeEventListener("touchstart", handleTouchOutside);
+      document.removeEventListener('touchstart', handleTouchOutside);
     };
   }, [calendarRef, isClicked]);
 
@@ -78,7 +72,7 @@ export default function Home() {
         <div className={styles.header_icons}>
           <Image
             src={alarm}
-            alt='alarm'
+            alt="alarm"
             width={24}
             height={24}
             className={styles.header_icon}
@@ -99,11 +93,7 @@ export default function Home() {
       </header>
       <section className={styles.section}>
         <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-        <CardSlider
-          isSeen={isSeen}
-          isClicked={isClicked}
-          setIsClicked={setIsClicked}
-        />
+        <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
       </section>
     </Suspense>
   );
