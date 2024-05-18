@@ -7,7 +7,7 @@ import checkTodayStatus from '@/libs/checkTodayStatus';
 
 const ToastModal = () => {
   const router = useRouter();
-  const [todayStatus, setTodayStatus] = useState("not checked");
+  const [todayStatus, setTodayStatus] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -16,6 +16,7 @@ const ToastModal = () => {
         console.log(data);
         const { pastCard, nowCard, futureCard } = await checkTodayStatus();
         if (pastCard && nowCard && futureCard) setTodayStatus("complete");
+        if (!pastCard && !nowCard && !futureCard) setTodayStatus("not checked");
         if (pastCard && nowCard && !futureCard) setTodayStatus("now");
         if (pastCard && !nowCard && !futureCard) setTodayStatus("past");
       } catch (error) {
@@ -26,11 +27,29 @@ const ToastModal = () => {
   },[])
 
   return (
-    todayStatus !== "complete" && <div className={styles.toast_container}>
+    todayStatus !== "complete" && todayStatus !== "" && 
+    <div className={styles.toast_container}>
       <div>
-        {todayStatus === "not checked" && <div className={styles.toast_complete}>오늘의 첫 카드를 뽑아주세요. (0/3) →</div>}
-        {todayStatus === "past" && <div className={styles.toast_past}>이제 일기를 쓸 차례에요. 쓰러 가보실까요? (1/3) →</div>}
-        {todayStatus === "now" && <div className={styles.toast_now}>마지막으로 카드를 뽑고, AI의 조언을 받아보세요. (2/3) →</div>}
+        {todayStatus === "not checked" && 
+          <div 
+            className={styles.toast_complete}
+            onClick={() => router.push('/tarot?info=past')}
+          >
+            오늘의 첫 카드를 뽑아주세요. (0/3) →
+          </div>}
+        {todayStatus === "past" && 
+          <div className={styles.toast_past}
+               onClick={() => router.push('/post')}
+          >
+            이제 일기를 쓸 차례에요. 쓰러 가보실까요? (1/3) →
+          </div>}
+        {todayStatus === "now" && 
+          <div 
+            className={styles.toast_now}
+            onClick={() => router.push('/tarot?info=future')}
+          >
+            마지막으로 카드를 뽑고, AI의 조언을 받아보세요. (2/3) →
+          </div>}
       </div>
     </div>
   )
