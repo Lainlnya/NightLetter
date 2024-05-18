@@ -3,23 +3,24 @@
 import { Suspense, useEffect, useRef, useState } from 'react';
 
 import styles from './mainPage.module.scss';
+import useStore from "@/store/date";
+import CardSlider from "./CardSlider";
+import { Messages } from "@/utils/msg";
+import CalendarComponent from "../diaries/Calendar";
+import CommentViewer from "./CommentViewer";
 
-import useStore from '@/store/date';
-import CardSlider from './CardSlider';
-import { Messages } from '@/utils/msg';
-import CalendarComponent from '../diaries/Calendar';
 
 import Image from 'next/image';
 import calendar from '../../../../public/Icons/calendar_icon.svg';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
 import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
-
 import Loading from '@/app/loading';
 import getCardListByPeriod from '@/libs/getCardListByPeriod';
 import getUserNickName from '@/libs/DIaryApi/getUserNickName';
 import Portal from '../modal/ModalPortal';
 import Notification from '../modal/Notification';
+import ToastModal from "../common/ToastModal";
 
 export default function Home() {
   const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
@@ -43,6 +44,7 @@ export default function Home() {
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [cardIndex, setCardIndex] = useState<number>(data?.length - 1);
   const calendarRef = useRef<HTMLDivElement>(null);
 
   const [isNotedTodayDiaries, SetIsNotedTodayDiaries] = useState(
@@ -71,6 +73,7 @@ export default function Home() {
 
   return (
     <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
+      <div className={styles.root}>
       <header className={styles.header}>
         <div className={styles.header_icons}>
           <Image
@@ -96,8 +99,21 @@ export default function Home() {
       </header>
       <section className={styles.section}>
         <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-        <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
+        <CardSlider
+          data={data}
+          isSeen={isSeen}
+          isClicked={isClicked}
+          setIsClicked={setIsClicked}
+          cardIndex={cardIndex}
+          setCardIndex={setCardIndex}
+        />
       </section>
+      </div>
+      <CommentViewer 
+        data={data}
+        cardIndex={cardIndex}
+      />
+      <ToastModal />
       <Portal>
         <Notification notification={''} />
       </Portal>

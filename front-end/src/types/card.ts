@@ -26,3 +26,40 @@ export interface CardInfo {
   keyword: string;
   desc: string;
 }
+
+
+export interface NullableTarotDiary { 
+  writerId: number | null;
+  type: string | null;
+  diaryId: number | null;
+  pastCard: {
+    id: number | null;
+    name: string | null;
+    imgUrl: string | null;
+    dir: string | null;
+    keyword: string | null;
+    description: string | null;
+    embedVector: string | null;
+  } | null;
+  nowCard: {
+    id: number | null;
+    name: string | null;
+    imgUrl: string | null;
+    dir: string | null;
+    keyword: string | null;
+    description: string | null;
+    embedVector: string | null;
+  } | null;
+  futureCard: {
+    id: number | null;
+    name: string | null;
+    imgUrl: string | null;
+    dir: string | null;
+    keyword: string | null;
+    description: string | null;
+    embedVector: string | null;
+  } | null;
+  date: string;
+  content: string | null;
+  gptComment: string | null;
+}
