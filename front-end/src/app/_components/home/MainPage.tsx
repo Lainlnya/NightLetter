@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "@/app/loading";
 import getCardListByPeriod from "@/libs/getCardListByPeriod";
 import getUserNickName from "@/libs/getUserNickName";
+import ToastModal from "../common/ToastModal";
 
 export default function Home() {
   const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
@@ -37,6 +38,18 @@ export default function Home() {
     }
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const data = await checkTodayStatus();
+  //       console.log(data)
+  //     } catch (error) {
+  //       console.error("닉네임 불러오기 실패");
+  //     }
+  //   }
+  //   fetchData();
+  // }, []);
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -108,6 +121,7 @@ export default function Home() {
           setCardIndex={setCardIndex}
         />
       </section>
+      <ToastModal />
     </Suspense>
   );
 }
