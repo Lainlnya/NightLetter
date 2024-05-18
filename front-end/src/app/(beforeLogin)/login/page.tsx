@@ -11,8 +11,8 @@ const Login = () => {
         <Image
           width={200}
           height={50}
-          alt="카카오 로그인 버튼"
-          src="/images/kakao-login-large-narrow.webp"
+          alt='카카오 로그인 버튼'
+          src='/images/kakao-login-large-narrow.webp'
         />
       </a>
     </>
