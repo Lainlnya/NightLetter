@@ -76,13 +76,28 @@ const Chatting: React.FC = () => {
       <section className={styles.chatting}>
         {chatRoomList.length === 0 ? (
           <section className={styles.noCard}>
-            <div>
-              아직 일기를 작성하지 않으셨네요! <br /> 오늘의 일기를 작성해보는건 어떨까요 ? <br /> 일기를 쓰시면 오늘의
-              채팅에 참여할 수 있어요!
-            </div>
-            <Link href="/post" replace>
-              <button className={styles.goPost}>일기 쓰러 가기</button>
-            </Link>
+            {todayCard && todayCard.nowCard === null && (
+              <>
+                <div>
+                  아직 일기를 작성하지 않으셨네요! <br /> 오늘의 일기를 작성해보는건 어떨까요 ? <br /> 일기를 쓰시면
+                  오늘의 채팅에 참여할 수 있어요!
+                </div>
+                <Link href="/post" replace>
+                  <button className={styles.goPost}>일기 쓰러 가기</button>
+                </Link>
+              </>
+            )}
+            {todayCard && todayCard.futureCard === null && (
+              <>
+                <div>
+                  아직 미래카드를 뽑지 않으셨네요! <br /> 미래카드를 뽑아 보는건 어떨까요 ? <br /> 미래카드까지 뽑으면
+                  채팅에 참여할 수 있어요!
+                </div>
+                <Link href="/tarot?info=future" replace>
+                  <button className={styles.goPost}>미래 카드 뽑기</button>
+                </Link>
+              </>
+            )}
           </section>
         ) : (
           <motion.div

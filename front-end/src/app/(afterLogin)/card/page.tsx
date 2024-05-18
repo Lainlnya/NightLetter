@@ -25,6 +25,12 @@ const ViewCard: React.FC = () => {
     enabled: searchParams.get('info') === 'past',
   });
 
+  const { data: presentCard } = useQuery({
+    queryKey: ['PresentTarotCard'],
+    queryFn: () => getTarotCard(searchParams.get('info') as string, 'POST'),
+    enabled: searchParams.get('info') === 'present',
+  });
+
   const { data: futureCard } = useQuery({
     queryKey: ['FutureTarotCard'],
     queryFn: () => getTarotCard(searchParams.get('info') as string, 'GET'),
@@ -41,15 +47,13 @@ const ViewCard: React.FC = () => {
         setIsLoadingCustom(false);
       }, 1500);
     };
-    
-    const presentCardInfo = sessionStorage.getItem('presentCardInfo');
-    if (searchParams.get('info') === 'present' && presentCardInfo !== null) {
-      const { name, imgUrl, keyword, desc } = JSON.parse(presentCardInfo);
-      updateCardData({ name, imgUrl, keyword, desc });
-    }
 
     if (pastCard && searchParams.get('info') === 'past') {
       updateCardData(pastCard);
+    }
+
+    if (presentCard && searchParams.get('info') === 'present') {
+      updateCardData(presentCard);
     }
 
     if (futureCard && searchParams.get('info') === 'future') {
@@ -61,7 +65,7 @@ const ViewCard: React.FC = () => {
         clearTimeout(timer);
       }
     };
-  }, [pastCard, futureCard]);
+  }, [pastCard, presentCard, futureCard]);
 
   if (!card || isLoading || isLoadingCustom) {
     return <Loading loadingMessage={Messages.LOADING_CARD_INFO} />;
