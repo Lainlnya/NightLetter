@@ -35,4 +35,20 @@ public class TarotCustomRepositoryImpl implements TarotCustomRepository {
 			.limit(1)
 			.fetchOne());
 	}
+
+	@Override
+	public Optional<Tarot> findNowTarot(LocalDate today, int memberId) {
+		return Optional.ofNullable(queryFactory.select(tarot)
+			.from(diary)
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.innerJoin(diaryTarot.tarot, tarot)
+			.where(
+				diary.writer.memberId.eq(memberId),
+				diary.date.eq(today),
+				diaryTarot.type.eq(DiaryTarotType.NOW)
+			)
+			.orderBy(diary.date.desc())
+			.limit(1)
+			.fetchOne());
+	}
 }

@@ -39,6 +39,13 @@ public class TarotController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 
+	@GetMapping("/now")
+	public ResponseEntity<?> findNowTarot() {
+
+		return tarotService.getNowTarot().map(ResponseEntity::ok)
+			.orElse(ResponseEntity.notFound().build());
+	}
+
 	// TODO REMOVE AFTER TEST
 	@GetMapping("/past-test")
 	public ResponseEntity<?> findTestPastTarot() {

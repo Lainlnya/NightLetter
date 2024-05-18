@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
@@ -67,6 +68,8 @@ import com.nightletter.global.exception.InvalidParameterException;
 import com.nightletter.global.exception.RecsysConnectionException;
 import com.nightletter.global.exception.ResourceNotFoundException;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -88,6 +91,9 @@ public class DiaryServiceImpl implements DiaryService {
 	private final TarotPastRedisRepository pastRedisRepository;
 	private final RecommendedDiaryRepository recommendedDiaryRepository;
 	private final NotificationService notificationService;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
 
@@ -144,20 +150,24 @@ public class DiaryServiceImpl implements DiaryService {
 			return ;
 		}
 
+		Integer memberId = getCurrentMemberId();
+
 		// 2. 추천 다이어리 저장 및 추천 다이어리 실시간 알림.
 		// 추천 다이어리 저장.
-		recommendedDiaryRepository.saveAll(
-			getRecommendedDiaries(event.getRecommendedDiaryIdList())
-				.stream()
-				.map(diary -> {
-						return RecommendedDiary.builder()
-							.diary(diary)
-							.member(getCurrentMember())
-							.recommendedDate(getToday())
-							.build();
-					}
-				).toList()
-		);
+
+		List<Long> recDiaryIds = event.getRecommendedDiaryIdList();
+
+		for (Long diaryId: recDiaryIds) {
+			entityManager.createNativeQuery(
+				"INSERT INTO recommended_diary (diary_id, member_id, recommended_date) VALUES (?, ?, ?)")
+				.setParameter(1, diaryId)
+				.setParameter(2, memberId)
+				.setParameter(3, LocalDateTime.now())
+				.executeUpdate();
+		}
+
+		entityManager.flush();
+		entityManager.clear();
 
 		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL);
 	}

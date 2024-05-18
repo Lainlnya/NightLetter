@@ -218,6 +218,22 @@ public class TarotServiceImpl implements TarotService {
 	}
 
 	@Override
+	public Optional<TarotResponse> getNowTarot() {
+		Integer memberId = getCurrentMemberId();
+
+		// 캐시 조회.
+		// 없으면 RDB 조회
+		return Optional.ofNullable(
+			// 캐시 조회. 있으면
+			tarotRepository.findNowTarot(getToday(), getCurrentMemberId())
+				.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
+				.orElseThrow(() ->
+					new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "NOW TAROT NOT FOUND"))
+
+		);
+	}
+
+	@Override
 	public Tarot makeRandomTarot(int... ignoreTarotsId) {
 		Random random = new Random();
 		List<Integer> ignoredIdsList = Arrays.stream(ignoreTarotsId).boxed().toList();

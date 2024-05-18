@@ -7,11 +7,14 @@ import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.entity.FutureTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
+import com.querydsl.core.group.GroupBy;
 
 public interface TarotService {
 	Optional<TarotResponse> createRandomPastTarot();
 
 	Optional<TarotResponse> getPastTarot();
+
+	Optional<TarotResponse> getNowTarot();
 
 	Tarot findSimilarTarot(EmbedVector diaryEmbedVector);
 
@@ -25,5 +28,6 @@ public interface TarotService {
 
 	Optional<FutureTarot>  updateWithNewEntity();
 	Optional<FutureTarot>  updateOnlyFlipped();
+
 }
 

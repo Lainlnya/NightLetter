@@ -34,5 +34,4 @@ public interface DiaryCustomRepository {
 
 	void updateDiaryGPTComment(Long diaryId, String gptComment);
 
-	// void insertDiaryRecommends(List<Long> diaries);
 }
