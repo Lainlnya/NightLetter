@@ -20,17 +20,17 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<NotificationQueryResponse> findAllNotifications(Member member, LocalDateTime todaySttTime) {
+	public List<NotificationQueryResponse> findAllNotifications(Member member) {
 		return queryFactory.
 			select(new QNotificationQueryResponse(
 				notification.id,
 				notification.type,
-				notification.isRead
+				notification.isRead,
+				notification.createdAt
 			))
 			.from(notification)
 			.where(
-				notification.createdAt.after(todaySttTime)
-				.and(notification.member.eq(member)))
+				notification.member.eq(member))
 			.orderBy(notification.createdAt.desc())
 			// 존재하는 서브테이블 모두와 Join
 			// .innerJoin()

@@ -1,6 +1,9 @@
 package com.nightletter.domain.social.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.nightletter.domain.social.entity.Notification;
+import com.nightletter.domain.social.entity.NotificationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +19,9 @@ import lombok.ToString;
 public class RecommendNotificationResponse extends NotificationResponse {
 
 	@Builder
-	public RecommendNotificationResponse(long notificationId, String title, String content, boolean isRead) {
-		super(notificationId, title, content, isRead);
+	public RecommendNotificationResponse(long notificationId, NotificationType type, LocalDateTime created_at,
+		String title, String content, Boolean isRead) {
+		super(notificationId, type, created_at, title, content, isRead);
 	}
 
 }

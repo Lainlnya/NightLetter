@@ -1,6 +1,9 @@
 package com.nightletter.domain.social.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.nightletter.domain.social.entity.Notification;
+import com.nightletter.domain.social.entity.NotificationType;
 
 import lombok.Builder;
 import lombok.Data;
@@ -15,9 +18,11 @@ import lombok.ToString;
 public class GptNotificationResponse extends NotificationResponse {
 	private String test;
 
+
 	@Builder
-	public GptNotificationResponse(long notificationId, String title, String content, boolean isRead, String test) {
-		super(notificationId, title, content, isRead);
+	public GptNotificationResponse(long notificationId, NotificationType type, LocalDateTime created_at,
+		String title, String content, Boolean isRead, String test) {
+		super(notificationId, type, created_at, title, content, isRead);
 		this.test = test;
 	}
 

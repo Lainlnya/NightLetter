@@ -14,8 +14,6 @@ import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.social.dto.response.NotificationQueryResponse;
 import com.nightletter.domain.social.dto.response.NotificationResponse;
-import com.nightletter.domain.social.entity.Notification;
-import com.nightletter.domain.social.repository.NotificationCustomRepository;
 import com.nightletter.domain.social.repository.NotificationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,10 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		System.out.println(todayStdTime);
 
-		List<NotificationQueryResponse> notifications = notificationRepository.findAllNotifications(getCurrentMember(),
-			todayStdTime);
-
-		System.out.println(notifications.size());
+		List<NotificationQueryResponse> notifications = notificationRepository.findAllNotifications(getCurrentMember());
 
 		return notifications.stream().map(NotificationQueryResponse::toResponse).toList();
 	}

@@ -8,5 +8,5 @@ import com.nightletter.domain.social.dto.response.NotificationQueryResponse;
 
 public interface NotificationCustomRepository {
 
-	public List<NotificationQueryResponse> findAllNotifications(Member member, LocalDateTime todaySttTime);
+	public List<NotificationQueryResponse> findAllNotifications(Member member);
 }
