@@ -120,6 +120,7 @@ public class DiaryServiceImpl implements DiaryService {
 
 		DiaryCreateEvent event = DiaryCreateEvent.builder()
 			.diaryId(userDiary.getDiaryId())
+			.memberId(getCurrentMemberId())
 			.recommendedDiaryIdList(recDiariesId)
 			.build();
 
@@ -143,14 +144,12 @@ public class DiaryServiceImpl implements DiaryService {
 			return ;
 		}
 
-		Member member = getCurrentMember();
+		Member member = memberRepository.findByMemberId(event.getMemberId());
 
 		// 2. 추천 다이어리 저장 및 추천 다이어리 실시간 알림.
 		// 추천 다이어리 저장.
 
 		List<Diary> recDiaries = getRecommendedDiaries(event.getRecommendedDiaryIdList());
-
-		int idx = 0;
 
 		for (Diary diary : recDiaries) {
 			RecommendedDiary recommendedDiary = RecommendedDiary.builder()
@@ -160,7 +159,6 @@ public class DiaryServiceImpl implements DiaryService {
 				.build();
 
 			recommendedDiaryRepository.save(recommendedDiary);
-			System.out.println("saved Diary: " + idx++);
 		}
 
 		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL);

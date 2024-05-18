@@ -13,5 +13,6 @@ import lombok.ToString;
 @Data @Builder @ToString
 public class DiaryCreateEvent {
 	Long diaryId;
+	Integer memberId;
 	List<Long> recommendedDiaryIdList;
 }
