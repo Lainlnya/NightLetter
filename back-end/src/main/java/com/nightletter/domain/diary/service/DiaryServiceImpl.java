@@ -9,8 +9,11 @@ import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
@@ -47,6 +50,7 @@ import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.FutureTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotFutureRedisRepository;
+import com.nightletter.domain.tarot.repository.TarotPastRedisRepository;
 import com.nightletter.domain.tarot.service.TarotService;
 import com.nightletter.domain.tarot.service.TarotServiceImpl;
 import com.nightletter.global.common.ResponseDto;
@@ -73,6 +77,7 @@ public class DiaryServiceImpl implements DiaryService {
 	private final GptServiceImpl gptServiceImpl;
 	private final TarotService tarotServiceImpl;
 	private final TarotFutureRedisRepository futureRedisRepository;
+	private final TarotPastRedisRepository pastRedisRepository;
 	private final RecommendedDiaryRepository recommendedDiaryRepository;
 
 	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
@@ -258,10 +263,35 @@ public class DiaryServiceImpl implements DiaryService {
 
 		List<TodayTarot> tarots = diaryRepository.findTodayDiary(getCurrentMember(), getToday());
 
-		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
+		// TODO 과거카드 수정.
 
-		System.out.println("today: " + futureRedisRepository.existsById(getCurrentMemberId()));
-		System.out.println("today: " + futureRedisRepository.findById(getCurrentMemberId()));
+		Optional<TodayTarot> pastTarot = tarots.stream()
+			.filter(tarot -> tarot.getCardType() == DiaryTarotType.PAST)
+			.findFirst();
+
+		if (pastTarot.isEmpty()) {
+
+			System.out.println("ISNOTPRESENT");
+
+			TarotDto pastTarotDto = getUnfinishedDiaryOfToday();
+
+			if (pastTarotDto != null) {
+				System.out.println("pastTarotDtoISNOTPRESENT");
+
+				TodayTarot tempPastTarot = TodayTarot.builder()
+					.cardNo(pastTarotDto.id())
+					.cardName(pastTarotDto.name())
+					.cardDir(pastTarotDto.dir())
+					.cardImgUrl(pastTarotDto.imgUrl())
+					.cardType(DiaryTarotType.PAST)
+					.build();
+
+				tarots.add(tempPastTarot);
+
+			}
+		}
+
+		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
 
 		if (! futureRedisRepository.existsById(getCurrentMemberId())) {
 			response.setFutureCard(null);

@@ -124,5 +124,4 @@ public class DiaryController {
 		return ResponseEntity.ok(diaryService.findTodayRecommendedDiaries());
 	}
 
-
 }

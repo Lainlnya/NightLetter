@@ -123,7 +123,7 @@ public class TarotServiceImpl implements TarotService {
 		// TODO TAROT FUTURE REDIS DIARY로  수정 필요.
 
 		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
-			.orElseThrow();
+			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "FUTURE TAROT NOT FOUND"));
 
 		futureRedisRepository.save(
 			FutureTarot.builder()

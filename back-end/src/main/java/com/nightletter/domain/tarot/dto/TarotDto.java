@@ -3,6 +3,7 @@ package com.nightletter.domain.tarot.dto;
 import java.util.List;
 
 import com.nightletter.domain.diary.dto.recommend.EmbedVector;
+import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.entity.TarotDirection;
 

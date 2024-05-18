@@ -5,15 +5,12 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
@@ -25,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-public class ChatConnController {
+public class WebSocketController {
 
 	private final ChatService chatService;
 
@@ -46,7 +43,6 @@ public class ChatConnController {
 			int memberId = testMemberCount / 3 + 1;
 
 			ChatResponse response = chatService.sendMessage(memberId, roomId, request.getMessage());
-
 
 			response.setProfileImgUrl(testProfileImg + memberId + ".jpg");
 			response.setSentByMe(memberId == 3);

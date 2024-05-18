@@ -17,8 +17,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		// 외부에서 사용하는 부분. 클라이언트가 /app 경로를 통해서 메세지를 발송함.
 		// config.setApplicationDestinationPrefixes("/send");
 
-		// 내부에서 작동하는 부분. /room 구독하는 사람들에게 알림과 메세지를 줌.
-		config.enableSimpleBroker("/room", "/alert");
+		/*
+		 * 내부에서 작동하는 부분.
+		 * /room : 채팅방 접속 시.
+		 * /notification : 초기 접속 시 notification 구독. Websocket 연결과 동시에.
+		 */
+		//  /room 구독하는 사람들에게 알림과 메세지를 줌.
+		config.enableSimpleBroker("/room", "/notification");
 		// 외부에서 사용하는 부분. 클라이언트가 /send 경로를 통해서 메세지를 발송함.
 		config.setApplicationDestinationPrefixes("/send");
 	}
