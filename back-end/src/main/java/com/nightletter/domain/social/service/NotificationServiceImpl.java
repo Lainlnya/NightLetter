@@ -67,7 +67,7 @@ public class NotificationServiceImpl implements NotificationService {
 		notificationRepository.save(notification);
 
 		messagingTemplate.convertAndSendToUser(
-			String.valueOf(getCurrentMemberId()),
+			String.valueOf(member.getMemberId()),
 			"/notification",
 			type.getTitle()
 		);
