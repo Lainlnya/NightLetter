@@ -19,7 +19,7 @@ export default function Notification({ notification }: { notification: string })
 
   return (
     <motion.div animate={{ y }} transition={{ type: 'spring', damping: 10, stiffness: 100 }}>
-      <div className={styles.noti}>
+      <div className={`${notification === '' ? styles.none : styles.noti}`}>
         <div>
           <FontAwesomeIcon icon={faEnvelope} />
         </div>
