@@ -41,8 +41,8 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public void sendNotificationToUser(String userId, NotificationResponse notification) {
-		messagingTemplate.convertAndSendToUser(userId, "/notification",
+	public void sendNotificationToUser(NotificationResponse notification) {
+		messagingTemplate.convertAndSendToUser(String.valueOf(getCurrentMemberId()), "/notification",
 			GptNotificationResponse.builder()
 				.notificationId(1)
 				.type(NotificationType.GPT_COMMENT_ARRIVAL)
@@ -54,6 +54,11 @@ public class NotificationServiceImpl implements NotificationService {
 			);
 	}
 
+	private Integer getCurrentMemberId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return Integer.parseInt((String)authentication.getPrincipal());
+	}
+
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
@@ -63,6 +68,5 @@ public class NotificationServiceImpl implements NotificationService {
 		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
 			LocalDate.now() : LocalDate.now().minusDays(1);
 	}
-
 
 }

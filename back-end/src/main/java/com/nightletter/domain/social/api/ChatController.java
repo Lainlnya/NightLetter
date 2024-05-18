@@ -43,9 +43,8 @@ public class ChatController {
 
 	@GetMapping("/send-notification")
 	@SendToUser("/notification")
-	public void sendNotification(SimpMessageHeaderAccessor headerAccessor) {
-		String userId = (String) headerAccessor.getSessionAttributes().get("memberId");
-		notificationService.sendNotificationToUser(userId, null);
+	public void sendNotification() {
+		notificationService.sendNotificationToUser(null);
 	}
 
 }
