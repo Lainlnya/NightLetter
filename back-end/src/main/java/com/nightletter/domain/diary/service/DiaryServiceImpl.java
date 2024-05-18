@@ -161,7 +161,7 @@ public class DiaryServiceImpl implements DiaryService {
 			recommendedDiaryRepository.save(recommendedDiary);
 		}
 
-		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL);
+		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL, member);
 	}
 
 	@KafkaListener(topics = "create-diary", groupId = "gpt_diary-1")
@@ -169,10 +169,13 @@ public class DiaryServiceImpl implements DiaryService {
 
 		System.out.println("RECEIVE_GPT_EVENT: event: " + event);
 
+
 		if (event == null || event.getRecommendedDiaryIdList() == null) {
 			// 에러 처리 .
 			return ;
 		}
+
+		Member member = memberRepository.findByMemberId(event.getMemberId());
 
 		FutureTarotResponse response = diaryRepository.findFutureTarot(event.getDiaryId())
 			.orElseThrow(() ->
@@ -187,7 +190,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diaryRepository.updateDiaryGPTComment(event.getDiaryId(), gptComment);
 
 		// 알림 전송, 저장.
-		notificationService.sendNotificationToUser(NotificationType.GPT_COMMENT_ARRIVAL);
+		notificationService.sendNotificationToUser(NotificationType.GPT_COMMENT_ARRIVAL, member);
 	}
 
 

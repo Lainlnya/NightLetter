@@ -56,9 +56,9 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public void sendNotificationToUser(NotificationType type) {
+	public void sendNotificationToUser(NotificationType type, Member member) {
 		Notification notification = Notification.builder()
-			.member(getCurrentMember())
+			.member(member)
 			.type(type)
 			.createdAt(LocalDateTime.now())
 			.isRead(false)
