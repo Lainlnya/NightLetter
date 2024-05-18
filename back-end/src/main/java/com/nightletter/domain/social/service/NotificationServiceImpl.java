@@ -43,16 +43,11 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public void sendNotificationToUser(NotificationResponse notification) {
-		messagingTemplate.convertAndSendToUser(String.valueOf(getCurrentMemberId()), "/notification",
-			GptNotificationResponse.builder()
-				.notificationId(1)
-				.type(NotificationType.GPT_COMMENT_ARRIVAL)
-				.title("GPT 받아라")
-				.content("GPT 답장 받아라")
-				.created_at(LocalDateTime.now())
-				.test("test입니다.")
-				.build()
-			);
+		messagingTemplate.convertAndSendToUser(
+			String.valueOf(getCurrentMemberId()),
+			"/notification",
+			notification.getTitle()
+		);
 	}
 
 	private Integer getCurrentMemberId() {
