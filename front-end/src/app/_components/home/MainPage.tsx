@@ -8,6 +8,7 @@ import useStore from "@/store/date";
 import CardSlider from "./CardSlider";
 import { Messages } from "@/utils/msg";
 import CalendarComponent from "../diaries/Calendar";
+import CommentViewer from "./CommentViewer";
 
 import Image from "next/image";
 import alarm from "../../../../public/Icons/alarm_icon.svg";
@@ -38,18 +39,6 @@ export default function Home() {
     }
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const data = await checkTodayStatus();
-  //       console.log(data)
-  //     } catch (error) {
-  //       console.error("닉네임 불러오기 실패");
-  //     }
-  //   }
-  //   fetchData();
-  // }, []);
 
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -87,6 +76,7 @@ export default function Home() {
 
   return (
     <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
+      <div className={styles.root}>
       <header className={styles.header}>
         <div className={styles.header_icons}>
           <Image
@@ -121,6 +111,11 @@ export default function Home() {
           setCardIndex={setCardIndex}
         />
       </section>
+      </div>
+      <CommentViewer 
+        data={data}
+        cardIndex={cardIndex}
+      />
       <ToastModal />
     </Suspense>
   );

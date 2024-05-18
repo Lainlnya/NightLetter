@@ -21,7 +21,7 @@ const GNB = () => {
         <Link href='/'>
           <li className={`${pathname === "/" ? styles.active : ""}`}>
             <FontAwesomeIcon icon={faHouse} />
-            <span>HOME</span>
+            <span>메인</span>
           </li>
         </Link>
         <Link href='/scrap'>
@@ -33,13 +33,13 @@ const GNB = () => {
         <Link href='/chatting'>
           <li className={`${pathname === "/chatting" ? styles.active : ""}`}>
             <FontAwesomeIcon icon={faComment} />
-            <span>CHAT</span>
+            <span>채팅</span>
           </li>
         </Link>
         <Link href='/profile'>
           <li className={`${pathname === "/profile" ? styles.active : ""}`}>
             <FontAwesomeIcon icon={faUser} />
-            <span>PROFILE</span>
+            <span>마이페이지</span>
           </li>
         </Link>
       </ul>
