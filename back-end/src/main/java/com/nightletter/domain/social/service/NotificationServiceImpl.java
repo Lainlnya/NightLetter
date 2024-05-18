@@ -16,6 +16,7 @@ import com.nightletter.domain.member.repository.MemberRepository;
 import com.nightletter.domain.social.dto.response.GptNotificationResponse;
 import com.nightletter.domain.social.dto.response.NotificationQueryResponse;
 import com.nightletter.domain.social.dto.response.NotificationResponse;
+import com.nightletter.domain.social.entity.Notification;
 import com.nightletter.domain.social.entity.NotificationType;
 import com.nightletter.domain.social.repository.NotificationRepository;
 
@@ -41,6 +42,10 @@ public class NotificationServiceImpl implements NotificationService {
 		return notifications.stream().map(NotificationQueryResponse::toResponse).toList();
 	}
 
+	/**
+	 * Method For Test (Not Used)
+	 * @param notification
+	 */
 	@Override
 	public void sendNotificationToUser(NotificationResponse notification) {
 		messagingTemplate.convertAndSendToUser(
@@ -49,6 +54,26 @@ public class NotificationServiceImpl implements NotificationService {
 			notification.getTitle()
 		);
 	}
+
+	@Override
+	public void sendNotificationToUser(NotificationType type) {
+		Notification notification = Notification.builder()
+			.member(getCurrentMember())
+			.type(type)
+			.createdAt(LocalDateTime.now())
+			.isRead(false)
+			.build();
+
+		notificationRepository.save(notification);
+
+		messagingTemplate.convertAndSendToUser(
+			String.valueOf(getCurrentMemberId()),
+			"/notification",
+			type.getTitle()
+		);
+	}
+
+
 
 	private Integer getCurrentMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -17,6 +17,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,12 +30,14 @@ import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.dto.recommend.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCreateEvent;
 import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.FutureTarotResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
@@ -46,7 +50,11 @@ import com.nightletter.domain.diary.repository.RecommendedDiaryRepository;
 import com.nightletter.domain.diary.repository.ScrapRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.domain.social.dto.response.GptNotificationResponse;
+import com.nightletter.domain.social.entity.NotificationType;
+import com.nightletter.domain.social.service.NotificationService;
 import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.entity.FutureTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
 import com.nightletter.domain.tarot.repository.TarotFutureRedisRepository;
@@ -69,7 +77,7 @@ import reactor.core.publisher.Mono;
 public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
-	private final DiaryRedisRepository diaryRedisRepository;
+	private final KafkaTemplate<String, Object> kafkaTemplate;
 	private final WebClient webClient;
 	private final TarotServiceImpl tarotService;
 	private final MemberRepository memberRepository;
@@ -79,33 +87,67 @@ public class DiaryServiceImpl implements DiaryService {
 	private final TarotFutureRedisRepository futureRedisRepository;
 	private final TarotPastRedisRepository pastRedisRepository;
 	private final RecommendedDiaryRepository recommendedDiaryRepository;
+	private final NotificationService notificationService;
 
 	private final String SHARING_BASE_URL = "https://dev.letter-for.me/api/v1/diaries/shared/";
 
 	@Override
 	@Transactional
-	public RecommendResponse createDiary(DiaryCreateRequest diaryRequest) {
+	public TarotResponse createDiary(DiaryCreateRequest diaryRequest) {
 
 		// 추천 사연 + 임베딩 벡터 수신
 		RecommendDataResponse recDataResponse = fetchRecData(diaryRequest);
 		List<Long> recDiariesId = recDataResponse.getDiariesId();
 		EmbedVector embedVector = recDataResponse.getEmbedVector();
 
-		RecommendResponse recResponse = new RecommendResponse();
-		recResponse.setRecommendDiaries(getRecDiaries(recDiariesId));
-
 		// 1. 임베딩 벡터 기반 현재 카드 추출, 응답.
-
 		// TODO: WRAP WITH OPTIONAL
 		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
-		recResponse.setCard(nowTarot);
 		Tarot pastTarot = tarotService.findPastTarot().get();
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
-		// 2. 추천 다이어리 저장 및 추천 다이어리 실시간 알림.
+		// 2. 다이어리 생성. GPT 코멘트는 이후 업데이트.
+		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
+		userDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
+		userDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
+		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
 
+		diaryRepository.save(userDiary);
+
+		// 3. Redis 미래 카드 마스킹 처리. 사용자가 미래카드 조회 시 toggle.
+
+		// TODO 일괄 수정 예정
+
+		futureRedisRepository.save(FutureTarot.unflipped(getCurrentMemberId()));
+
+		DiaryCreateEvent event = DiaryCreateEvent.builder()
+			.diaryId(userDiary.getDiaryId())
+			.recommendedDiaryIdList(recDiariesId)
+			.build();
+
+		System.out.println("SEND_EVENT: event: " + event);
+
+		// 메세지 전송.
+		// 생성된 다이어리 아이디와, 임베딩 벡터 값을 전달.
+		kafkaTemplate.send("create-diary", event);
+
+		return TarotResponse.of(nowTarot, nowTarot.getDir());
+	}
+
+	@KafkaListener(topics = "create-diary", groupId = "recommend_diary-1")
+	public void sendRecommendedDiaries(DiaryCreateEvent event) {
+
+		System.out.println("RECEIVE_REC_EVENT: event: " + event);
+
+		if (event == null || event.getRecommendedDiaryIdList() == null) {
+			// 에러 처리 .
+			return ;
+		}
+
+		// 2. 추천 다이어리 저장 및 추천 다이어리 실시간 알림.
+		// 추천 다이어리 저장.
 		recommendedDiaryRepository.saveAll(
-			getRecommendedDiaries(recDiariesId)
+			getRecommendedDiaries(event.getRecommendedDiaryIdList())
 				.stream()
 				.map(diary -> {
 						return RecommendedDiary.builder()
@@ -117,34 +159,35 @@ public class DiaryServiceImpl implements DiaryService {
 				).toList()
 		);
 
-		// 3. GPT 코멘트 요청 및 응답 수신 후 실시간 알림.
+		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL);
+	}
 
-		String question = String.format("%s, %s, %s", futureTarot.getName(), futureTarot.getDir().toString(), diaryRequest.getContent());
+	@KafkaListener(topics = "create-diary", groupId = "gpt_diary-1")
+	public void sendGPTComment(DiaryCreateEvent event) {
+
+		System.out.println("RECEIVE_GPT_EVENT: event: " + event);
+
+		if (event == null || event.getRecommendedDiaryIdList() == null) {
+			// 에러 처리 .
+			return ;
+		}
+
+		FutureTarotResponse response = diaryRepository.findFutureTarot(event.getDiaryId())
+			.orElseThrow(() ->
+				new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "Diary Not Found"));
+
+		// 3. GPT 코멘트 요청 및 응답 수신 후 실시간 알림.
+		// 데이터 베이스에 업데이트
+
+		String question = String.format("%s, %s, %s", response.getFutureTarotName(), response.getFutureTarotDir().toString(), response.getDiaryContent());
 		String gptComment = gptServiceImpl.askQuestion(question);
 
-		Diary userDiary = diaryRequest.toEntity(getCurrentMember(), embedVector);
-		userDiary.addDiaryComment(gptComment);
-		userDiary.addDiaryTarot(pastTarot, DiaryTarotType.PAST);
-		userDiary.addDiaryTarot(nowTarot, DiaryTarotType.NOW);
-		userDiary.addDiaryTarot(futureTarot, DiaryTarotType.FUTURE);
+		diaryRepository.updateDiaryGPTComment(event.getDiaryId(), gptComment);
 
-		// TODO 일괄 수정 예정
-		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
-
-		Long timeToLive = expiredTime.toEpochSecond(ZoneOffset.UTC)
-			- LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
-		diaryRepository.save(userDiary);
-		futureRedisRepository.save(
-				FutureTarot.builder()
-						// 수정
-						.memberId(getCurrentMemberId())
-						.expiredTime(timeToLive)
-						.flipped(false)
-						.build()
-		);
-		return recResponse;
+		// 알림 전송, 저장.
+		notificationService.sendNotificationToUser(NotificationType.GPT_COMMENT_ARRIVAL);
 	}
+
 
 	private RecommendDataResponse fetchRecData(DiaryCreateRequest diaryRequest) {
 		RecommendDataResponse recDataResponse = webClient.post()

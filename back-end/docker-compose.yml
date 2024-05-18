@@ -22,6 +22,7 @@ services:
       - OPENAI_MODEL=${OPENAI_MODEL}
       - OPENAI_SECRET_KEY=${OPENAI_SECRET_KEY}
       - TEST_PROFILE=${TEST_PROFILE}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=${SPRING_KAFKA_BOOTSTRAP_SERVERS}
       - TZ=Asia/Seoul
     networks:
       - night-letter

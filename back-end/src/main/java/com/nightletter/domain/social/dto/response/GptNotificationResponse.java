@@ -17,8 +17,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class GptNotificationResponse extends NotificationResponse {
 	private String test;
-
-
+	
 	@Builder
 	public GptNotificationResponse(long notificationId, NotificationType type, LocalDateTime created_at,
 		String title, String content, Boolean isRead, String test) {

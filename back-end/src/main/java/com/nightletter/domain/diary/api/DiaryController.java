@@ -26,6 +26,7 @@ import com.nightletter.domain.diary.dto.response.GPTResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.domain.diary.service.DiaryService;
 import com.nightletter.domain.diary.service.GptServiceImpl;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +41,9 @@ public class DiaryController {
 	private final GptServiceImpl gptService;
 
 	@PostMapping("")
-	public ResponseEntity<RecommendResponse> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
-		RecommendResponse diary = diaryService.createDiary(diaryCreateRequest);
-		return ResponseEntity.status(HttpStatus.CREATED).body(diary);
+	public ResponseEntity<TarotResponse> addDiary(@RequestBody DiaryCreateRequest diaryCreateRequest) {
+		TarotResponse tarot = diaryService.createDiary(diaryCreateRequest);
+		return ResponseEntity.status(HttpStatus.CREATED).body(tarot);
 	}
 
 	@PatchMapping("")

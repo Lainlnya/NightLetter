@@ -22,12 +22,14 @@ import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
 import com.nightletter.domain.diary.dto.request.DiaryListRequest;
 import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.FutureTarotResponse;
 import com.nightletter.domain.diary.dto.response.QDiaryRecResponse;
 import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.dto.TarotDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -142,6 +144,32 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.leftJoin(scrap)
 			.on(recommendedDiary.diary.diaryId.eq(scrap.diary.diaryId))
 			.fetch();
+	}
+
+	@Override
+	public Optional<FutureTarotResponse> findFutureTarot(Long diaryId) {
+		return Optional.ofNullable(
+			queryFactory.select(
+			Projections.constructor(
+				FutureTarotResponse.class,
+				tarot.name,
+				tarot.dir,
+				diary.content
+				))
+			.from(diary)
+			.where(diary.diaryId.eq(diaryId))
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.type.eq(FUTURE))
+			.fetchOne()
+		);
+	}
+
+	@Override
+	public void updateDiaryGPTComment(Long diaryId, String gptComment) {
+		queryFactory.update(diary)
+			.set(diary.gptComment, gptComment)
+			.where(diary.diaryId.eq(diaryId))
+			.execute();
 	}
 
 	@Override

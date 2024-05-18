@@ -16,11 +16,12 @@ import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
 import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
 import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.global.common.ResponseDto;
 
 public interface DiaryService {
 
-	RecommendResponse createDiary(DiaryCreateRequest diaryCreateRequest);
+	TarotResponse createDiary(DiaryCreateRequest diaryCreateRequest);
 
 	Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request);
 

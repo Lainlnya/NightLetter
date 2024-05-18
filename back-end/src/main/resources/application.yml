@@ -59,6 +59,9 @@ spring:
       host: ${REDIS_HOSTNAME}
       port: ${REDIS_PORT}
 
+kafka:
+  bootstrap-server: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access:
