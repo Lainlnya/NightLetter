@@ -33,12 +33,14 @@ public class NotificationServiceImpl implements NotificationService {
 
 		LocalDateTime todayStdTime = LocalDateTime.of(getToday(), LocalTime.of(4, 0));
 
+		System.out.println(todayStdTime);
+
 		List<NotificationQueryResponse> notifications = notificationRepository.findAllNotifications(getCurrentMember(),
 			todayStdTime);
 
-		// TODO notifications 요소 하나씩 Response로 처리.
-		// TODO notification Type 마다 다르게 설정해야함.
-		return null;
+		System.out.println(notifications.size());
+
+		return notifications.stream().map(NotificationQueryResponse::toResponse).toList();
 	}
 
 	private Member getCurrentMember() {

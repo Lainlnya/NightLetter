@@ -45,25 +45,9 @@ public class NotificationController {
 		return ResponseEntity.ok(responses);
 	}
 
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity<?> getAllNotifications() {
 
-		List<NotificationResponse> responses = List.of(
-			GptNotificationResponse.builder()
-				.notificationId(1)
-				.title("GPT TITLE")
-				.content("GPT CONTENT")
-				.isRead(true)
-				.test("dsamlkdmaskl")
-				.build(),
-			RecommendNotificationResponse.builder()
-				.notificationId(1)
-				.title("REC TITLE")
-				.content("REC CONTENT")
-				.isRead(true)
-				.build()
-		);
-
-		return ResponseEntity.ok(responses);
+		return ResponseEntity.ok(notificationService.getAllNotifications());
 	}
 }
