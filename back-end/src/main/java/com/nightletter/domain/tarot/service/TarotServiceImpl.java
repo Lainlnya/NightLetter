@@ -268,7 +268,10 @@ public class TarotServiceImpl implements TarotService {
 	@Override
 	public Optional<FutureTarot> updateWithNewEntity() {
 		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
-			.orElseThrow();
+			.orElseGet(() -> FutureTarot.builder()
+				.memberId(getCurrentMemberId())
+				.build()
+			);
 
 		LocalDateTime expiredTime = LocalDateTime.of(getToday().plusDays(1), LocalTime.of(4, 0));
 

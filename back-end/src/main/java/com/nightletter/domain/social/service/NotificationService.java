@@ -8,4 +8,6 @@ public interface NotificationService {
 
 	public List<NotificationResponse> getAllNotifications();
 
+	public void sendNotificationToUser(String userId, NotificationResponse notification);
+
 }

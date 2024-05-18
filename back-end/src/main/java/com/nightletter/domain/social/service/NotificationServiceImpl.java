@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.domain.social.dto.response.GptNotificationResponse;
 import com.nightletter.domain.social.dto.response.NotificationQueryResponse;
 import com.nightletter.domain.social.dto.response.NotificationResponse;
+import com.nightletter.domain.social.entity.NotificationType;
 import com.nightletter.domain.social.repository.NotificationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-	private final SimpMessagingTemplate simpleMessageTemplate;
+	private final SimpMessagingTemplate messagingTemplate;
 	private final MemberRepository memberRepository;
 	private final NotificationRepository notificationRepository;
 
@@ -38,6 +40,20 @@ public class NotificationServiceImpl implements NotificationService {
 		return notifications.stream().map(NotificationQueryResponse::toResponse).toList();
 	}
 
+	@Override
+	public void sendNotificationToUser(String userId, NotificationResponse notification) {
+		messagingTemplate.convertAndSendToUser(userId, "/notification",
+			GptNotificationResponse.builder()
+				.notificationId(1)
+				.type(NotificationType.GPT_COMMENT_ARRIVAL)
+				.title("GPT 받아라")
+				.content("GPT 답장 받아라")
+				.created_at(LocalDateTime.now())
+				.test("test입니다.")
+				.build()
+			);
+	}
+
 	private Member getCurrentMember() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
@@ -47,5 +63,6 @@ public class NotificationServiceImpl implements NotificationService {
 		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
 			LocalDate.now() : LocalDate.now().minusDays(1);
 	}
+
 
 }

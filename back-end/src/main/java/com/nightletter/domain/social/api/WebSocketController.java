@@ -9,6 +9,8 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -17,6 +19,7 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import com.nightletter.domain.social.dto.request.ChatRequest;
 import com.nightletter.domain.social.dto.response.ChatResponse;
 import com.nightletter.domain.social.service.ChatService;
+import com.nightletter.domain.social.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class WebSocketController {
 
 	private final ChatService chatService;
+	private final NotificationService notificationService;
 
 	@Value("${chat.test-profile}")
 	private String testProfileImg;
@@ -61,6 +65,11 @@ public class WebSocketController {
 		// TODO null 처리 .
 		if (destination == null) {
 
+		}
+
+		if (destination.equals("/notification")) {
+			System.out.println("notification 구독 완료.");
+			return ;
 		}
 
 		Pattern pattern = Pattern.compile("/room/(\\d+)(\\?)?"); // 정규 표현식

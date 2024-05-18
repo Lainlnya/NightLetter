@@ -86,7 +86,7 @@ public class DiaryServiceImpl implements DiaryService {
 	@Transactional
 	public RecommendResponse createDiary(DiaryCreateRequest diaryRequest) {
 
-		// 추천 사연 받아옴.
+		// 추천 사연 + 임베딩 벡터 수신
 		RecommendDataResponse recDataResponse = fetchRecData(diaryRequest);
 		List<Long> recDiariesId = recDataResponse.getDiariesId();
 		EmbedVector embedVector = recDataResponse.getEmbedVector();
@@ -94,24 +94,30 @@ public class DiaryServiceImpl implements DiaryService {
 		RecommendResponse recResponse = new RecommendResponse();
 		recResponse.setRecommendDiaries(getRecDiaries(recDiariesId));
 
-		recommendedDiaryRepository.saveAll(
-			getRecommendedDiaries(recDiariesId)
-				.stream()
-				.map(diary -> {
-					return RecommendedDiary.builder()
-						.diary(diary)
-						.member(getCurrentMember())
-						.recommendedDate(getToday())
-						.build();
-				}
-			).toList()
-		);
+		// 1. 임베딩 벡터 기반 현재 카드 추출, 응답.
 
 		// TODO: WRAP WITH OPTIONAL
 		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
 		recResponse.setCard(nowTarot);
 		Tarot pastTarot = tarotService.findPastTarot().get();
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
+
+		// 2. 추천 다이어리 저장 및 추천 다이어리 실시간 알림.
+
+		recommendedDiaryRepository.saveAll(
+			getRecommendedDiaries(recDiariesId)
+				.stream()
+				.map(diary -> {
+						return RecommendedDiary.builder()
+							.diary(diary)
+							.member(getCurrentMember())
+							.recommendedDate(getToday())
+							.build();
+					}
+				).toList()
+		);
+
+		// 3. GPT 코멘트 요청 및 응답 수신 후 실시간 알림.
 
 		String question = String.format("%s, %s, %s", futureTarot.getName(), futureTarot.getDir().toString(), diaryRequest.getContent());
 		String gptComment = gptServiceImpl.askQuestion(question);
