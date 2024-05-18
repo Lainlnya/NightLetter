@@ -39,7 +39,7 @@ public class TarotController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/now")
+	@GetMapping("/present")
 	public ResponseEntity<?> findNowTarot() {
 
 		return tarotService.getNowTarot().map(ResponseEntity::ok)

@@ -140,6 +140,7 @@ public class DiaryServiceImpl implements DiaryService {
 		return TarotResponse.of(nowTarot, nowTarot.getDir());
 	}
 
+	@Transactional
 	@KafkaListener(topics = "create-diary", groupId = "recommend_diary-1")
 	public void sendRecommendedDiaries(DiaryCreateEvent event) {
 
