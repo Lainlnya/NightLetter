@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 		try {
 			// 토큰 확인.
-			String token = devToken;
+			String token = parseBearerToken(request);
 
 			if (token == null) {
 				filterChain.doFilter(request, response);
