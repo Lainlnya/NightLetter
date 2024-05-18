@@ -164,6 +164,7 @@ public class DiaryServiceImpl implements DiaryService {
 		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL, member);
 	}
 
+	@Transactional
 	@KafkaListener(topics = "create-diary", groupId = "gpt_diary-1")
 	public void sendGPTComment(DiaryCreateEvent event) {
 
