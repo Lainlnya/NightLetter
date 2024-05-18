@@ -42,8 +42,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	private Member getCurrentMember() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+		return memberRepository.findByMemberId(getCurrentMemberId());
 	}
 
 	private Integer getCurrentMemberId() {

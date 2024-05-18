@@ -306,8 +306,8 @@ public class TarotServiceImpl implements TarotService {
 	}
 
 	@Override
-	public Optional<FutureTarot> updateOnlyFlipped() {
-		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
+	public Optional<FutureTarot> updateOnlyFlipped(Integer memberId) {
+		FutureTarot futureTarot = futureRedisRepository.findById(memberId)
 			.orElseThrow();
 
 		futureTarot.setFlipped(! futureTarot.getFlipped());

@@ -85,8 +85,7 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	private Member getCurrentMember() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+		return memberRepository.findByMemberId(getCurrentMemberId());
 	}
 
 	private Integer getCurrentMemberId() {

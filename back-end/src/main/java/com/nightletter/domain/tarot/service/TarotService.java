@@ -27,7 +27,7 @@ public interface TarotService {
 	Optional<FutureTarot> getFutureTarot();
 
 	Optional<FutureTarot>  updateWithNewEntity();
-	Optional<FutureTarot>  updateOnlyFlipped();
+	Optional<FutureTarot>  updateOnlyFlipped(Integer memberId);
 
 }
 

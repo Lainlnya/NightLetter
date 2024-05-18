@@ -75,7 +75,7 @@ public class TarotController {
 	}
 
 	// @PatchMapping("/test-single")
-	public ResponseEntity<?> updateSingleValue() {
-		return ResponseEntity.ok(tarotService.updateOnlyFlipped());
-	}
+	// public ResponseEntity<?> updateSingleValue() {
+	// 	return ResponseEntity.ok(tarotService.updateOnlyFlipped());
+	// }
 }

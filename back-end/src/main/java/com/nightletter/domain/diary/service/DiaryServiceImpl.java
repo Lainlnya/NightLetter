@@ -5,19 +5,14 @@ import static com.nightletter.global.exception.CommonErrorCode.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
@@ -30,7 +25,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.dto.recommend.RecommendDataResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
-import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
 import com.nightletter.domain.diary.dto.request.DiaryCreateEvent;
 import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
 import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
@@ -45,13 +39,11 @@ import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.entity.RecommendedDiary;
 import com.nightletter.domain.diary.entity.Scrap;
-import com.nightletter.domain.diary.repository.DiaryRedisRepository;
 import com.nightletter.domain.diary.repository.DiaryRepository;
 import com.nightletter.domain.diary.repository.RecommendedDiaryRepository;
 import com.nightletter.domain.diary.repository.ScrapRepository;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
-import com.nightletter.domain.social.dto.response.GptNotificationResponse;
 import com.nightletter.domain.social.entity.NotificationType;
 import com.nightletter.domain.social.service.NotificationService;
 import com.nightletter.domain.tarot.dto.TarotDto;
@@ -151,24 +143,25 @@ public class DiaryServiceImpl implements DiaryService {
 			return ;
 		}
 
-		Integer memberId = getCurrentMemberId();
+		Member member = getCurrentMember();
 
 		// 2. 추천 다이어리 저장 및 추천 다이어리 실시간 알림.
 		// 추천 다이어리 저장.
 
-		List<Long> recDiaryIds = event.getRecommendedDiaryIdList();
+		List<Diary> recDiaries = getRecommendedDiaries(event.getRecommendedDiaryIdList());
 
-		for (Long diaryId: recDiaryIds) {
-			entityManager.createNativeQuery(
-				"INSERT INTO recommended_diary (diary_id, member_id, recommended_date) VALUES (?, ?, ?)")
-				.setParameter(1, diaryId)
-				.setParameter(2, memberId)
-				.setParameter(3, LocalDateTime.now())
-				.executeUpdate();
+		int idx = 0;
+
+		for (Diary diary : recDiaries) {
+			RecommendedDiary recommendedDiary = RecommendedDiary.builder()
+				.diary(diary)
+				.member(member)
+				.recommendedDate(getToday())
+				.build();
+
+			recommendedDiaryRepository.save(recommendedDiary);
+			System.out.println("saved Diary: " + idx++);
 		}
-
-		entityManager.flush();
-		entityManager.clear();
 
 		notificationService.sendNotificationToUser(NotificationType.RECOMMEND_DIARIES_ARRIVAL);
 	}
@@ -452,8 +445,7 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	private Member getCurrentMember() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
+		return memberRepository.findByMemberId(getCurrentMemberId());
 	}
 
 	private Integer getCurrentMemberId() {
