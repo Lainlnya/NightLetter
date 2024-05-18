@@ -25,7 +25,7 @@ const Profile: React.FC = () => {
 
   const router = useRouter();
 
-  const handleNicknameChange = (e) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
 
@@ -44,7 +44,6 @@ const Profile: React.FC = () => {
 
   const handleEditToggle = async () => {
     if (canEdit) {
-      // Save the new nickname when switching from edit mode to view mode
       try {
         await updateUserNickName(nickname);
         setError(false);

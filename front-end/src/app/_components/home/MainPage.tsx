@@ -10,6 +10,7 @@ import { Messages } from '@/utils/msg';
 import CalendarComponent from '../diaries/Calendar';
 
 import Image from 'next/image';
+import calendar from '../../../../public/Icons/calendar_icon.svg';
 import alarm from '../../../../public/Icons/alarm_icon.svg';
 import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
@@ -17,6 +18,8 @@ import { useQuery } from '@tanstack/react-query';
 import Loading from '@/app/loading';
 import getCardListByPeriod from '@/libs/getCardListByPeriod';
 import getUserNickName from '@/libs/DIaryApi/getUserNickName';
+import Portal from '../modal/ModalPortal';
+import Notification from '../modal/Notification';
 
 export default function Home() {
   const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
@@ -71,8 +74,8 @@ export default function Home() {
       <header className={styles.header}>
         <div className={styles.header_icons}>
           <Image
-            src={alarm}
-            alt="alarm"
+            src={calendar}
+            alt="calendar"
             width={24}
             height={24}
             className={styles.header_icon}
@@ -95,6 +98,9 @@ export default function Home() {
         <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
         <CardSlider isSeen={isSeen} isClicked={isClicked} setIsClicked={setIsClicked} />
       </section>
+      <Portal>
+        <Notification notification={''} />
+      </Portal>
     </Suspense>
   );
 }
