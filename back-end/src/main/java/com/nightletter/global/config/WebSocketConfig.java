@@ -3,12 +3,16 @@ package com.nightletter.global.config;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.converter.JsonbMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -42,7 +46,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
-		messageConverters.add(new MappingJackson2MessageConverter());
+		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		converter.setObjectMapper(objectMapper);
+		messageConverters.add(converter);
 		return false;
 	}
 }
