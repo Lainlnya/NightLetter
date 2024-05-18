@@ -87,7 +87,7 @@ const Chatting: React.FC = () => {
                 </Link>
               </>
             )}
-            {todayCard && todayCard.futureCard === null && (
+            {todayCard && todayCard.nowCard && todayCard.futureCard === null && (
               <>
                 <div>
                   아직 미래카드를 뽑지 않으셨네요! <br /> 미래카드를 뽑아 보는건 어떨까요 ? <br /> 미래카드까지 뽑으면

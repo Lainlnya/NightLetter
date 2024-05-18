@@ -27,7 +27,7 @@ const ViewCard: React.FC = () => {
 
   const { data: presentCard } = useQuery({
     queryKey: ['PresentTarotCard'],
-    queryFn: () => getTarotCard(searchParams.get('info') as string, 'POST'),
+    queryFn: () => getTarotCard(searchParams.get('info') as string, 'GET'),
     enabled: searchParams.get('info') === 'present',
   });
 
