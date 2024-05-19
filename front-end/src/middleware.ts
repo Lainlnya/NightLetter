@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (accessToken && nextUrl.pathname === '/login') {
-    return NextResponse.redirect(new URL('https://letter-for.me/'));
+    return NextResponse.redirect(new URL('/', process.env.NEXT_PUBLIC_URL));
   }
 
   return NextResponse.next();
