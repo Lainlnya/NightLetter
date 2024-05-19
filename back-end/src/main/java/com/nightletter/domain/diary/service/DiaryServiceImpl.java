@@ -101,7 +101,8 @@ public class DiaryServiceImpl implements DiaryService {
 		// 1. 임베딩 벡터 기반 현재 카드 추출, 응답.
 		// TODO: WRAP WITH OPTIONAL
 		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
-		Tarot pastTarot = tarotService.findPastTarot().get();
+		Tarot pastTarot = tarotService.findPastTarot()
+			.orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"));
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
 		// 2. 다이어리 생성. GPT 코멘트는 이후 업데이트.

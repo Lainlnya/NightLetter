@@ -263,13 +263,11 @@ public class TarotServiceImpl implements TarotService {
 			// 캐시 조회. 있으면
 				pastRedisRepository.findById(memberId)
 				.map(info -> tarotRepository.findById(info.getTarotId())
-                    .orElseThrow(() ->
-                        new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
+				.orElseGet(() -> null)
 				)
 				.orElse(
 					tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
-						.orElseThrow(() ->
-							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
+					.orElseGet(() -> null)
 				)
 		);
 
