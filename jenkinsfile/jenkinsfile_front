@@ -28,10 +28,15 @@ pipeline{
 	        stage('Docker Run'){
 	            agent any
 	            steps{
+					sh 'cp /var/jenkins_home/.env ./front-end'
+
                     sh 'docker stop frontend_dev || true'
 			        sh 'docker rm frontend_dev || true'
-	                sh 'docker run -d --name frontend_dev -e NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE} \
-                    -e NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL} -e NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} --network night-letter nightletter-front'
+	                sh 'docker run -d --name frontend_dev \
+					-e NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE} \
+					-e NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL} \
+					-e NEXT_PUBLIC_API_URL=${env.NEXT_PUBLIC_API_URL} \
+					--network night-letter nightletter-front'
                     sh 'docker restart nginx'
 	            }
 	            post{
