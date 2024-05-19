@@ -37,8 +37,6 @@ export default function CardSlider({
 }: DataProps) {
   const { PIVOT_DATE_YYYY_MM_DD, setDate } = useStore();
 
-  console.log(data);
-
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {

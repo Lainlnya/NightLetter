@@ -12,26 +12,27 @@ const nextConfig = {
         source: `/:path*`,
         headers: [
           {
-            key: 'Access-Control-Allow-Origin',
-            // value: 'https://localhost:3001',
-            value: 'https://letter-for.me',
+            key: "Access-Control-Allow-Origin",
+            value: "https://localhost:3001",
+            // value: 'https://letter-for.me',
           },
           {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
           },
           {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization',
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
           },
           {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true',
+            key: "Access-Control-Allow-Credentials",
+            value: "true",
           },
         ],
       },
     ];
   },
+  
   // async rewrites() {
   //   return [
   //     {
@@ -44,7 +45,7 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/auth/oauth-response',
+        source: "/auth/oauth-response",
         permanent: true,
         destination: `${process.env.NEXT_PUBLIC_URL}`,
       },
@@ -54,16 +55,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com',
+        protocol: "https",
+        hostname: "ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com",
       },
       {
-        protocol: 'http',
-        hostname: 't1.kakaocdn.net',
+        protocol: "http",
+        hostname: "t1.kakaocdn.net",
       },
       {
-        protocol: 'http',
-        hostname: 'k.kakaocdn.net',
+        protocol: "http",
+        hostname: "k.kakaocdn.net",
       },
     ],
   },

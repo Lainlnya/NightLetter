@@ -16,7 +16,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100dvw;
+    width: 100%;
 
     flex-shrink: 0;
 
@@ -43,6 +43,7 @@
         z-index: 3;
     }
 }
+
 
 .blur{
     opacity: 0.7;
@@ -86,3 +87,12 @@
 
     padding: 0 4rem;
 }
+
+
+@media screen and (max-width:375px){
+    .card {
+        width: 9.5em;
+        height: 16rem;
+    }
+  
+  }

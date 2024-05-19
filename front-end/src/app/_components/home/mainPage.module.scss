@@ -47,7 +47,7 @@
 
 .section {
   width: 100%;
-  height: 45rem;
+  height: 30rem;
 
   position: absolute;
   overflow: hidden;
@@ -68,3 +68,28 @@
   margin-bottom: 1.5rem;
 }
 
+@media screen and (max-width:375px){
+  .guide {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .header_icons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  
+    width: 100%;
+    height: 2rem;
+    padding-right: 1rem;
+  }
+
+  .header_title h1 {
+    font-size: 1.75rem;
+    font-weight: 500;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
