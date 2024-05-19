@@ -47,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
 
 		chatRepository.save(chat);
 
-		return ChatResponse.of(chat, member.getMemberId());
+		return ChatResponse.of(chat, memberId);
 	}
 
 	@Override
