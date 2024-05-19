@@ -3,7 +3,6 @@ package com.nightletter.global.config;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.converter.JsonbMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -11,12 +10,18 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.nightletter.domain.member.repository.MemberRepository;
+import com.nightletter.domain.social.handler.HttpHandshakeInterceptor;
+import com.nightletter.global.security.handler.jwt.JwtProvider;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+	private final HttpHandshakeInterceptor interceptor;
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -41,6 +46,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/ws-stomp")
+			.addInterceptors(interceptor)
 			.setAllowedOrigins("http://localhost:5500", "https://localhost:3001", "*");
 	}
 

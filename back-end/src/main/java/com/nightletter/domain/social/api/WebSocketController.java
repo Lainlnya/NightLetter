@@ -31,18 +31,6 @@ public class WebSocketController {
 	@Value("${chat.test-profile}")
 	private String testProfileImg;
 
-	@MessageMapping("/{roomId}")
-	@SendTo("/room/{roomId}")
-	public ChatResponse sendMessage(
-		@DestinationVariable("roomId") Integer roomId,
-		@Payload ChatRequest request) throws Exception {
-
-		// int memberId = testMemberCount / 3 + 1;
-		// ChatResponse response = chatService.sendMessage(memberId, roomId, request.getMessage());
-
-		return chatService.sendMessage(roomId, request.getMessage());
-	}
-
 	@EventListener
 	public void handleSubscribeEvent(SessionSubscribeEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
