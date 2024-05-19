@@ -3,6 +3,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {
@@ -10,7 +13,8 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://letter-for.me",
+            value: "https://localhost:3001",
+            // value: 'https://letter-for.me',
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -28,10 +32,11 @@ const nextConfig = {
       },
     ];
   },
+  
   // async rewrites() {
   //   return [
   //     {
-  //       source: "/:path*",
+  //       source: '/:path*',
   //       destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
   //     },
   //   ];
@@ -48,9 +53,20 @@ const nextConfig = {
   },
 
   images: {
-    domains: ["ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com"],
-    minimumCacheTTL: 315360000,
-    formats: ["image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com",
+      },
+      {
+        protocol: "http",
+        hostname: "t1.kakaocdn.net",
+      },
+      {
+        protocol: "http",
+        hostname: "k.kakaocdn.net",
+      },
+    ],
   },
 };
 

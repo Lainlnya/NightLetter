@@ -4,7 +4,7 @@ pipeline{
 	    environment {
 	        NEXT_PUBLIC_MODE='local'
 	        NEXT_URL='https://dev.letter-for.me'
-	        NEXT_API_URL='https://dev.letter-for.me/api/v1'
+	        NEXT_API_URL='https://dev.letter-for.me/api/v2'
 	    }
 
 	    stages{

@@ -1,0 +1,51 @@
+.noti {
+  height: 90dvh;
+  padding: 2rem;
+  text-align: center;
+  overflow-y: scroll;
+
+  h1 {
+    font-size: 2rem;
+    margin: 4rem 0;
+  }
+
+  .eachNoti {
+    display: flex;
+    flex-direction: column;
+    background-color: #252d3d;
+    height: 8rem;
+    border-radius: 2rem;
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    align-items: center;
+    justify-content: center;
+
+    .up {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -1rem;
+      margin-bottom: 0.5rem;
+
+      width: 90%;
+
+      .unRead {
+        width: 1rem;
+        height: 1rem;
+        background-color: #fee500;
+        border-radius: 50%;
+      }
+    }
+  }
+  .date {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    align-self: flex-end;
+    margin-right: 2rem;
+    color: #c6c6c6;
+  }
+
+  .noAlarm {
+    font-size: 2rem;
+  }
+}

@@ -27,12 +27,11 @@ export default async function page() {
   const dehydrateState = dehydrate(queryClient);
 
   const pastCardInfo: PastCardInfo = await getPastCardInfo();
-  console.log(pastCardInfo);
 
   return (
     <HydrationBoundary state={dehydrateState}>
       <Suspense fallback={<Loading loadingMessage="불러오는 중 입니다." />}>
-        <Redirect pastCardInfo={pastCardInfo} />
+        {/* <Redirect pastCardInfo={pastCardInfo} /> */}
       </Suspense>
     </HydrationBoundary>
   )

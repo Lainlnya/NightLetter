@@ -1,0 +1,88 @@
+.profile {
+  background-color: #191c2b;
+  height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0rem 2rem 2rem 2rem;
+  z-index: 100;
+
+  h1 {
+    padding-top: 4rem;
+    font-size: 2rem;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileImage {
+    border-radius: 50%;
+  }
+
+  input {
+    all: unset;
+    margin-top: 2rem;
+    position: relative;
+    border-radius: 2rem;
+    font-size: 2rem;
+    height: 6rem;
+    text-align: center;
+    background-color: #242d3d;
+  }
+
+  button {
+    position: absolute;
+    width: 5rem;
+    height: 5rem;
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: calc(50% + 8rem);
+    top: calc(50% - 7rem);
+
+    svg {
+      font-size: 2.5rem;
+    }
+
+    svg > path {
+      color: #171717;
+    }
+  }
+
+  .buttonSec {
+    button {
+      all: unset;
+      text-align: center;
+      width: 36rem;
+      height: 6rem;
+      border-radius: 1rem;
+      font-size: 1.6rem;
+      background-color: #242d3d;
+    }
+    .signout {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      span {
+        color: #fc0505;
+      }
+      div {
+        margin-left: 2rem;
+      }
+      svg {
+        margin-right: 2rem;
+      }
+
+      svg > path {
+        color: #fc0505;
+      }
+    }
+  }
+}

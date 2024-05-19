@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./not-found.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-import tarotBackground from "../../public/images/tarot-background.webp";
+import tarotBackground from "../../public/images/tarot-background.png";
 
 const NotFound = () => {
   return (

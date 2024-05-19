@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import styles from "./comment.module.scss";
-import Image from "next/image";
-import { TODAY } from "@/utils/dateFormat";
-import { useQuery } from "@tanstack/react-query";
-import { getGPTData } from "@/_apis/DiaryApis";
-import Loading from "@/app/loading";
-import { Messages } from "@/utils/msg";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import closeIcon from "../../../../public/Icons/xmark-solid.svg";
-import letterIcon from "../../../../public/Icons/envelope-regular.svg";
-import tarot_background from "../../../../public/images/tarot-background.webp";
+import styles from './comment.module.scss';
+import Image from 'next/image';
+import { TODAY } from '@/utils/dateFormat';
+import { useQuery } from '@tanstack/react-query';
+import { getGPTData } from '@/libs/DiaryApi/getGPTData';
+import Loading from '@/app/loading';
+import { Messages } from '@/utils/msg';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import closeIcon from '../../../../public/Icons/xmark-solid.svg';
+import letterIcon from '../../../../public/Icons/envelope-regular.svg';
+import tarot_background from '../../../../public/images/tarot-background.png';
 
 const Comment: React.FC = () => {
   const router = useRouter();
   const [showImage, setShowImage] = useState<boolean>(false);
 
   const { isLoading, data: gptComment } = useQuery({
-    queryKey: ["GPTComments"],
+    queryKey: ['GPTComments'],
     queryFn: () => getGPTData(),
   });
 
@@ -46,27 +46,21 @@ const Comment: React.FC = () => {
   return (
     <>
       {gptComment && (
-        <main className={styles.commentMain}>
+        <section className={styles.commentMain}>
           <section className={styles.titleSec}>
-            <Image
-              src={closeIcon}
-              alt="뒤로가기"
-              width={30}
-              height={30}
-              onClick={() => router.replace("/")}
-            />
+            <Image src={closeIcon} alt="뒤로가기" width={30} height={30} onClick={() => router.replace('/')} />
             <h1>
               <div>{TODAY}</div>
               <div>하루의 코멘트</div>
             </h1>
             <Image
-              className={`${styles.recommend} ${showImage ? styles.blink : ""}`}
+              className={`${styles.recommend} ${showImage ? styles.blink : ''}`}
               src={letterIcon}
               ref={blinkElement}
               alt="사연"
               width={30}
               height={30}
-              onClick={() => router.push("/stories")}
+              onClick={() => router.push('/stories')}
             />
           </section>
           <section className={styles.cardSec}>
@@ -100,9 +94,9 @@ const Comment: React.FC = () => {
             </section>
           </section>
           <section className={styles.commentSec}>
-            {gptComment?.gptComment || "현재 코멘트가 지원되지 않습니다."}
+            {gptComment?.gptComment || '현재 코멘트가 지원되지 않습니다.'}
           </section>
-        </main>
+        </section>
       )}
     </>
   );

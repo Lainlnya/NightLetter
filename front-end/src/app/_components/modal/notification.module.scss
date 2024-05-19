@@ -1,0 +1,33 @@
+.none {
+  display: none;
+}
+
+.noti {
+  position: absolute;
+  transform: translateX(-50%);
+  background-color: #202435;
+  top: 1%;
+  left: 50%;
+  width: 95%;
+  height: 8dvh;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.noti > div {
+  background-color: #ffffff;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7rem;
+  margin-right: 1rem;
+  svg > path {
+    color: #202435;
+  }
+}
