@@ -9,6 +9,7 @@ export const config = {
 export function middleware(request: NextRequest) {
   const { nextUrl, cookies } = request;
   const accessToken = cookies.get('access-token');
+  console.log(nextUrl);
 
   if (!accessToken && nextUrl.pathname !== '/login') {
     return NextResponse.redirect(new URL('/login', request.url));

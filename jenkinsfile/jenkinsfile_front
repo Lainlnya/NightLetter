@@ -2,9 +2,9 @@ pipeline{
 	    agent any
 
 	    environment {
-	        NEXT_PUBLIC_MODE='local'
-	        NEXT_URL='https://dev.letter-for.me'
-	        NEXT_API_URL='https://dev.letter-for.me/api/v2'
+	        NEXT_PUBLIC_MODE='${NEXT_PUBLIC_MODE}'
+	        NEXT_PUBLIC_URL='${NEXT_PUBLIC_URL}'
+	        NEXT_PUBLIC_API_URL='${NEXT_PUBLIC_API_URL}'
 	    }
 
 	    stages{
@@ -31,7 +31,7 @@ pipeline{
                     sh 'docker stop frontend_dev || true'
 			        sh 'docker rm frontend_dev || true'
 	                sh 'docker run -d --name frontend_dev -e NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE} \
-                    -e NEXT_URL=${NEXT_URL} -e NEXT_API_URL=${NEXT_API_URL} --network night-letter nightletter-front'
+                    -e NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL} -e NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} --network night-letter nightletter-front'
                     sh 'docker restart nginx'
 	            }
 	            post{
