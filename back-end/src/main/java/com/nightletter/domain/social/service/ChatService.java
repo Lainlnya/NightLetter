@@ -9,7 +9,7 @@ import com.nightletter.domain.social.dto.response.ChatResponse;
 public interface ChatService {
 
 	public ChatResponse sendMessage(Integer memberId, Integer roomId, String message);
-
+	public ChatResponse sendMessage(Integer roomId, String message);
 	public Page<ChatResponse> findChatByChatroomId(int chatroomId, int pageNo);
 	public Page<ChatResponse> findChatByChatroom(int chatroomId, int pageNo);
 

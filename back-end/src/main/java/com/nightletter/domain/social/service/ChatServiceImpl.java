@@ -49,6 +49,25 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
+	public ChatResponse sendMessage(Integer roomId, String message) {
+		Chatroom chatroom = chatroomRepository.findById(roomId)
+			.orElseThrow();
+
+		Member member = getCurrentMember();
+
+		Chat chat = Chat.builder()
+			.message(message)
+			.chatroom(chatroom)
+			.sender(member)
+			.sendTime(LocalDateTime.now())
+			.build();
+
+		chatRepository.save(chat);
+
+		return ChatResponse.of(chat, member.getMemberId());
+	}
+
+	@Override
 	public Page<ChatResponse> findChatByChatroomId(int chatroomId, int pageNo) {
 
 		return chatRepository.findChatPages(chatroomId, pageNo, getCurrentMemberId());
