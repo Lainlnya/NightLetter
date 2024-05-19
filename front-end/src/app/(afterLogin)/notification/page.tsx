@@ -3,13 +3,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import styles from './notification.module.scss';
 import { getNotifications } from '@/libs/DiaryApi/getNotifications';
+import { setNotificationRead } from '@/libs/DiaryApi/setNotificationRead';
+import { deleteNotificationRead } from '@/libs/DiaryApi/deleteNotification';
 import Loading from '@/app/loading';
 import { Messages } from '@/utils/msg';
 import { formattedDate } from '@/utils/dateFormat';
-import { setNotificationRead } from '@/libs/DiaryApi/setNotificationRead';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
-import { deleteNotificationRead } from '@/libs/DiaryApi/deleteNotification';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
