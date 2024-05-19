@@ -48,7 +48,7 @@ const ToastModal = () => {
             className={styles.toast_now}
             onClick={() => router.push('/tarot?info=future')}
           >
-            마지막 미래 카드를 뽑고, AI의 조언을 받아보세요. (2/3) →
+            마지막 카드를 뽑고, 오늘의 AI메시지를 받아보세요. (2/3) →
           </div>}
       </div>
     </div>
