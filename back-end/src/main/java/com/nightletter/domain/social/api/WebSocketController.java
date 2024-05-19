@@ -28,13 +28,14 @@ public class WebSocketController {
 	private final ChatService chatService;
 	private final NotificationService notificationService;
 
-	@Value("${chat.test-profile}")
-	private String testProfileImg;
-
 	@EventListener
 	public void handleSubscribeEvent(SessionSubscribeEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String destination = headerAccessor.getDestination();
+
+		System.out.println("TEST1: " + event.getUser().toString());
+		System.out.println("TEST2: " + event.getSource().toString());
+		System.out.println("TEST3: " + event.getMessage());
 
 		// TODO null 처리 .
 		if (destination == null) {
