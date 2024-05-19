@@ -4,6 +4,7 @@ import styles from '@/app/_components/common/toastModal.module.scss';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import checkTodayStatus from '@/libs/checkTodayStatus';
+import getPastCardInfo from '@/libs/getPastCardInfo';
 
 const ToastModal = () => {
   const router = useRouter();
@@ -13,18 +14,26 @@ const ToastModal = () => {
     async function fetchData() {
       try {
         const data = await checkTodayStatus();
+        console.log(data);
+        const pastCardInfo = await getPastCardInfo();
+        console.log(pastCardInfo);
         const { pastCard, nowCard, futureCard } = await checkTodayStatus();
         if (pastCard && nowCard && futureCard) setTodayStatus("complete");
-        if (!pastCard && !nowCard && !futureCard) setTodayStatus("not checked");
         if (pastCard && nowCard && !futureCard) setTodayStatus("now");
         if (pastCard && !nowCard && !futureCard) setTodayStatus("past");
       } catch (error) {
-        console.error("오늘의 카드를 조회하는데 실패했어요.");
+        setTodayStatus("not checked");
+        const data = await checkTodayStatus();
+        console.log(data);
+        const { pastCard, nowCard, futureCard } = await checkTodayStatus();
+        if (pastCard && nowCard && futureCard) setTodayStatus("complete");
+        if (pastCard && nowCard && !futureCard) setTodayStatus("now");
+        if (pastCard && !nowCard && !futureCard) setTodayStatus("past");
       }
-    }
+    } 
     fetchData();
   },[])
-
+ 
   return (
     todayStatus !== "complete" && todayStatus !== "" && 
     <div className={styles.toast_container}>

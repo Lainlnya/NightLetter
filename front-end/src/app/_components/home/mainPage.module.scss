@@ -93,3 +93,35 @@
     align-items: center;
   }
 }
+
+.card{
+  width: 12rem;
+  height: 20.5rem;
+
+  &.past {
+      margin-right: -4rem;
+      margin-top: 2rem;
+      transform: rotate(-12deg);
+      z-index: 1;
+  }
+  &.current {
+      margin-right: -4rem;
+      z-index: 2;
+  }
+  &.future {
+      margin-top: 2rem;
+      transform: rotate(12deg);
+      z-index: 3;
+  }
+}
+
+.card_wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  flex-shrink: 0;
+
+  object-fit: cover;
+}

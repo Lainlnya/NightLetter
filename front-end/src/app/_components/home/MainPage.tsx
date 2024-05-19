@@ -11,20 +11,21 @@ import CommentViewer from './CommentViewer';
 
 import Image from 'next/image';
 import calendar from '../../../../public/Icons/calendar_icon.svg';
-import alarm from '../../../../public/Icons/alarm_icon.svg';
+import tarot_background from '../../../../public/images/tarot-background.png';
 import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '@/app/loading';
 import getCardListByPeriod from '@/libs/getCardListByPeriod';
-import getUserNickName from '@/libs/DiaryApi/getUserNickName';
+import getUserNickName from '@/libs/DIaryApi/getUserNickName';
 import Portal from '../modal/ModalPortal';
 import Notification from '../modal/Notification';
 import ToastModal from '../common/ToastModal';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { date, PIVOT_DATE_YYYY_MM_DD, username, setUserName } = useStore();
 
-  const { data, isLoading } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ['card', PIVOT_DATE_YYYY_MM_DD],
     queryFn: () => getCardListByPeriod(getPreviousDate(PIVOT_DATE_YYYY_MM_DD, 30), PIVOT_DATE_YYYY_MM_DD),
   });
@@ -97,16 +98,49 @@ export default function Home() {
           </div>
         </header>
         <section className={styles.section}>
-          <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
-          <CardSlider
-            data={data}
-            isSeen={isSeen}
-            isClicked={isClicked}
-            setIsClicked={setIsClicked}
-            cardIndex={cardIndex}
-            setCardIndex={setCardIndex}
-          />
+          { isError ?
+                    (<div className={styles.card_wrapper}>
+                      <Image
+                        src={tarot_background}
+                        className={`${styles.card} ${styles.past}`}
+                        alt='past_card'
+                        width={120}
+                        height={205}
+                      />
+                      <Image
+                        src={tarot_background}
+                        className={`${styles.card} ${styles.current} `}
+                        alt='current_card'
+                        width={120}
+                        height={205}
+                      />
+                      <Image
+                        src={tarot_background}
+                        className={`${styles.card} ${styles.future}`}
+                        alt='future_card'
+                        width={120}
+                        height={205}
+                      />
+                    </div>
+            )
+          :
+          (
+          <>
+            <div className={styles.guide}>{Messages.MAIN_PAGE_DRAG_GUIDE}</div>
+              <CardSlider
+                data={data}
+                isSeen={isSeen}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+                cardIndex={cardIndex}
+                setCardIndex={setCardIndex}
+              /> 
+          </>
+          )
+          }
+
         </section>
+
       </div>
       <CommentViewer data={data} cardIndex={cardIndex} />
       <ToastModal />
