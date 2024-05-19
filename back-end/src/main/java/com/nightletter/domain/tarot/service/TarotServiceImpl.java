@@ -205,16 +205,22 @@ public class TarotServiceImpl implements TarotService {
 		Integer memberId = getCurrentMemberId();
 
 		// 캐시 조회.
-		// 없으면 RDB 조회
-		return pastRedisRepository.findById(memberId)
-			.map(info -> tarotRepository.findById(info.getTarotId())
-				.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
-				.orElse(tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
-					.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
-					.orElseThrow(() ->
-						new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND")))
-		);
+		Optional<TarotResponse> response = pastRedisRepository.findById(memberId)
+			.map(info -> {
+				Tarot pastTarot = tarotRepository.findById(info.getTarotId())
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT CART  RESOURCE NOT FOUND"));
 
+				return TarotResponse.of(pastTarot, pastTarot.getDir());
+			});
+
+		if (response.isPresent()) {
+			return response;
+		}
+
+		// 없으면 RDB 조회
+
+		return tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
+				.map(tarot -> TarotResponse.of(tarot, tarot.getDir()));
 	}
 
 	@Override
