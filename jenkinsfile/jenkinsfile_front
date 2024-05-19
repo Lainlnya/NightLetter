@@ -2,47 +2,47 @@ pipeline{
 	    agent any
 
 	    environment {
-	        NEXT_PUBLIC_MODE='${NEXT_PUBLIC_MODE}'
-	        NEXT_PUBLIC_URL='${NEXT_PUBLIC_URL}'
-	        NEXT_PUBLIC_API_URL='${NEXT_PUBLIC_API_URL}'
+	        NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE}
+	        NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+	        NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 	    }
 
 	    stages{
-            stage('Checkout') {
+            stage("Checkout") {
             steps {
                 checkout scm
                 }
             }   
         
-	        stage('Docker image build'){
+	        stage("Docker image build"){
 	            steps {
-                    sh 'cd front-end && docker build -t nightletter-front .'
+                    sh "cd front-end && docker build -t nightletter-front ."
 	            }
 	            post{
 	                failure{
-	                    error 'Fail Docker Build'
+	                    error "Fail Docker Build"
 	                }
 	            }
 	        }
         
-	        stage('Docker Run'){
+	        stage("Docker Run"){
 	            agent any
 	            steps{
-					sh 'ls'
-					sh 'cp /var/jenkins_home/.env ./front-end/'
+					sh "ls"
+					sh "cp /var/jenkins_home/.env ./front-end/"
 
-                    sh 'docker stop frontend_dev || true'
-			        sh 'docker rm frontend_dev || true'
-	                sh 'docker run -d --name frontend_dev \
+                    sh "docker stop frontend_dev || true"
+			        sh "docker rm frontend_dev || true"
+	                sh "docker run -d --name frontend_dev \
 					-e NEXT_PUBLIC_MODE=${NEXT_PUBLIC_MODE} \
 					-e NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL} \
 					-e NEXT_PUBLIC_API_URL=${env.NEXT_PUBLIC_API_URL} \
-					--network night-letter nightletter-front'
-                    sh 'docker restart nginx'
+					--network night-letter nightletter-front"
+                    sh "docker restart nginx"
 	            }
 	            post{
 	                failure{
-	                    error 'Fail Docker Run'
+	                    error "Fail Docker Run"
 	                }
 	            }
 	        }
