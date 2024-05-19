@@ -35,7 +35,8 @@ public class TarotController {
 	@GetMapping("/past")
 	public ResponseEntity<?> findPastTarot() {
 
-		return tarotService.getPastTarot().map(ResponseEntity::ok)
+		return tarotService.getPastTarot()
+			.map(ResponseEntity::ok)
 			.orElse(ResponseEntity.notFound().build());
 	}
 

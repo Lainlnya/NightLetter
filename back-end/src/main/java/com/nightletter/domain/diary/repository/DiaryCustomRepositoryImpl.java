@@ -100,8 +100,6 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 	@Override
 	public List<TodayTarot> findTodayDiary(Member member, LocalDate today) {
 
-		// TodayDiaryResponse response = new TodayDiaryResponse();
-
 		return queryFactory.select(Projections.constructor(
 			TodayTarot.class,
 			diaryTarot.tarot.id,

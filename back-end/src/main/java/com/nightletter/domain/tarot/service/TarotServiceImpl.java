@@ -1,11 +1,32 @@
 package com.nightletter.domain.tarot.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import com.nightletter.domain.diary.dto.recommend.EmbedVector;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.diary.repository.DiaryRepository;
-import com.nightletter.domain.tarot.dto.*;
+import com.nightletter.domain.tarot.dto.RecTarotResponse;
+import com.nightletter.domain.tarot.dto.RecVectorResponse;
+import com.nightletter.domain.tarot.dto.TarotDto;
+import com.nightletter.domain.tarot.dto.TarotKeyword;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.domain.tarot.entity.FutureTarot;
 import com.nightletter.domain.tarot.entity.PastTarot;
 import com.nightletter.domain.tarot.entity.Tarot;
@@ -16,26 +37,12 @@ import com.nightletter.domain.tarot.repository.TarotRepository;
 import com.nightletter.global.exception.CommonErrorCode;
 import com.nightletter.global.exception.RecsysConnectionException;
 import com.nightletter.global.exception.ResourceNotFoundException;
+
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -198,23 +205,22 @@ public class TarotServiceImpl implements TarotService {
 		Integer memberId = getCurrentMemberId();
 
 		// 캐시 조회.
-		// 없으면 RDB 조회
-		return Optional.ofNullable(
-			// 캐시 조회. 있으면
-				pastRedisRepository.findById(memberId)
-				.map(info -> tarotRepository.findById(info.getTarotId())
-                    .map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
-                    .orElseThrow(() ->
-                        new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
-				)
-				.orElse(
-					tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
-						.map(tarot -> TarotResponse.of(tarot, tarot.getDir()))
-						.orElseThrow(() ->
-							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
-				)
-		);
+		Optional<TarotResponse> response = pastRedisRepository.findById(memberId)
+			.map(info -> {
+				Tarot pastTarot = tarotRepository.findById(info.getTarotId())
+					.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "TAROT CART  RESOURCE NOT FOUND"));
 
+				return TarotResponse.of(pastTarot, pastTarot.getDir());
+			});
+
+		if (response.isPresent()) {
+			return response;
+		}
+
+		// 없으면 RDB 조회
+
+		return tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
+				.map(tarot -> TarotResponse.of(tarot, tarot.getDir()));
 	}
 
 	@Override
@@ -263,13 +269,11 @@ public class TarotServiceImpl implements TarotService {
 			// 캐시 조회. 있으면
 				pastRedisRepository.findById(memberId)
 				.map(info -> tarotRepository.findById(info.getTarotId())
-                    .orElseThrow(() ->
-                        new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
+				.orElseGet(() -> null)
 				)
 				.orElse(
 					tarotRepository.findPastTarot(getToday(), getCurrentMemberId())
-						.orElseThrow(() ->
-							new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"))
+					.orElseGet(() -> null)
 				)
 		);
 

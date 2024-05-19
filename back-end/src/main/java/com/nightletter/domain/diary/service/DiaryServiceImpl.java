@@ -101,7 +101,8 @@ public class DiaryServiceImpl implements DiaryService {
 		// 1. 임베딩 벡터 기반 현재 카드 추출, 응답.
 		// TODO: WRAP WITH OPTIONAL
 		Tarot nowTarot = tarotService.findSimilarTarot(embedVector);
-		Tarot pastTarot = tarotService.findPastTarot().get();
+		Tarot pastTarot = tarotService.findPastTarot()
+			.orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND, "PAST TAROT NOT FOUND"));
 		Tarot futureTarot = tarotService.makeRandomTarot(pastTarot.getId(), nowTarot.getId());
 
 		// 2. 다이어리 생성. GPT 코멘트는 이후 업데이트.
@@ -128,13 +129,13 @@ public class DiaryServiceImpl implements DiaryService {
 
 		// 메세지 전송.
 		// 생성된 다이어리 아이디와, 임베딩 벡터 값을 전달.
-		kafkaTemplate.send("create-diary", event);
+		kafkaTemplate.send("create-diary-dev", event);
 
 		return TarotResponse.of(nowTarot, nowTarot.getDir());
 	}
 
 	@Transactional
-	@KafkaListener(topics = "create-diary", groupId = "recommend_diary-1")
+	@KafkaListener(topics = "create-diary-dev", groupId = "recommend_diary-1")
 	public void sendRecommendedDiaries(DiaryCreateEvent event) {
 
 		System.out.println("RECEIVE_REC_EVENT: event: " + event);
@@ -165,7 +166,7 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Transactional
-	@KafkaListener(topics = "create-diary", groupId = "gpt_diary-1")
+	@KafkaListener(topics = "create-diary-dev", groupId = "gpt_diary-1")
 	public void sendGPTComment(DiaryCreateEvent event) {
 
 		System.out.println("RECEIVE_GPT_EVENT: event: " + event);
@@ -319,21 +320,15 @@ public class DiaryServiceImpl implements DiaryService {
 
 		List<TodayTarot> tarots = diaryRepository.findTodayDiary(getCurrentMember(), getToday());
 
-		// TODO 과거카드 수정.
-
 		Optional<TodayTarot> pastTarot = tarots.stream()
 			.filter(tarot -> tarot.getCardType() == DiaryTarotType.PAST)
 			.findFirst();
 
 		if (pastTarot.isEmpty()) {
 
-			System.out.println("ISNOTPRESENT");
-
 			TarotDto pastTarotDto = getUnfinishedDiaryOfToday();
 
 			if (pastTarotDto != null) {
-				System.out.println("pastTarotDtoISNOTPRESENT");
-
 				TodayTarot tempPastTarot = TodayTarot.builder()
 					.cardNo(pastTarotDto.id())
 					.cardName(pastTarotDto.name())
@@ -343,16 +338,15 @@ public class DiaryServiceImpl implements DiaryService {
 					.build();
 
 				tarots.add(tempPastTarot);
-
 			}
 		}
 
 		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
 
 		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
-			.orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND, "FUTURE TAROT MUST BE PULLED"));
+			.orElseGet(() ->null);
 
-		if (! futureTarot.getFlipped()) {
+		if (futureTarot != null && ! futureTarot.getFlipped()) {
 			response.setFutureCard(null);
 		}
 
