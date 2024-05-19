@@ -25,12 +25,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 	@Value("${spring.security.provider.response-uri.kakao}")
 	private String tokenResponseUri;
 
-	private static String cookieDomain;
-	@Value("${spring.security.cookie-domain}")
-	public void setCookieDomain(String value) {
-		cookieDomain = value;
-	}
-
 	private final JwtProvider jwtProvider;
 
 	private static ResponseCookie accessCookie(String token) {
@@ -38,7 +32,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			.maxAge(Duration.of(30, ChronoUnit.DAYS))
 			.httpOnly(true)
 			// TODO Oauth2 성공 시 옵션. 개발용으로 변경.
-			// .domain(cookieDomain)
 			.path("/")
 			.sameSite("None")
 			.secure(true)
