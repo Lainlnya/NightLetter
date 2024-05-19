@@ -16,12 +16,9 @@ import com.nightletter.global.security.handler.jwt.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-	private final HttpHandshakeInterceptor interceptor;
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
