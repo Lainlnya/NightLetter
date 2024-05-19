@@ -61,7 +61,14 @@ const Profile: React.FC = () => {
     <section className={styles.profile}>
       <h1>프로필</h1>
       <section>
-        <Image className={styles.profileImage} src={profileImage} width={150} height={150} alt="프로필" priority />
+        <Image
+          className={styles.profileImage}
+          src={'https://ssafy-tarot-01.s3.ap-northeast-2.amazonaws.com/profile/1.webp'}
+          width={150}
+          height={150}
+          alt="프로필"
+          priority
+        />
         {canEdit ? (
           <input type="text" id="nickname" value={nickname} onChange={handleNicknameChange} />
         ) : (

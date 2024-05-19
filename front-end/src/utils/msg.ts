@@ -7,4 +7,5 @@ export const Messages = {
   MAKING_COMMENT: '코멘트를 생성중입니다.',
   NICKNAME_SAVE_SUCCESS: '닉네임이 성공적으로 변경되었어요.',
   NICKNAME_SAVE_ERROR: '닉네임이 변경되지 않았어요.',
+  DIARY_NOSTORIES: '오늘 사연만 확인할 수 있어요.',
 };

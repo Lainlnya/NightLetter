@@ -35,10 +35,17 @@
         background-color: #fee500;
         border-radius: 50%;
       }
-
-      .date {
-        color: #c6c6c6;
-      }
     }
+  }
+  .date {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    align-self: flex-end;
+    margin-right: 2rem;
+    color: #c6c6c6;
+  }
+
+  .noAlarm {
+    font-size: 2rem;
   }
 }
