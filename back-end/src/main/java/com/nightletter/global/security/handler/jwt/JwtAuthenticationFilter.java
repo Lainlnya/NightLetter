@@ -34,12 +34,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final MemberRepository memberRepository;
 	private final JwtProvider jwtProvider;
 
+	@Value("${spring.security.dev-token}")
+	private String devToken;
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
 		try {
 			// 토큰 확인.
-			String token = parseBearerToken(request);
+			String token = devToken;
 
 			if (token == null) {
 				filterChain.doFilter(request, response);
