@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,12 @@ public class NotificationController {
 		return ResponseEntity.ok(responses);
 	}
 
+	@GetMapping("")
+	public ResponseEntity<?> getAllNotifications() {
+
+		return ResponseEntity.ok(notificationService.getAllNotifications());
+	}
+
 	@PatchMapping("")
 	public ResponseEntity<?> updateNotificationIsRead(@RequestBody Long notificationId) {
 
@@ -59,10 +66,12 @@ public class NotificationController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 
+	@DeleteMapping("")
+	public ResponseEntity<?> deleteNotification(@RequestBody Long notificationId) {
 
-	@GetMapping("")
-	public ResponseEntity<?> getAllNotifications() {
+		notificationService.deleteNotification(notificationId);
 
-		return ResponseEntity.ok(notificationService.getAllNotifications());
+		return ResponseEntity.ok().build();
 	}
+
 }

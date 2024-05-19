@@ -11,7 +11,8 @@ public interface NotificationService {
 
 	public List<NotificationResponse> getAllNotifications();
 	public Optional<NotificationResponse> updateNotificationIsRead(long notificationId);
-
+	public void deleteNotification(long notificationId);
 	public void sendNotificationToUser(NotificationResponse notification);
 	public void sendNotificationToUser(NotificationType type, Member member);
+
 }

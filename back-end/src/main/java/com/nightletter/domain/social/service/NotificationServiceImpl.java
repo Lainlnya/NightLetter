@@ -21,6 +21,8 @@ import com.nightletter.domain.social.dto.response.NotificationResponse;
 import com.nightletter.domain.social.entity.Notification;
 import com.nightletter.domain.social.entity.NotificationType;
 import com.nightletter.domain.social.repository.NotificationRepository;
+import com.nightletter.global.exception.CommonErrorCode;
+import com.nightletter.global.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +55,15 @@ public class NotificationServiceImpl implements NotificationService {
 				notificationRepository.save(notification);
 				return NotificationResponse.of(notification);
 			});
+	}
+
+	@Override
+	public void deleteNotification(long notificationId) {
+		Notification notification = notificationRepository.findById(notificationId)
+			.orElseThrow(() -> new ResourceNotFoundException(CommonErrorCode.RESOURCE_NOT_FOUND, "NOTIFICATION NOT FOUND"));
+
+		notification.deleteNotification();
+		notificationRepository.save(notification);
 	}
 
 	/**

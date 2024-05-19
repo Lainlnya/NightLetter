@@ -63,4 +63,9 @@ public class Notification {
 	public void readNotification() {
 		isRead = true;
 	}
+
+	public void deleteNotification() {
+		deletedAt = LocalDateTime.now();
+	}
+
 }

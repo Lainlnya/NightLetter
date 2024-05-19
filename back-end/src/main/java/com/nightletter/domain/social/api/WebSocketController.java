@@ -67,12 +67,6 @@ public class WebSocketController {
 
 		}
 
-		System.out.println("=========HEADER=========");
-		System.out.println(headerAccessor.toString());
-		System.out.println("=========DESTINATION======");
-
-		System.out.println(destination);
-
 		if (destination.equals("/notification")) {
 			System.out.println("notification 구독 완료.");
 			return ;
