@@ -4,7 +4,7 @@ import styles from './comment.module.scss';
 import Image from 'next/image';
 import { TODAY } from '@/utils/dateFormat';
 import { useQuery } from '@tanstack/react-query';
-import { getGPTData } from '@/libs/DiaryApi/getGPTData';
+import { getGPTData } from '@/libs/DiaryApis/getGPTData';
 import Loading from '@/app/loading';
 import { Messages } from '@/utils/msg';
 import { useRouter } from 'next/navigation';

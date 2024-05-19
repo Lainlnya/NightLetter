@@ -16,7 +16,7 @@ import { getPreviousDate, isToday, TODAY, TODAY_CONVERTED } from '@/utils/dateFo
 import { useQuery } from '@tanstack/react-query';
 import Loading from '@/app/loading';
 import getCardListByPeriod from '@/libs/getCardListByPeriod';
-import getUserNickName from '@/libs/DiaryApi/getUserNickName';
+import getUserNickName from '@/libs/DiaryApis/getUserNickName';
 import Portal from '../modal/ModalPortal';
 import Notification from '../modal/Notification';
 import ToastModal from '../common/ToastModal';

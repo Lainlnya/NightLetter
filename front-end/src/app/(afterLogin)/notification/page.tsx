@@ -2,9 +2,9 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import styles from './notification.module.scss';
-import { getNotifications } from '@/libs/DiaryApi/getNotifications';
-import { setNotificationRead } from '@/libs/DiaryApi/setNotificationRead';
-import { deleteNotificationRead } from '@/libs/DiaryApi/deleteNotification';
+import { getNotifications } from '@/libs/DiaryApis/getNotifications';
+import { setNotificationRead } from '@/libs/DiaryApis/setNotificationRead';
+import { deleteNotificationRead } from '@/libs/DiaryApis/deleteNotification';
 import Loading from '@/app/loading';
 import { Messages } from '@/utils/msg';
 import { formattedDate } from '@/utils/dateFormat';
