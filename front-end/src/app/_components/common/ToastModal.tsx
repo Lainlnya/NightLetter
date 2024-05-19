@@ -13,7 +13,6 @@ const ToastModal = () => {
     async function fetchData() {
       try {
         const data = await checkTodayStatus();
-        console.log(data);
         const { pastCard, nowCard, futureCard } = await checkTodayStatus();
         if (pastCard && nowCard && futureCard) setTodayStatus("complete");
         if (!pastCard && !nowCard && !futureCard) setTodayStatus("not checked");
@@ -48,7 +47,7 @@ const ToastModal = () => {
             className={styles.toast_now}
             onClick={() => router.push('/tarot?info=future')}
           >
-            마지막 카드를 뽑고, 오늘의 AI메시지를 받아보세요. (2/3) →
+            마지막 카드를 뽑고, 오늘의 AI의 응원을 받아보세요. (2/3) →
           </div>}
       </div>
     </div>
