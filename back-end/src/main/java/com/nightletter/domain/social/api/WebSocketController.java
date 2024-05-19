@@ -48,7 +48,7 @@ public class WebSocketController {
 
 			ChatResponse response = chatService.sendMessage(memberId, roomId, request.getMessage());
 
-			response.setProfileImgUrl(testProfileImg + memberId + ".jpg");
+			response.setProfileImgUrl(testProfileImg + memberId + ".webp");
 			response.setSentByMe(memberId == 3);
 			response.setSenderId(memberId);
 
