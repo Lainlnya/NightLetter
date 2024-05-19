@@ -28,6 +28,7 @@ pipeline{
 	        stage('Docker Run'){
 	            agent any
 	            steps{
+					sh 'ls'
 					sh 'cp /var/jenkins_home/.env ./front-end'
 
                     sh 'docker stop frontend_dev || true'
