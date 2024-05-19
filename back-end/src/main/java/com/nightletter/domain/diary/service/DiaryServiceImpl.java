@@ -319,21 +319,15 @@ public class DiaryServiceImpl implements DiaryService {
 
 		List<TodayTarot> tarots = diaryRepository.findTodayDiary(getCurrentMember(), getToday());
 
-		// TODO 과거카드 수정.
-
 		Optional<TodayTarot> pastTarot = tarots.stream()
 			.filter(tarot -> tarot.getCardType() == DiaryTarotType.PAST)
 			.findFirst();
 
 		if (pastTarot.isEmpty()) {
 
-			System.out.println("ISNOTPRESENT");
-
 			TarotDto pastTarotDto = getUnfinishedDiaryOfToday();
 
 			if (pastTarotDto != null) {
-				System.out.println("pastTarotDtoISNOTPRESENT");
-
 				TodayTarot tempPastTarot = TodayTarot.builder()
 					.cardNo(pastTarotDto.id())
 					.cardName(pastTarotDto.name())
@@ -343,16 +337,15 @@ public class DiaryServiceImpl implements DiaryService {
 					.build();
 
 				tarots.add(tempPastTarot);
-
 			}
 		}
 
 		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
 
 		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
-			.orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND, "FUTURE TAROT MUST BE PULLED"));
+			.orElseGet(() ->null);
 
-		if (! futureTarot.getFlipped()) {
+		if (futureTarot != null && ! futureTarot.getFlipped()) {
 			response.setFutureCard(null);
 		}
 
