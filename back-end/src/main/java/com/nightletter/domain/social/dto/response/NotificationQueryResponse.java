@@ -1,5 +1,7 @@
 package com.nightletter.domain.social.dto.response;
 
+import static com.nightletter.domain.social.dto.response.NotificationResponse.*;
+
 import java.time.LocalDateTime;
 
 import com.nightletter.domain.social.entity.NotificationType;
@@ -30,30 +32,7 @@ public class NotificationQueryResponse {
 	}
 
 	public NotificationResponse toResponse() {
-		return switch (this.type) {
-			case GPT_COMMENT_ARRIVAL -> {
-				yield GptNotificationResponse.builder()
-					.notificationId(this.notificationId)
-					.type(this.type)
-					.title(NotificationType.GPT_COMMENT_ARRIVAL.getTitle())
-					.content(NotificationType.GPT_COMMENT_ARRIVAL.getContent())
-					.test("TEST")
-					.isRead(this.isRead)
-					.created_at(this.created_at)
-					.build();
-			}
-			case RECOMMEND_DIARIES_ARRIVAL -> {
-				yield RecommendNotificationResponse.builder()
-					.notificationId(this.notificationId)
-					.type(this.type)
-					.title(NotificationType.RECOMMEND_DIARIES_ARRIVAL.getTitle())
-					.content(NotificationType.RECOMMEND_DIARIES_ARRIVAL.getContent())
-					.isRead(this.isRead)
-					.created_at(this.created_at)
-					.build();
-			}
-			default -> null;
-		};
+		return getNotificationResponse(this.type, this.notificationId, this.isRead, this.created_at);
 	}
 
 }

@@ -25,4 +25,36 @@ public abstract class NotificationResponse {
 	private String content;
 	private Boolean isRead;
 
+	public static NotificationResponse of(Notification notification) {
+		return getNotificationResponse(notification.getType(), notification.getId(), notification.isRead(), notification.getCreatedAt());
+	}
+
+	public static NotificationResponse getNotificationResponse(NotificationType type, long notificationId, Boolean isRead,
+		LocalDateTime createdAt) {
+		return switch (type) {
+			case GPT_COMMENT_ARRIVAL -> {
+				yield GptNotificationResponse.builder()
+					.notificationId(notificationId)
+					.type(type)
+					.title(NotificationType.GPT_COMMENT_ARRIVAL.getTitle())
+					.content(NotificationType.GPT_COMMENT_ARRIVAL.getContent())
+					.test("TEST")
+					.isRead(isRead)
+					.created_at(createdAt)
+					.build();
+			}
+			case RECOMMEND_DIARIES_ARRIVAL -> {
+				yield RecommendNotificationResponse.builder()
+					.notificationId(notificationId)
+					.type(type)
+					.title(NotificationType.RECOMMEND_DIARIES_ARRIVAL.getTitle())
+					.content(NotificationType.RECOMMEND_DIARIES_ARRIVAL.getContent())
+					.isRead(isRead)
+					.created_at(createdAt)
+					.build();
+			}
+			default -> null;
+		};
+	}
+
 }

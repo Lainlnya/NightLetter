@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.member.repository.MemberRepository;
@@ -40,6 +42,17 @@ public class NotificationServiceImpl implements NotificationService {
 		List<NotificationQueryResponse> notifications = notificationRepository.findAllNotifications(getCurrentMember());
 
 		return notifications.stream().map(NotificationQueryResponse::toResponse).toList();
+	}
+
+	@Transactional
+	@Override
+	public Optional<NotificationResponse> updateNotificationIsRead(long notificationId) {
+		return notificationRepository.findById(notificationId)
+			.map(notification -> {
+				notification.readNotification();
+				notificationRepository.save(notification);
+				return NotificationResponse.of(notification);
+			});
 	}
 
 	/**

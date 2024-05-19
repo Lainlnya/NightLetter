@@ -59,4 +59,8 @@ public class Notification {
 
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
+
+	public void readNotification() {
+		isRead = true;
+	}
 }

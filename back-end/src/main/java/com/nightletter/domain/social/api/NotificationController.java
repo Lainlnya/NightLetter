@@ -1,9 +1,12 @@
 package com.nightletter.domain.social.api;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +16,7 @@ import com.nightletter.domain.social.dto.response.RecommendNotificationResponse;
 import com.nightletter.domain.social.entity.Notification;
 import com.nightletter.domain.social.service.NotificationService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,6 +48,17 @@ public class NotificationController {
 
 		return ResponseEntity.ok(responses);
 	}
+
+	@PatchMapping("")
+	public ResponseEntity<?> updateNotificationIsRead(@RequestBody Long notificationId) {
+
+		Optional<NotificationResponse> notificationResponse = notificationService.updateNotificationIsRead(notificationId);
+
+		return notificationResponse
+			.map(ResponseEntity::ok)
+			.orElse(ResponseEntity.notFound().build());
+	}
+
 
 	@GetMapping("")
 	public ResponseEntity<?> getAllNotifications() {
