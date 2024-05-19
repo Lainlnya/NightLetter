@@ -10,8 +10,8 @@ import UserPopUp from '@/app/_components/user/UserPopUp';
 import { deleteCookie } from '../action';
 import { useRouter } from 'next/navigation';
 import useStore from '@/store/date';
-import getUserNickName from '@/libs/DIaryApi/getUserNickName';
-import updateUserNickName from '@/libs/DIaryApi/updateUserNickName';
+import getUserNickName from '@/libs/DiaryApi/getUserNickName';
+import updateUserNickName from '@/libs/DiaryApi/updateUserNickName';
 import Toast from '@/app/_components/post/Toast';
 import { Messages } from '@/utils/msg';
 
