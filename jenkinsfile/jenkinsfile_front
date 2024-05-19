@@ -29,7 +29,7 @@ pipeline{
 	            agent any
 	            steps{
 					sh 'ls'
-					sh 'cp /var/jenkins_home/.env ./front-end'
+					sh 'cp /var/jenkins_home/.env ./front-end/'
 
                     sh 'docker stop frontend_dev || true'
 			        sh 'docker rm frontend_dev || true'
