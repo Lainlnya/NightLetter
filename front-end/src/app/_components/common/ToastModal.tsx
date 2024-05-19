@@ -24,7 +24,6 @@ const ToastModal = () => {
       } catch (error) {
         setTodayStatus("not checked");
         const data = await checkTodayStatus();
-        console.log(data);
         const { pastCard, nowCard, futureCard } = await checkTodayStatus();
         if (pastCard && nowCard && futureCard) setTodayStatus("complete");
         if (pastCard && nowCard && !futureCard) setTodayStatus("now");

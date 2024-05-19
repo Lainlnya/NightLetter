@@ -13,8 +13,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://localhost:3001",
-            // value: 'https://letter-for.me',
+            value: "https://letter-for.me",
           },
           {
             key: "Access-Control-Allow-Methods",
