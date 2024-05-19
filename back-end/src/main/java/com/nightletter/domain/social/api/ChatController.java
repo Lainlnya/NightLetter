@@ -1,13 +1,12 @@
 package com.nightletter.domain.social.api;
 
-import java.util.List;
+import java.security.Principal;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nightletter.domain.social.dto.request.ChatRequest;
 import com.nightletter.domain.social.dto.response.ChatResponse;
 import com.nightletter.domain.social.dto.response.GptNotificationResponse;
-import com.nightletter.domain.social.dto.response.NotificationResponse;
 import com.nightletter.domain.social.dto.response.RecommendNotificationResponse;
 import com.nightletter.domain.social.entity.NotificationType;
 import com.nightletter.domain.social.service.ChatService;
@@ -73,12 +71,18 @@ public class ChatController {
 	@SendTo("/room/{roomId}")
 	public ChatResponse sendMessage(
 		@DestinationVariable("roomId") Integer roomId,
-		@Payload ChatRequest request) throws Exception {
+		@Payload ChatRequest request,
+		Principal principal) throws Exception {
 
 		// int memberId = testMemberCount / 3 + 1;
 		// ChatResponse response = chatService.sendMessage(memberId, roomId, request.getMessage());
 
-		return chatService.sendMessage(roomId, request.getMessage());
+		System.out.println("PRINCIPAL: " + principal);
+		System.out.println("member_id: " + principal.getName());
+
+		Integer memberId = Integer.valueOf(principal.getName());
+
+		return chatService.sendMessage(memberId, roomId, request.getMessage());
 	}
 
 }
