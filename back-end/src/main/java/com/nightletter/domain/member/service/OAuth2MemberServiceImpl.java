@@ -3,7 +3,9 @@ package com.nightletter.domain.member.service;
 import static com.nightletter.domain.member.entity.Provider.*;
 
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -25,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
 
 	private final MemberRepository memberRepository;
+
+	@Value("${profile.base-url}")
+	private String profileBaseUrl;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -61,9 +66,12 @@ public class OAuth2MemberServiceImpl extends DefaultOAuth2UserService {
 
 				Map<String, String> kakaoAccountInfo = oAuth2User.getAttribute("kakao_account");
 				Map<String, String> kakaoProfileInfo = oAuth2User.getAttribute("properties");
+
+				int profileRandomNum = ThreadLocalRandom.current().nextInt(1, 31);
+
 				email = kakaoAccountInfo.get("email");
 				nickname = kakaoProfileInfo.get("nickname");
-				profileImgUrl = kakaoProfileInfo.get("profile_image");
+				profileImgUrl = profileBaseUrl + profileRandomNum + ".webp";
 				provider = KAKAO;
 
 				break;

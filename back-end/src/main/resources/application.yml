@@ -60,6 +60,9 @@ spring:
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
 
+profile:
+  base-url: ${PROFILE_BASEURL}
+
 kafka:
   bootstrap-server: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
 
