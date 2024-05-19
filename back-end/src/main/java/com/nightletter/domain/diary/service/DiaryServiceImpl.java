@@ -272,7 +272,8 @@ public class DiaryServiceImpl implements DiaryService {
 			- 조회 시 PASS
 			- 조회하지 않았으면 정보를 지워 전달.
 		 */
-		// TODO 이후 처리 ...
+		// TODO 존재하지 않는 경우 처리.
+
 		futureRedisRepository.findById(getCurrentMemberId())
 			.ifPresent(futureTarot -> {
 				if (!futureTarot.getFlipped() && diaryMap.get(today) != null) {
@@ -348,7 +349,12 @@ public class DiaryServiceImpl implements DiaryService {
 
 		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
 
-		if (! futureRedisRepository.existsById(getCurrentMemberId())) {
+		// TODO 마스킹 .
+
+		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
+			.orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND, "FUTURE TAROT MUST BE PULLED"));
+
+		if (! futureTarot.getFlipped()) {
 			response.setFutureCard(null);
 		}
 
