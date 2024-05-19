@@ -51,20 +51,9 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public Page<ChatResponse> findChatByChatroomId(int chatroomId, int pageNo) {
+	public Page<ChatResponse> findChatByChatroomId(Integer memberId, int chatroomId, int pageNo) {
 
 		return chatRepository.findChatPages(chatroomId, pageNo, getCurrentMemberId());
-	}
-
-	@Override
-	public Page<ChatResponse> findChatByChatroom(int chatroomId, int pageNo) {
-		// 에러 처리.
-		Chatroom chatroom = chatroomRepository.findById(chatroomId)
-			.orElseThrow();
-
-		Member member = getCurrentMember();
-
-		return chatRepository.findChatPages(chatroom, pageNo, member);
 	}
 
 	@Override

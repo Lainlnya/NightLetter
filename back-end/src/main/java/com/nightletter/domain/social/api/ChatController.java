@@ -34,15 +34,16 @@ public class ChatController {
 	@GetMapping("")
 	public ResponseEntity<?> findChatByChatroomId(
 		@RequestParam(name = "roomId") Integer chatroomId,
-		@RequestParam(name = "pageNo", defaultValue = "0", required = false) Integer pageNo) {
-		return ResponseEntity.ok(chatService.findChatByChatroomId(chatroomId, pageNo));
-	}
+		@RequestParam(name = "pageNo", defaultValue = "0", required = false) Integer pageNo,
+		Principal principal) {
 
-	@GetMapping("/entity")
-	public ResponseEntity<?> findChatByChatroom(
-		@RequestParam(name = "roomId") Integer chatroomId,
-		@RequestParam(name = "pageNo", defaultValue = "0", required = false) Integer pageNo) {
-		return ResponseEntity.ok(chatService.findChatByChatroomId(chatroomId, pageNo));
+		System.out.println("find Chat By ChatroomId");
+		System.out.println("PRINCIPAL: " + principal);
+		System.out.println("member_id: " + principal.getName());
+
+		Integer memberId = Integer.valueOf(principal.getName());
+
+		return ResponseEntity.ok(chatService.findChatByChatroomId(memberId, chatroomId, pageNo));
 	}
 
 	private int testCall = 0;
