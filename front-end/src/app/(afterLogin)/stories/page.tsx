@@ -16,7 +16,7 @@ import { deleteScrapData } from '@/libs/ScrapApi/deleteScrapData';
 import { setScrapData } from '@/libs/ScrapApi/setScrapData';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ScrapItem } from '@/types/apis';
-import { getRecommendDiaries } from '@/libs/DIaryApi/getRecommendDiaries';
+import { getRecommendDiaries } from '@/libs/DiaryApi/getRecommendDiaries';
 
 export default function Diaries() {
   const router = useRouter();
