@@ -7,6 +7,7 @@ const WebSocketContext = createContext<Client | null>(null);
 
 export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [client, setClient] = useState<Client | null>(null);
+  const [username, setUsername] = useState<string>('');
 
   useEffect(() => {
     const client = new Client({
@@ -22,7 +23,10 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       onWebSocketClose: (event) => {
         console.warn('WebSocket closed: ', event);
       },
-      onConnect: () => {
+      onConnect: (frame) => {
+        const principle = JSON.parse(frame.headers['user-name']);
+        setUsername(principle);
+        console.log('username' + username);
         console.log('Connected to WebSocket');
       },
     });
