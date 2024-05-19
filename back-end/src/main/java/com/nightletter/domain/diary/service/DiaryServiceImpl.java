@@ -349,8 +349,6 @@ public class DiaryServiceImpl implements DiaryService {
 
 		TodayDiaryResponse response = TodayDiaryResponse.of(tarots);
 
-		// TODO 마스킹 .
-
 		FutureTarot futureTarot = futureRedisRepository.findById(getCurrentMemberId())
 			.orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NOT_FOUND, "FUTURE TAROT MUST BE PULLED"));
 
