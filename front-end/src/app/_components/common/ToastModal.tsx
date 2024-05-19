@@ -23,11 +23,6 @@ const ToastModal = () => {
         if (pastCard && !nowCard && !futureCard) setTodayStatus("past");
       } catch (error) {
         setTodayStatus("not checked");
-        const data = await checkTodayStatus();
-        const { pastCard, nowCard, futureCard } = await checkTodayStatus();
-        if (pastCard && nowCard && futureCard) setTodayStatus("complete");
-        if (pastCard && nowCard && !futureCard) setTodayStatus("now");
-        if (pastCard && !nowCard && !futureCard) setTodayStatus("past");
       }
     } 
     fetchData();
