@@ -18,7 +18,14 @@ const Portal = ({ children }: PortalProps) => {
   }, []);
 
   // 웹소켓 연결부분
-  const client = useWebSocket();
+  const webSocketContext = useWebSocket();
+
+  if (!webSocketContext) {
+    return <div>Loading...</div>;
+  }
+
+  const { client } = webSocketContext;
+
   const subscriptionRef = useRef<any>(null);
   const [notification, setNotification] = useState<string>('');
 
