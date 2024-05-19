@@ -10,7 +10,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: 'wss://dev.letter-for.me/ws-stomp',
+      brokerURL: 'wss://letter-for.me/ws-stomp',
       reconnectDelay: 5000,
       debug: (str) => {
         console.log('STOMP: ' + str);
