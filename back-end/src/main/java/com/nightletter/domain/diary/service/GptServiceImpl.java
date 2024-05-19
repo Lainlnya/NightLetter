@@ -1,6 +1,7 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,7 @@ public class GptServiceImpl {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Member member = memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 		// Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), member);
-		List<Diary> diaries = diaryRepository.findAllByDateAndWriter(LocalDate.now(), member);
+		List<Diary> diaries = diaryRepository.findAllByDateAndWriter(getToday(), member);
 		Diary diary = diaries.get(0);
 
 		if (diary == null) {
@@ -91,5 +92,11 @@ public class GptServiceImpl {
 
 		response.setGptComment(diary.getGptComment());
 		return Optional.of(response);
+
+	}
+
+	private LocalDate getToday() {
+		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
+			LocalDate.now() : LocalDate.now().minusDays(1);
 	}
 }
