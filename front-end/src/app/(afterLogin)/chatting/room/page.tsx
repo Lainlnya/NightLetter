@@ -47,7 +47,13 @@ export default function Room() {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
   const subscriptionRef = useRef<any>(null);
-  const client = useWebSocket();
+  const webSocketContext = useWebSocket();
+
+  if (!webSocketContext) {
+    return <div>Loading...</div>;
+  }
+
+  const { client, username } = webSocketContext;
 
   useEffect(() => {
     if (chatHistory) {
@@ -115,7 +121,7 @@ export default function Room() {
     const isSameDate = prevTime === convertTime(msg.sendTime);
 
     if (idx === messages.length - 1) {
-      if (msg.sentByMe) {
+      if (msg.senderId === username) {
         return <MyChat key={uuidv4()} msg={msg} last={true} />;
       }
 
@@ -127,7 +133,7 @@ export default function Room() {
     }
 
     // 채팅 시간 표기
-    if (msg.sentByMe) {
+    if (msg.senderId === username) {
       const lastWritten = msg.senderId !== messages[idx + 1].senderId;
       return <MyChat key={uuidv4()} msg={msg} last={lastWritten} />;
     }

@@ -3,11 +3,16 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Client, IMessage } from '@stomp/stompjs';
 
-const WebSocketContext = createContext<Client | null>(null);
+interface WebSocketContextType {
+  client: Client | null;
+  username: number;
+}
+
+const WebSocketContext = createContext<WebSocketContextType | null>(null);
 
 export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [client, setClient] = useState<Client | null>(null);
-  const [username, setUsername] = useState<string>('');
+  const [username, setUsername] = useState<number>(0);
 
   useEffect(() => {
     const client = new Client({
@@ -15,6 +20,10 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       reconnectDelay: 5000,
       debug: (str) => {
         console.log('STOMP: ' + str);
+        const userNameMatch = str.match(/user-name:(\d+)/);
+        if (userNameMatch) {
+          setUsername(parseInt(userNameMatch[1]));
+        }
       },
       onStompError: (frame) => {
         console.error('Broker reported error: ' + frame.headers['message']);
@@ -39,9 +48,9 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
   }, []);
 
-  return <WebSocketContext.Provider value={client}>{children}</WebSocketContext.Provider>;
+  return <WebSocketContext.Provider value={{ client, username }}>{children}</WebSocketContext.Provider>;
 };
 
-export const useWebSocket = (): Client | null => {
+export const useWebSocket = (): WebSocketContextType | null => {
   return useContext(WebSocketContext);
 };
