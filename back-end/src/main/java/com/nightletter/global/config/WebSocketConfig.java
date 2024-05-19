@@ -10,12 +10,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.nightletter.domain.member.repository.MemberRepository;
-import com.nightletter.domain.social.handler.HttpHandshakeInterceptor;
-import com.nightletter.global.security.handler.jwt.JwtProvider;
-
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
