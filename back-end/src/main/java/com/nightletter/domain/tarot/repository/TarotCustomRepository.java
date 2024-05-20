@@ -9,4 +9,5 @@ public interface TarotCustomRepository {
 
 	Optional<Tarot> findPastTarot(LocalDate today, int memberId);
 
+	Optional<Tarot> findNowTarot(LocalDate today, int memberId);
 }

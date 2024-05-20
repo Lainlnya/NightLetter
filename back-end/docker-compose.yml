@@ -1,6 +1,6 @@
 version: "3"
 services:
-  backend:
+  backend_main:
     image: nightletter-server
     container_name: backend_main
     environment:
@@ -21,6 +21,10 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - OPENAI_MODEL=${OPENAI_MODEL}
       - OPENAI_SECRET_KEY=${OPENAI_SECRET_KEY}
+      - TEST_PROFILE=${TEST_PROFILE}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - PROFILE_BASEURL=${PROFILE_BASEURL}
       - TZ=Asia/Seoul
     networks:
       - night-letter

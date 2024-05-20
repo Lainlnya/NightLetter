@@ -2,6 +2,8 @@ package com.nightletter.domain.diary.dto.recommend;
 
 import java.util.Objects;
 
+import com.nightletter.domain.diary.entity.Diary;
+import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.global.utils.Nickname;
 
 import lombok.Getter;
@@ -11,11 +13,17 @@ import lombok.ToString;
 @ToString
 public class RecommendDiaryResponse {
 
+	// TODO Id 포함 수정.
+	// TODO 유저 닉네임 분리.
+
+	Long diaryId;
 	String nickname;
 	String content;
 	String imgUrl;
 
-	public RecommendDiaryResponse(String content, String imgUrl) {
+
+	public RecommendDiaryResponse(Long diaryId, String content, String imgUrl) {
+		this.diaryId = diaryId;
 		this.content = content;
 		this.imgUrl = imgUrl;
 		this.nickname = Nickname.createRandom();

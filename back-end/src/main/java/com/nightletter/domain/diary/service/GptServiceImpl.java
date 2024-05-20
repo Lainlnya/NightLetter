@@ -1,6 +1,7 @@
 package com.nightletter.domain.diary.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.nightletter.domain.diary.dto.DiaryCommentRequest;
-import com.nightletter.domain.diary.dto.DiaryCommentResponse;
-import com.nightletter.domain.diary.dto.GPTResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCommentRequest;
+import com.nightletter.domain.diary.dto.response.DiaryCommentResponse;
+import com.nightletter.domain.diary.dto.response.GPTResponse;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryTarot;
 import com.nightletter.domain.diary.repository.DiaryRepository;
@@ -66,7 +67,7 @@ public class GptServiceImpl {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Member member = memberRepository.findByMemberId(Integer.parseInt((String)authentication.getPrincipal()));
 		// Diary diary = diaryRepository.findByDateAndWriter(LocalDate.now(), member);
-		List<Diary> diaries = diaryRepository.findAllByDateAndWriter(LocalDate.now(), member);
+		List<Diary> diaries = diaryRepository.findAllByDateAndWriter(getToday(), member);
 		Diary diary = diaries.get(0);
 
 		if (diary == null) {
@@ -91,5 +92,11 @@ public class GptServiceImpl {
 
 		response.setGptComment(diary.getGptComment());
 		return Optional.of(response);
+
+	}
+
+	private LocalDate getToday() {
+		return LocalTime.now().isAfter(LocalTime.of(4, 0)) ?
+			LocalDate.now() : LocalDate.now().minusDays(1);
 	}
 }

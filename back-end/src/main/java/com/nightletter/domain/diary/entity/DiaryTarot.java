@@ -13,11 +13,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 public class DiaryTarot extends BaseTimeEntity {
 
 	@EmbeddedId
@@ -37,14 +39,11 @@ public class DiaryTarot extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private DiaryTarotType type;
 
-	public DiaryTarot() {
-
-	}
-
 	public DiaryTarot(Diary diary, Tarot tarot, DiaryTarotType type) {
 		this.id = new DiaryTarotId(diary.getDiaryId(), tarot.getId());
 		this.diary = diary;
 		this.tarot = tarot;
 		this.type = type;
 	}
+
 }

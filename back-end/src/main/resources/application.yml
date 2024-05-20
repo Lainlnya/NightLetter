@@ -1,6 +1,9 @@
 server:
   port: 8081
 
+chat:
+  test-profile: ${TEST_PROFILE}
+
 spring:
   security:
     dev-token: ${KAKAO_LOCAL_TOKEN}
@@ -49,12 +52,19 @@ spring:
                       internal:
                         JBossStandAloneJtaPlatform:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
   data:
     redis:
       host: ${REDIS_HOSTNAME}
       port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+profile:
+  base-url: ${PROFILE_BASEURL}
+
+kafka:
+  bootstrap-server: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

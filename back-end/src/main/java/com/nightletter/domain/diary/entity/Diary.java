@@ -8,7 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import com.nightletter.domain.diary.dto.DiaryResponse;
+import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.member.entity.Member;
 import com.nightletter.domain.tarot.dto.TarotDto;
 import com.nightletter.domain.tarot.entity.Tarot;
@@ -30,6 +30,7 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder

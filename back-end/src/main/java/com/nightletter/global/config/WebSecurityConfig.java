@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -51,12 +52,13 @@ public class WebSecurityConfig {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeHttpRequests(request -> request
-				.requestMatchers("/", "/api/v1/auth/**", "/oauth2/**").permitAll()
+				// TODO 수정 필요.
+				.requestMatchers("/", "/api/v2/auth/**", "/oauth2/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth2 -> oauth2
-				.authorizationEndpoint(endPoint -> endPoint.baseUri("/api/v1/auth/oauth2"))
-				.redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+				.authorizationEndpoint(endPoint -> endPoint.baseUri("/api/v2/auth/oauth2"))
+				.redirectionEndpoint(endPoint -> endPoint.baseUri("/oauth2/callback/**"))
 				.userInfoEndpoint(endPoint -> endPoint.userService(oAuth2UserService))
 				.successHandler(oAuth2SuccessHandler)
 			)
@@ -73,12 +75,20 @@ public class WebSecurityConfig {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 
 		corsConfiguration.setAllowedOrigins(
-			List.of("http://letter-for.me",
-					"https://letter-for.me"
-				)
-			);
+			List.of(
+				"http://letter-for.me",
+				"https://letter-for.me",
+				"http://dev.letter-for.me",
+				"https://dev.letter-for.me",
+				"http://localhost:3000",
+				"https://localhost:3001"
+			)
+		);
 
-		corsConfiguration.addAllowedMethod("*");
+		corsConfiguration.setAllowedMethods(
+			List.of("GET", "DELETE", "PUT", "PATCH", "POST", "OPTIONS")
+		);
+
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.setAllowCredentials(true);
 

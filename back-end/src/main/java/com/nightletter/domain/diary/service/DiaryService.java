@@ -1,26 +1,41 @@
 package com.nightletter.domain.diary.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
-import com.nightletter.domain.diary.dto.DiaryCreateRequest;
-import com.nightletter.domain.diary.dto.DiaryDisclosureRequest;
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryListResponse;
-import com.nightletter.domain.diary.dto.DiaryResponse;
+import org.springframework.data.domain.Page;
+
+import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.request.DiaryCreateRequest;
+import com.nightletter.domain.diary.dto.request.DiaryDisclosureRequest;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
+import com.nightletter.domain.diary.dto.response.DiaryResponse;
 import com.nightletter.domain.diary.dto.recommend.RecommendResponse;
+import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.TodayDiaryResponse;
+import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.dto.TarotResponse;
 import com.nightletter.global.common.ResponseDto;
 
 public interface DiaryService {
 
-	RecommendResponse createDiary(DiaryCreateRequest diaryCreateRequest);
+	TarotResponse createDiary(DiaryCreateRequest diaryCreateRequest);
 
 	Optional<DiaryResponse> updateDiaryDisclosure(DiaryDisclosureRequest request);
 
-	Optional<DiaryListResponse> findDiaries(DiaryListRequest diaryListRequest);
+	List<DiaryResponse> findDiaries(DiaryListRequest diaryListRequest);
 
 	Optional<DiaryResponse> findDiary(Long diaryId);
+	TodayDiaryResponse isTodayDiaryWritten();
 
 	Optional<ResponseDto> deleteDiary(Long diaryId);
 
 	Optional<String> createDiaryShareUrl(Long diaryId);
+	Page<DiaryScrapResponse> findScrappedRecommends(Integer pageNo);
+	void scrapDiary(Long diaryId);
+	void unscrapDiary(Long diaryId);
+	List<DiaryRecResponse> findTodayRecommendedDiaries();
+
 }

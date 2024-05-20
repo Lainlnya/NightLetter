@@ -1,22 +1,37 @@
 package com.nightletter.domain.diary.repository;
 
+import static com.nightletter.domain.diary.entity.DiaryTarotType.*;
 import static com.nightletter.domain.diary.entity.QDiary.*;
 import static com.nightletter.domain.diary.entity.QDiaryTarot.*;
+import static com.nightletter.domain.diary.entity.QRecommendedDiary.*;
+import static com.nightletter.domain.diary.entity.QScrap.*;
+import static com.nightletter.domain.member.entity.QMember.*;
 import static com.nightletter.domain.tarot.entity.QTarot.*;
 
 import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.nightletter.domain.diary.dto.DiaryListRequest;
-import com.nightletter.domain.diary.dto.DiaryRequestDirection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import com.nightletter.domain.diary.dto.recommend.RecommendDiaryResponse;
+import com.nightletter.domain.diary.dto.request.DiaryListRequest;
+import com.nightletter.domain.diary.dto.response.DiaryRecResponse;
+import com.nightletter.domain.diary.dto.response.DiaryScrapResponse;
+import com.nightletter.domain.diary.dto.response.FutureTarotResponse;
+import com.nightletter.domain.diary.dto.response.QDiaryRecResponse;
+import com.nightletter.domain.diary.dto.response.TodayTarot;
 import com.nightletter.domain.diary.entity.Diary;
 import com.nightletter.domain.diary.entity.DiaryOpenType;
 import com.nightletter.domain.diary.entity.DiaryTarotType;
 import com.nightletter.domain.member.entity.Member;
+import com.nightletter.domain.tarot.dto.TarotDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -24,11 +39,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 
+	private static final int PAGE_SIZE = 10;
 	private final JPAQueryFactory queryFactory;
 
 	@Override
 	public List<RecommendDiaryResponse> findRecommendDiaries(List<Long> diariesId, Member member) {
 		List<RecommendDiaryResponse> responses = queryFactory.select(Projections.constructor(RecommendDiaryResponse.class,
+				diary.diaryId,
 				diary.content,
 				tarot.imgUrl
 			))
@@ -46,52 +63,120 @@ public class DiaryCustomRepositoryImpl implements DiaryCustomRepository {
 			.collect(Collectors.toList());
 	}
 
-	// 수정 예정
 	@Override
-	public List<Diary> findDiariesByMemberInDir(Member member, DiaryListRequest request) {
-		List<Diary> diaries = new LinkedList<>();
+	public Page<DiaryScrapResponse> findScrappedDiaryPages(Integer memberId, Integer pageNo) {
 
-		LocalDate queryDate = request.getDate();
-		DiaryRequestDirection dir = request.getDirection();
+		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
 
-		Integer limitSize = request.getSize();
-		if (dir.equals(DiaryRequestDirection.BEFORE) || dir.equals(DiaryRequestDirection.BOTH)) {
-			diaries.addAll(queryFactory.select(diary)
-				.from(diary)
-				.where(diary.writer.eq(member)
-					.and(diary.date.loe(queryDate)))
-				.orderBy(diary.date.asc())
-				.limit(limitSize)
-				.fetch()
-			);
-		}
+		List<DiaryScrapResponse> results = queryFactory
+			.select(Projections.constructor(DiaryScrapResponse.class,
+				diary.diaryId,
+				diary.content,
+				tarot.imgUrl,
+				scrap.scrappedAt
+			))
+			.from(member)
+			.innerJoin(member.scraps, scrap)
+			.innerJoin(scrap.diary, diary)
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.type.eq(DiaryTarotType.NOW))
+			.innerJoin(diaryTarot.tarot, tarot)
+			.orderBy(scrap.scrappedAt.desc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
 
-		if (dir.equals(DiaryRequestDirection.BOTH) &&
-			!diaries.isEmpty() &&
-			diaries.get(diaries.size() - 1).getDate().isEqual(queryDate)) {
-			diaries.remove(diaries.get(diaries.size() - 1));
-		}
+		Long count = Optional.ofNullable(queryFactory
+			.select(scrap.countDistinct())
+			.from(member)
+			.innerJoin(member.scraps, scrap)
+			.innerJoin(scrap.diary, diary)
+			.fetchOne())
+			.orElse(0L);
 
-		if (dir.equals(DiaryRequestDirection.AFTER) || dir.equals(DiaryRequestDirection.BOTH)) {
-			diaries.addAll(queryFactory.select(diary)
-				.from(diary)
-				.where(diary.writer.eq(member)
-					.and(diary.date.goe(queryDate)))
-				.orderBy(diary.date.asc())
-				.limit(limitSize)
-				.fetch()
-			);
-		}
-
-		return diaries;
+		return new PageImpl<>(results, pageable, count);
 	}
 
 	@Override
-	public List<Diary> findDiariesByMember(Member member, LocalDate sttDate, LocalDate endDate) {
+	public List<TodayTarot> findTodayDiary(Member member, LocalDate today) {
+
+		return queryFactory.select(Projections.constructor(
+			TodayTarot.class,
+			diaryTarot.tarot.id,
+			diaryTarot.tarot.name,
+			diaryTarot.tarot.imgUrl,
+			diaryTarot.tarot.dir,
+			diaryTarot.type
+			))
+			.from(diary)
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.diary.writer.eq(member)
+				.and(diary.date.eq(today)))
+			.fetch();
+	}
+
+	@Override
+	public List<DiaryRecResponse> findTodayDiaryRecommends(Member member, LocalDate today) {
+
+		return queryFactory.select(
+			new QDiaryRecResponse(
+				recommendedDiary.diary.diaryId,
+				recommendedDiary.diary.writer.nickname,
+				recommendedDiary.diary.content,
+				// 오늘 타로 정보.
+				tarot.imgUrl,
+				// 조인 해서 조회해야 함.
+				// 내가 스크랩 했는지 여부.
+				new CaseBuilder()
+					.when(scrap.id.isNull())
+					.then(false)
+					.otherwise(true)
+				)
+			)
+			.from(recommendedDiary)
+			.where(recommendedDiary.recommendedDate.eq(today)
+				.and(recommendedDiary.member.eq(member)))
+			.innerJoin(recommendedDiary.diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.type.eq(NOW))
+			.innerJoin(diaryTarot.tarot, tarot)
+			.leftJoin(scrap)
+			.on(recommendedDiary.diary.diaryId.eq(scrap.diary.diaryId))
+			.fetch();
+	}
+
+	@Override
+	public Optional<FutureTarotResponse> findFutureTarot(Long diaryId) {
+		return Optional.ofNullable(
+			queryFactory.select(
+			Projections.constructor(
+				FutureTarotResponse.class,
+				tarot.name,
+				tarot.dir,
+				diary.content
+				))
+			.from(diary)
+			.where(diary.diaryId.eq(diaryId))
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.where(diaryTarot.type.eq(FUTURE))
+			.fetchOne()
+		);
+	}
+
+	@Override
+	public void updateDiaryGPTComment(Long diaryId, String gptComment) {
+		queryFactory.update(diary)
+			.set(diary.gptComment, gptComment)
+			.where(diary.diaryId.eq(diaryId))
+			.execute();
+	}
+
+	@Override
+	public List<Diary> findDiariesByMember(Member member, DiaryListRequest request) {
 		return queryFactory.select(diary)
 			.from(diary)
 			.where(diary.writer.eq(member)
-				.and(diary.date.between(sttDate, endDate)))
+				.and(diary.date.between(request.getSttDate(), request.getEndDate())))
+			.orderBy(diary.date.asc())
 			.fetch();
 	}
 }

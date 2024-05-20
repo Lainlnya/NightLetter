@@ -20,7 +20,7 @@ public class TarotCustomRepositoryImpl implements TarotCustomRepository {
 
 	@Override
 	public Optional<Tarot> findPastTarot(LocalDate today, int memberId) {
-		LocalDate pastLimitDate = today.minusDays(21);
+		LocalDate pastLimitDate = today.minusDays(28);
 
 		return Optional.ofNullable(queryFactory.select(tarot)
 			.from(diary)
@@ -29,6 +29,22 @@ public class TarotCustomRepositoryImpl implements TarotCustomRepository {
 			.where(
 				diary.writer.memberId.eq(memberId),
 				diary.date.between(pastLimitDate, today),
+				diaryTarot.type.eq(DiaryTarotType.NOW)
+			)
+			.orderBy(diary.date.desc())
+			.limit(1)
+			.fetchOne());
+	}
+
+	@Override
+	public Optional<Tarot> findNowTarot(LocalDate today, int memberId) {
+		return Optional.ofNullable(queryFactory.select(tarot)
+			.from(diary)
+			.innerJoin(diary.diaryTarots, diaryTarot)
+			.innerJoin(diaryTarot.tarot, tarot)
+			.where(
+				diary.writer.memberId.eq(memberId),
+				diary.date.eq(today),
 				diaryTarot.type.eq(DiaryTarotType.NOW)
 			)
 			.orderBy(diary.date.desc())
