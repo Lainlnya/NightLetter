@@ -96,85 +96,107 @@
 
 - 카카오 소셜 로그인을 활용하여 서비스에 회원가입 및 로그인을 할 수 있습니다.
 
-  ![시연영상_01_로그인](./assets/gif/카카오로그인.gif)
+<figure>
+  <img src="./assets/gif/로그인.gif" align="center" width="50%" />
+</figure>
 
-## 메인화면
+## 메인화면 및 오늘의 일기 쓰기
 
 - 메인 화면에서 유저가 뽑은 타로카드를 좌우로 스와이프하여 확인할 수 있습니다.
-- 타로카드를 클릭했을 때 해당 일자에 작성한 다이어리로 이동할 수 있습니다.
-- 당일에 다이어리를 작성하지 않았을 경우 '오늘의 일기 작성하기' 버튼을 통해 다이어리 작성 화면으로 이동할 수 있습니다.
-
-  ![시연영상_02_메인](./assets/gif/메인.gif)
-
-## 첫 로그인이거나, 사용 이력이 오래되었을 경우
-
-- 최초 로그인한 유저이거나, 4주 이내에 다이어리를 작성한 이력이 없는 유저라면 과거 카드를 뽑을 수 있습니다.
-
-  ![시연영상_03_로그인유저과거카드](./assets/gif/로그인후과거카드뽑기.gif)
-
-## 과거 카드 뽑기
-
-- 셔플 버튼을 통해 카드 셔플이 가능하며, 카드를 클릭해 타로를 한 장 뽑을 수 있습니다.
-- 다이어리 쓰러가기 버튼을 통해 다이어리쓰기 화면으로 이동할 수 있습니다.
-
-  ![시연영상_04_과거카드뽑기](./assets/gif/과거카드뽑기.gif)
-
-## 일기 작성 및 오늘의 카드 확인
-
+- 가장 아래 안내 멘트와 뒤집혀진 카드의 개수를 통해 현재 어디까지 카드를 뽑았는지 확인할 수 있습니다.
+- 과거카드의 경우 최초 로그인이거나, 28일 내에 뽑지 않았다면 뽑을 수 있습니다.
 - 오늘 일기를 작성하지 않은 유저라면 일기를 작성할 수 있습니다.
 - 사연의 공개 여부를 클릭할 수 있습니다.
 - 오늘의 일기를 저장하면 일기의 감정을 분석하여 뽑힌 카드를 받을 수 있습니다.
 
-  ![시연영상_05_다이어리작성](./assets/gif/다이어리작성.gif)
+<figure>
+  <img src="./assets/gif/일기쓰기.gif" align="center" width="50%" />
+</figure>
 
 ## OPEN AI의 하루 코멘트
 
 - 오늘 작성한 일기와 3장의 카드를 종합하여 OPEN AI가 전해준 하루의 코멘트를 받을 수 있습니다.
 
-  ![시연영상_06_GPT코멘트](./assets/gif/GPT코멘트.gif)
+<figure>
+  <img src="./assets/gif/GPT코멘트.gif" align="center" width="50%" />
+</figure>
 
-## 사연 추천 받기
+## 사연 추천 받기 기능
 
 - 내가 쓴 일기를 바탕으로 나와 비슷한 카드를 뽑은 사람의 사연을 추천 받을 수 있습니다.
+- 추천 사연을 스크랩 버튼을 통해 스크랩할 수 있습니다.
+- 양쪽 `<` `>` 버튼을 통해 다른 사연을 확인할 수 있습니다.
+<figure>
+  <img src="./assets/gif/추천사연.gif" align="center" width="50%" />
+</figure>
 
-  ![시연영상_07_사연추천](./assets/gif/사연%20추천.gif)
+## 스크랩 확인 기능
+
+- 추천 사연에서 스크랩한 사연을 확인할 수 있다.
+- 스크랩한 사연은 스크랩 버튼을 통해 스크랩 상태를 바꿀 수 있다.
+
+<figure>
+  <img src="./assets/gif/스크랩.gif" align="center" width="50%"/>
+</figure>
+
+## 채팅방입장 및 채팅 기능
+
+- 채팅방은 과거 카드, 현재 카드, 미래 카드 총 3개의 방이 존재하며, 드래그하여 해당 방을 선택할 수 있다.
+- 해당 일자에 뽑은 카드를 통해 해당 카드의 채팅 방에 입장할 수 있다.
+- 해당 일자의 채팅은 같은 카드를 뽑은 사람만 참여할 수 있으며, 일기쓰기가 끝나는 새벽 4시에 채팅 내용은 모두 초기화된다.
+
+<figure class="half">
+  <img src='./assets/gif/채팅방입장.gif' align='left' width="50%"/>
+  <img src='./assets/gif/채팅.gif' align='right' width="50%"/>
+</figure>
+
+## 알림 확인 기능
+
+- 일기 작성했을 경우, AI의 코멘트와 추천 사연이 도착했을 경우 팝업알림으로 확인할 수 있다.
+- 팝업 알림을 확인하지 못했을 경우, 해당 페이지에서 확인할 수 있다.
+- 확인하지 못한 알림이 있을 경우, 노란색 점으로 알림을 확인할 수 있다.
+- x 버튼 클릭으로 알림을 삭제할 수 있다.
+- AI의 코멘트 알림을 누르면 메인 페이지로 이동하고, 당일에 한해 추천 사연을 클릭했을 때 추천 사연 페이지로 이동할 수 있다.
+
+<figure>
+  <img src="./assets/gif/알림.gif" align="center" width="50%"/>
+</figure>
+
+## 닉네임 변경 및 로그아웃 기능
+
+- 닉네임 변경 버튼을 클릭해 닉네임 변경이 가능하다.
+- 처음에 배정받은 내 이미지를 확인할 수 있다.
+- 로그아웃 버튼을 통해 로그아웃을 할 수 있다.
+
+<figure>
+  <img src="./assets/gif/로그아웃 및 프로필.gif" align="center" width="50%"/>
+</figure>
 
 # 💌기술 스택
 
 ## 1. 타로카드 추천
 
-
 ![타로카드추천](./assets/image/타로카드추천.JPG)
-
-
 
 사용자가 입력한 일기를 KoSBERT 모델을 통하여 768차원의 임베딩 벡터 값으로 나타냅니다.
 타로카드를 나타내는 5개의 키워드 역시 같은 방법으로 각각 768차원의 임베딩 벡터 값으로 나타냅니다.
 일기와 타로카드의 키워드를 코사인 유사도를 통해 유사한 정도를 수치화 합니다.
 5개의 유사도를 평균+최대값이 가장 높은 카드를 선정하여 일기를 대표하는 타로카드로 추천합니다.
-
-
 
 ## 2. 비슷한 일기 추천
 
-
 ![일기추천](./assets/image/일기추천.JPG)
-
-
 
 사용자가 입력한 일기를 KoSBERT 모델을 통하여 768차원의 임베딩 벡터 값으로 나타냅니다.
 타로카드를 나타내는 5개의 키워드 역시 같은 방법으로 각각 768차원의 임베딩 벡터 값으로 나타냅니다.
 일기와 타로카드의 키워드를 코사인 유사도를 통해 유사한 정도를 수치화 합니다.
 5개의 유사도를 평균+최대값이 가장 높은 카드를 선정하여 일기를 대표하는 타로카드로 추천합니다.
-
 
 ## 3. 개발 환경
 
 <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <br/> <img src="https://img.shields.io/badge/Amazon EC2-569A31?style=for-the-badge&logo=Amazon EC2&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=NGINX&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/mySql-007ec6?style=for-the-badge&logo=mySql&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <br/>
 <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
 <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/zustand-764ABC?style=for-the-badge&logo=react&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Node.js-339939?style=for-the-badge&logo=Node.js&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Scss-cc6699?style=for-the-badge&logo=sass&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/react query-F73F51?style=for-the-badge&logo=react query&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=Jira&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/GitLab-FCA121?style=for-the-badge&logo=GitLab&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <br/>
-
-
 
 # 💌프로젝트 산출물
 
